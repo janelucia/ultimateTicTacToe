@@ -1,265 +1,272 @@
 :root {
-    --spieler-farbe: #00FFCA;
-    --gegner-farbe: #088395;
+  --spieler-farbe: #00ffca;
+  --gegner-farbe: #088395;
 }
 
 body {
-    background-color: #0A4D68;
-    font-family: sans-serif;
+  background-color: #0a4d68;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100vh;
+  margin: 16px;
 }
 
 header {
-    color: white;
-    margin: 8px 0 8px;
-    padding-top: 8px;
-    border-bottom: 2px solid #05BFDB;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.header-left {
-    display: flex;
-    flex-direction: row;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 header img {
-    width: 32px;
-    margin: 8px;
+  width: 32px;
 }
 
 header a {
-    color: black;
-    border-radius: 8px;
-    background-color: #00FFCA;
-    border: 1px solid black;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    width: fit-content;
-    align-self: center;
-    margin: 8px;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  color: black;
+  border-radius: 8px;
+  background-color: #00ffca;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 8px;
 }
 
 h1 {
-    color: white;
-    text-align: center;
-    margin: 16px;
-}
-
-.oberflaeche {
-    display: flex;
-    flex-direction: column;
-}
-
-main img {
-    display: block;
-    margin: 0 auto;
-    width: 80%;
-    height: 80%;
-}
-
-.right-side {
-    display: flex;
-    flex-direction: column;
+  color: white;
+  text-align: center;
+  margin: 16px;
 }
 
 h2 {
-    color: white;
-    text-align: center;
-    font-weight: normal;
+  color: white;
+  text-align: center;
+  font-weight: normal;
+}
+
+footer {
+  color: white;
+  align-self: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+main img {
+  display: block;
+  margin: 0 auto;
+  width: 80%;
+  height: 80%;
 }
 
 main p {
-    color: white;
-    text-align: center;
-}
-
-.input-spielername {
-    display: block;
-    margin: 0 auto;
-    border-radius: 8px;
-    border: 2px solid black;
-    padding: 5px;
-}
-
-.single-multiplayer {
-    display: inline-block;
-    margin: 32px;
-    justify-content: center;
-    text-align: center;
+  color: white;
+  text-align: center;
 }
 
 main a {
-    color: black;
-    border-radius: 8px;
-    background-color: #00FFCA;
-    border: 1px solid black;
-    text-decoration: none;
-    cursor: pointer;
-    padding: 4px 8px;
-    width: fit-content;
-    align-self: center;
-    font-size: medium;
-    margin: 8px;
+  color: black;
+  border-radius: 8px;
+  background-color: #00ffca;
+  border: 1px solid black;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  width: fit-content;
+  align-self: center;
+  font-size: medium;
+  margin: 8px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: row;
+}
+
+.oberflaeche {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-spielername {
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  border: 2px solid black;
+  padding: 5px;
+}
+
+.single-multiplayer {
+  display: inline-block;
+  margin: 32px;
+  justify-content: center;
+  text-align: center;
 }
 
 .spielfeld {
-    width: 550px;
-    height: 550px;   
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    margin: 8px;
+  background-image: url('assets/board.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
 }
 
 .feld {
-    background-color: transparent;
-    border: 2px solid #00FFCA;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5%;
-    aspect-ratio: 1 / 1;
+  background-color: transparent;
+  border: 2px dotted red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  aspect-ratio: 1 / 1;
 }
 
 .feld:nth-child(-n + 3) {
-    border-top: none;
+  border-top: none;
 }
 
 .feld:nth-child(3n + 3) {
-    border-right: none;
+  border-right: none;
 }
 
 .feld:nth-child(n + 7) {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .feld:nth-child(3n + 1) {
-    border-left: none;
+  border-left: none;
 }
 
 .feld::before,
 .feld::after {
-    content: "";
-    box-sizing: border-box;
+  content: '';
+  box-sizing: border-box;
 }
 
 .feld.spieler::before,
 .spielanzeige.spieler ~ .spielfeld .feld:not([disabled]):hover::before {
-    border: 1rem solid var(--spieler-farbe);
-    border-radius: 50%;
-    width: 80%;
-    height: 80%;
+  border: 1rem solid var(--spieler-farbe);
+  border-radius: 50%;
+  width: 80%;
+  height: 80%;
 }
 
 .feld.gegner::before,
 .feld.gegner::after {
-    background-color: var(--gegner-farbe);
-    width: 1rem;
-    height: 80%;
+  background-color: var(--gegner-farbe);
+  width: 1rem;
+  height: 80%;
 }
 
 .feld.gegner::before {
-    transform: translateX(50%) rotate(45deg);
+  transform: translateX(50%) rotate(45deg);
 }
 
 .feld.gegner::after {
-    transform: translateX(-50%) rotate(-45deg);
+  transform: translateX(-50%) rotate(-45deg);
 }
 
 .spielanzeige.spieler,
 .overlay-text.spieler {
-    color: var(--spieler-farbe);
+  color: var(--spieler-farbe);
 }
 
 .spielanzeige.gegner,
 .overlay-text.gegner {
-    color: var(--gegner-farbe);
+  color: var(--gegner-farbe);
 }
 
 .spielanzeige.spieler ~ .spielfeld .feld:not([disabled]) {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .spielanzeige.spieler ~ .spielfeld .feld:not([disabled]):hover::before {
-    opacity: 0.3;
+  opacity: 0.3;
 }
 
 .overlay {
-    background-color: #0A4D68;
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: clamp(1rem, 2vh, 4rem);
-    opacity: 0;
-    pointer-events: none;
+  background-color: #0a4d68;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 2vh, 4rem);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .overlay-text {
-    font-size: clamp(2rem, 10vh, 4rem);
-    font-size: 900;
-    text-align: center;
+  font-size: clamp(2rem, 10vh, 4rem);
+  font-size: 900;
+  text-align: center;
 }
 
 .overlay-button {
-    font-size: 2rem;
-    font-weight: 600;
-    background-color: #00FFCA;
-    border: 2px solid black;
-    border-radius: 8px;
-    color: black;
-    cursor: pointer;
-    padding: 4px 8px;
-    width: fit-content;
-    align-self: center;
-    margin: 8px;
+  font-size: 2rem;
+  font-weight: 600;
+  background-color: #00ffca;
+  border: 2px solid black;
+  border-radius: 8px;
+  color: black;
+  cursor: pointer;
+  padding: 4px 8px;
+  width: fit-content;
+  align-self: center;
+  margin: 8px;
 }
 
 .overlay-button:hover {
-    background-color: #00ffccdc;
+  background-color: #00ffccdc;
 }
 
 .overlay.sichtbar {
-    opacity: 1;
-    pointer-events: all;
-    transition: opacity 1.5s;
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 1.5s;
 }
 
-footer {
-    color: white;
+@media (min-width: 768px) {
+  .spielfeld {
+    width: 50vw;
+    height: 50vh;
+  }
+}
+
+@media (min-width: 992px) {
+  .oberflaeche {
+    display: flex;
+    flex-direction: row;
+    width: 900px;
+    justify-content: space-around;
+  }
+
+  .left-side {
+    display: flex;
+    justify-content: center;
     text-align: center;
-    margin: 8px 0 8px;
-    padding-top: 8px;
-    border-top: 2px solid #05BFDB;
-}
-  
-@media (min-width:992px) {
-    .oberflaeche {
-        display: flex;
-        flex-direction: row;
-        width: 900px;
-        justify-content: space-around;
-    }
+    width: 60%;
+  }
 
-    .left-side {
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        width: 60%;
-    }
-
-    main img {
-        width: 90%;
-        height: 90%;
-    }
+  main img {
+    width: 90%;
+    height: 90%;
+  }
 }
