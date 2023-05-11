@@ -14,20 +14,13 @@ const overlay = document.querySelector('.' + OVERLAY_KLASSE);
 const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
-const initialBoardArr = { rows: Array(3).fill(Array(3).fill('')) };
+const heroes = {
+  spieler: { name: 'I am Hero 1', icon: '' },
+  gegner: { name: 'I am Hero 2', icon: '' },
+};
 
-console.log(initialBoardArr);
-
-const boardRender = () => {
-  for (row of initialBoardArr.rows) {
-    const rowDiv = document.createElement('div');
-    for (index of row) {
-      const feldDiv = document.createElement('div');
-      feldDiv.classList.add('feld');
-      rowDiv.appendChild(feldDiv);
-    }
-    spielfeld.appendChild(rowDiv);
-  }
+const initialBoardArr = {
+  board: Array(3).fill(Array(3).fill(Array(3).fill(Array(3).fill('')))),
 };
 
 const SIEG_KOMBINATION = [
@@ -41,15 +34,25 @@ const SIEG_KOMBINATION = [
   [felder[2], felder[4], felder[6]],
 ];
 
-let aktuelleKlasse;
+let currentPlayer;
 
 overlayButton.addEventListener('click', spielStarten);
 
 spielStarten();
 
-function klickVerarbeiten(ereignis) {
-  // Den Klick verhindern, wenn der Gegner gerade am Zug ist
-  if (aktuelleKlasse === GEGNER_KLASSE) {
+const togglePlayer = () => {
+  if (aktuelleKlasse === spieler) {
+    // spieler beendet seinen Zug -> zum gegner wechseln
+    aktuelleKlasse = gegner;
+  } else if (aktuelleKlasse === gegner) {
+    // gegner beendet seinen Zug -> zum spieler wechseln
+    aktuelleKlasse = spieler;
+  }
+};
+
+function klickVerarbeiten() {
+  // Den Klick verhindern, wenn der gegner gerade am Zug ist
+  if (aktuelleKlasse === gegner) {
     return;
   }
 
@@ -64,58 +67,54 @@ function klickVerarbeiten(ereignis) {
 }
 
 function spielsteinSetzen(feld) {
-  // Prüfen, ob das Feld schon besetzt ist
-  if (
-    feld.classList.contains(SPIELER_KLASSE) ||
-    feld.classList.contains(GEGNER_KLASSE)
-  ) {
-    // Verhindern, dass ein Spielstein gesetzt wird
-    return false;
-  }
-
-  // Dem Feld die Klasse des Spielers anhängen, der gerade an der Reihe ist
-  feld.classList.add(aktuelleKlasse);
-
-  // Das Feld deaktivieren, um weitere Klicks zu verhindern
-  feld.disabled = true;
-
-  // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
-  return true;
+  // // Prüfen, ob das Feld schon besetzt ist
+  // if (feld.classList.contains(spieler) || feld.classList.contains(gegner)) {
+  //   // Verhindern, dass ein Spielstein gesetzt wird
+  //   return false;
+  // }
+  // // Dem Feld die Klasse des Spielers anhängen, der gerade an der Reihe ist
+  // feld.classList.add(aktuelleKlasse);
+  // // Das Feld deaktivieren, um weitere Klicks zu verhindern
+  // feld.disabled = true;
+  // // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
+  // return true;
 }
 
-function spielStarten() {
+function spielStarten(heroes) {
+  const spieler = heroes.spieler;
+  const gegner = heroes.gegner;
+
   // Das Overlay wieder verstecken, falls es bereits sichtbar ist
   overlay.classList.remove(SICHTBAR_KLASSE);
 
   // Die Klasse des letzten Siegers vom Overlay-Text entfernen
   overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
 
-  // Die aktuelleKlasse leeren, damit der Zufall entscheidet, wer beginnt
-  aktuelleKlasse = null;
+  // der Zufall entscheidet, wer beginnt
+  currentPlayer = Math.random() < 0.5 ? spieler : gegner;
 
-  // Die Liste der Felder durchgehen
-  for (const feld of felder) {
-    // Bestehende Spielsteine vom Feld entfernen
-    feld.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
+  // zufälliges assignment des Icons
 
-    // Das Feld wieder aktivieren, falls es schon deaktiviert ist
-    feld.disabled = false;
-
-    // Jedem Feld sagen, was beim Klick darauf passieren soll
-    feld.addEventListener('click', klickVerarbeiten);
+  const randomPlayer = Math.round(Math.random());
+  if (randomPlayer === 0) {
+    heroes.spieler.icon = '✗';
+    heroes.gegner.icon = '⚪';
+  } else {
+    heroes.spieler.icon = '⚪';
+    heroes.gegner.icon = '✗';
   }
 
-  // Festlegen, wer beginnen darf
-  zugBeenden();
+  gameOverviewRender(heroes, currentPlayer);
+  boardRender(currentPlayer);
 }
 
 function zugBeenden() {
-  // Prüfen, ob der Spieler, der gerade an der Reihe ist, gewonnen hat
+  // Prüfen, ob der spieler, der gerade an der Reihe ist, gewonnen hat
   if (siegPruefen() === true) {
     // Ist das der Fall, wird das Spiel beendet
     spielBeenden(false);
 
-    // zugBeenden-Funktion unterbrechen, um nicht zum anderen Spieler zu wechseln
+    // zugBeenden-Funktion unterbrechen, um nicht zum anderen spieler zu wechseln
     return;
   }
 
@@ -125,34 +124,23 @@ function zugBeenden() {
     spielBeenden(true);
   }
 
-  if (aktuelleKlasse === SPIELER_KLASSE) {
-    // Spieler beendet seinen Zug -> zum Gegner wechseln
-    aktuelleKlasse = GEGNER_KLASSE;
-  } else if (aktuelleKlasse === GEGNER_KLASSE) {
-    // Gegner beendet seinen Zug -> zum Spieler wechseln
-    aktuelleKlasse = SPIELER_KLASSE;
-  } else {
-    // Es ist noch niemand am Zug -> auswürfeln, wer beginnt
-    aktuelleKlasse = Math.random() < 0.5 ? SPIELER_KLASSE : GEGNER_KLASSE;
-  }
-
   spielanzeigeAktualisieren();
 
-  // Ist der Gegner an der Reihe, muss ein Computerzug ausgeführt werden
-  if (aktuelleKlasse === GEGNER_KLASSE) {
+  // Ist der gegner an der Reihe, muss ein Computerzug ausgeführt werden
+  if (aktuelleKlasse === gegner) {
     setTimeout(computerZugAusfuehren, 750);
   }
 }
 
 function spielanzeigeAktualisieren() {
   // Die Klasse des aktuellen Spielers von der Spielanzeige entwerfen
-  spielanzeige.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
+  spielanzeige.classList.remove(spieler, gegner);
 
   // Text der Spielanzeige anpassen: je nachdem, wer gerade am Zug ist
-  if (aktuelleKlasse === SPIELER_KLASSE) {
+  if (aktuelleKlasse === spieler) {
     spielanzeige.innerText = 'Du bist am Zug.';
   } else {
-    spielanzeige.innerText = 'Dein Gegner ist am Zug.';
+    spielanzeige.innerText = 'Dein gegner ist am Zug.';
   }
 
   // Die Klasse des Spielers, der gerade am Zug ist an die Spielanzeige hängen
@@ -168,7 +156,7 @@ function siegPruefen() {
     });
 
     if (gewonnen === true) {
-      // Beende die Funktion & signalisiere, dass der Spieler gewonnen hat
+      // Beende die Funktion & signalisiere, dass der spieler gewonnen hat
       return true;
     }
   }
@@ -181,12 +169,12 @@ function spielBeenden(unentschieden) {
   // Text für Overlay
   if (unentschieden === true) {
     overlayText.innerText = 'Unentschieden!';
-  } else if (aktuelleKlasse === SPIELER_KLASSE) {
+  } else if (aktuelleKlasse === spieler) {
     overlayText.innerText = 'Du hast gewonnen!';
-    overlayText.classList.add(SPIELER_KLASSE);
+    overlayText.classList.add(spieler);
   } else {
-    overlayText.innerText = 'Dein Gegner hat gewonnen!';
-    overlayText.classList.add(GEGNER_KLASSE);
+    overlayText.innerText = 'Dein gegner hat gewonnen!';
+    overlayText.classList.add(gegner);
   }
 
   // Das Overlay sichtbar machen
@@ -197,10 +185,7 @@ function unentschiedenPruefen() {
   // Gehe alle Felder durch
   for (const feld of felder) {
     // Prüfe, ob das Feld noch unbesetzt ist
-    if (
-      !feld.classList.contains(SPIELER_KLASSE) &&
-      !feld.classList.contains(GEGNER_KLASSE)
-    ) {
+    if (!feld.classList.contains(spieler) && !feld.classList.contains(gegner)) {
       // Gibt es ein unbesetztes Feld, kann es kein Unentschieden sein
       return false;
     }

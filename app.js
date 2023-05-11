@@ -4,6 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //     renderOverviewPage();
   //   }
   if (currentPath.endsWith('/game.html')) {
-    boardRender();
+    spielStarten(heroes, currentPlayer);
   }
 });

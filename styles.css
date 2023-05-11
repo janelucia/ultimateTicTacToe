@@ -120,37 +120,65 @@ main a {
 }
 
 .spielfeld {
-  background-image: url('assets/board.svg');
-  background-size: contain;
-  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+
+.rowBoards {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
   width: 100%;
-  height: 100%;
+}
+
+.rowBoard {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  padding: 4px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 33.33%;
 }
 
 .feld {
   background-color: transparent;
-  border: 2px dotted red;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 5%;
-  aspect-ratio: 1 / 1;
 }
 
-.feld:nth-child(-n + 3) {
-  border-top: none;
+.rowBoards:not(:last-child) {
+  border-bottom: 2px solid #00ffca;
 }
 
-.feld:nth-child(3n + 3) {
+.rowBoard {
+  border-right: 2px solid #00ffca;
+}
+
+.rowBoard:last-child {
   border-right: none;
 }
 
-.feld:nth-child(n + 7) {
-  border-bottom: none;
+.row:not(:last-child) {
+  border-bottom: 2px solid #05bfdb;
 }
 
-.feld:nth-child(3n + 1) {
-  border-left: none;
+.feld {
+  border-right: 2px solid #05bfdb;
+}
+
+.feld:last-child {
+  border-right: none;
 }
 
 .feld::before,
@@ -182,22 +210,14 @@ main a {
   transform: translateX(-50%) rotate(-45deg);
 }
 
-.spielanzeige.spieler,
-.overlay-text.spieler {
-  color: var(--spieler-farbe);
+.hero {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 
-.spielanzeige.gegner,
-.overlay-text.gegner {
-  color: var(--gegner-farbe);
-}
-
-.spielanzeige.spieler ~ .spielfeld .feld:not([disabled]) {
-  cursor: pointer;
-}
-
-.spielanzeige.spieler ~ .spielfeld .feld:not([disabled]):hover::before {
-  opacity: 0.3;
+.hero p {
+  color: #00ffca;
 }
 
 .overlay {
