@@ -4,6 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   //     renderOverviewPage();
   //   }
   if (currentPath.endsWith('/game.html')) {
-    spielStarten(heroes, currentPlayer);
+    spielStarten(helden);
   }
 });

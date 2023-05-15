@@ -14,45 +14,69 @@ const overlay = document.querySelector('.' + OVERLAY_KLASSE);
 const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
-const heroes = {
+const helden = {
   spieler: { name: 'I am Hero 1', icon: '' },
   gegner: { name: 'I am Hero 2', icon: '' },
 };
 
-const initialBoardArr = {
-  board: Array(3).fill(Array(3).fill(Array(3).fill(Array(3).fill('')))),
+const anfangsspielfeld = {
+  spielfeld: Array(3).fill(Array(3).fill(Array(3).fill(Array(3).fill('')))),
 };
 
 const SIEG_KOMBINATION = [
-  [felder[0], felder[1], felder[2]],
-  [felder[3], felder[4], felder[5]],
-  [felder[6], felder[7], felder[8]],
-  [felder[0], felder[3], felder[6]],
-  [felder[1], felder[4], felder[7]],
-  [felder[2], felder[5], felder[8]],
-  [felder[0], felder[4], felder[8]],
-  [felder[2], felder[4], felder[6]],
+  // [felder[0], felder[1], felder[2]],
+  // [felder[3], felder[4], felder[5]],
+  // [felder[6], felder[7], felder[8]],
+  // [felder[0], felder[3], felder[6]],
+  // [felder[1], felder[4], felder[7]],
+  // [felder[2], felder[5], felder[8]],
+  // [felder[0], felder[4], felder[8]],
+  // [felder[2], felder[4], felder[6]],
 ];
-
-let currentPlayer;
 
 overlayButton.addEventListener('click', spielStarten);
 
-spielStarten();
+function spielStarten(helden) {
+  // Das Overlay wieder verstecken, falls es bereits sichtbar ist
+  overlay.classList.remove(SICHTBAR_KLASSE);
 
-const togglePlayer = () => {
-  if (aktuelleKlasse === spieler) {
+  // Die Klasse des letzten Siegers vom Overlay-Text entfernen
+  overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
+
+  // der Zufall entscheidet, wer beginnt
+  let momentanerSpieler =
+    Math.random() < 0.5 ? helden.spieler.name : helden.gegner.name;
+
+  // zufälliges assignment des Icons
+
+  const zufaelligesIcon = Math.round(Math.random());
+  if (zufaelligesIcon === 0) {
+    helden.spieler.icon = 'X';
+    helden.gegner.icon = 'O';
+  } else {
+    helden.spieler.icon = 'O';
+    helden.gegner.icon = 'X';
+  }
+
+  uebersichtAnzeigen(helden, momentanerSpieler);
+  spielfeldAnzeigen(helden, momentanerSpieler);
+}
+
+const aendereSpieler = (helden, momentanerSpieler) => {
+  if (momentanerSpieler === spieler) {
     // spieler beendet seinen Zug -> zum gegner wechseln
-    aktuelleKlasse = gegner;
-  } else if (aktuelleKlasse === gegner) {
+    momentanerSpieler = helden.gegner;
+  } else if (momentanerSpieler === gegner) {
     // gegner beendet seinen Zug -> zum spieler wechseln
-    aktuelleKlasse = spieler;
+    momentanerSpieler = helden.spieler;
   }
 };
 
-function klickVerarbeiten() {
+function klickVerarbeiten(helden, momentanerSpieler) {
   // Den Klick verhindern, wenn der gegner gerade am Zug ist
-  if (aktuelleKlasse === gegner) {
+
+  if (momentanerSpieler === helden.gegner.name) {
+    console.log('Du bist nicht dran');
     return;
   }
 
@@ -67,45 +91,17 @@ function klickVerarbeiten() {
 }
 
 function spielsteinSetzen(feld) {
-  // // Prüfen, ob das Feld schon besetzt ist
-  // if (feld.classList.contains(spieler) || feld.classList.contains(gegner)) {
-  //   // Verhindern, dass ein Spielstein gesetzt wird
-  //   return false;
-  // }
-  // // Dem Feld die Klasse des Spielers anhängen, der gerade an der Reihe ist
-  // feld.classList.add(aktuelleKlasse);
-  // // Das Feld deaktivieren, um weitere Klicks zu verhindern
-  // feld.disabled = true;
-  // // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
-  // return true;
-}
-
-function spielStarten(heroes) {
-  const spieler = heroes.spieler;
-  const gegner = heroes.gegner;
-
-  // Das Overlay wieder verstecken, falls es bereits sichtbar ist
-  overlay.classList.remove(SICHTBAR_KLASSE);
-
-  // Die Klasse des letzten Siegers vom Overlay-Text entfernen
-  overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
-
-  // der Zufall entscheidet, wer beginnt
-  currentPlayer = Math.random() < 0.5 ? spieler : gegner;
-
-  // zufälliges assignment des Icons
-
-  const randomPlayer = Math.round(Math.random());
-  if (randomPlayer === 0) {
-    heroes.spieler.icon = '✗';
-    heroes.gegner.icon = '⚪';
-  } else {
-    heroes.spieler.icon = '⚪';
-    heroes.gegner.icon = '✗';
+  // Prüfen, ob das Feld schon besetzt ist
+  if (feld.classList.contains(spieler) || feld.classList.contains(gegner)) {
+    // Verhindern, dass ein Spielstein gesetzt wird
+    return false;
   }
-
-  gameOverviewRender(heroes, currentPlayer);
-  boardRender(currentPlayer);
+  // Dem Feld die Klasse des Spielers anhängen, der gerade an der Reihe ist
+  feld.classList.add(aktuelleKlasse);
+  // Das Feld deaktivieren, um weitere Klicks zu verhindern
+  feld.disabled = true;
+  // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
+  return true;
 }
 
 function zugBeenden() {
