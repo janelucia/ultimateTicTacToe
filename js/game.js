@@ -15,12 +15,8 @@ const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
 const helden = {
-  spieler: { name: 'I am Hero 1', icon: '' },
-  gegner: { name: 'I am Hero 2', icon: '' },
-};
-
-const anfangsspielfeld = {
-  spielfeld: Array(3).fill(Array(3).fill(Array(3).fill(Array(3).fill('')))),
+  X: { name: 'I am Hero 1', icon: 'X' },
+  O: { name: 'I am Hero 2', icon: 'O' },
 };
 
 const SIEG_KOMBINATION = [
@@ -42,105 +38,101 @@ function spielStarten(helden) {
 
   // Die Klasse des letzten Siegers vom Overlay-Text entfernen
   overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
+  const a = (l) => (l === 0 ? '' : [a(l - 1), a(l - 1), a(l - 1)]);
+
+  const spielfeldArr = {
+    spielfeld: a(4),
+  };
 
   // der Zufall entscheidet, wer beginnt
-  let momentanerSpieler =
-    Math.random() < 0.5 ? helden.spieler.name : helden.gegner.name;
+  let momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
 
   // zufälliges assignment des Icons
 
-  const zufaelligesIcon = Math.round(Math.random());
-  if (zufaelligesIcon === 0) {
-    helden.spieler.icon = 'X';
-    helden.gegner.icon = 'O';
-  } else {
-    helden.spieler.icon = 'O';
-    helden.gegner.icon = 'X';
-  }
+  // const zufaelligesIcon = Math.round(Math.random());
+  // if (zufaelligesIcon === 0) {
+  //   helden.spieler.icon = 'X';
+  //   helden.gegner.icon = 'O';
+  // } else {
+  //   helden.spieler.icon = 'O';
+  //   helden.gegner.icon = 'X';
+  // }
 
-  uebersichtAnzeigen(helden, momentanerSpieler);
-  spielfeldAnzeigen(helden, momentanerSpieler);
+  const settings = {
+    helden,
+    momentanerSpieler,
+    spielfeldArr,
+  };
+
+  console.log(settings);
+
+  uebersichtAnzeigen(settings);
+  spielfeldAnzeigen(settings);
 }
 
-const aendereSpieler = (helden, momentanerSpieler) => {
-  if (momentanerSpieler === spieler) {
-    // spieler beendet seinen Zug -> zum gegner wechseln
-    momentanerSpieler = helden.gegner;
-  } else if (momentanerSpieler === gegner) {
-    // gegner beendet seinen Zug -> zum spieler wechseln
-    momentanerSpieler = helden.spieler;
-  }
-};
-
-function klickVerarbeiten(helden, momentanerSpieler) {
+function klickVerarbeiten(settings, i, j, k, l) {
   // Den Klick verhindern, wenn der gegner gerade am Zug ist
 
-  if (momentanerSpieler === helden.gegner.name) {
-    console.log('Du bist nicht dran');
-    return;
-  }
-
-  // Ermittelt, welches Feld geklickt wurde
-  const feld = ereignis.target;
+  // if (settings.momentanerSpieler.name === settings.helden.O.name) {
+  //   console.log('Du bist nicht dran');
+  //   return;
+  // }
 
   // Spielstein auf dieses Feld setzen
-  if (spielsteinSetzen(feld) === true) {
+  if (spielsteinSetzen(settings, i, j, k, l) === true) {
     // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
-    zugBeenden();
+    zugBeenden(settings);
   }
 }
 
-function spielsteinSetzen(feld) {
+function spielsteinSetzen(settings, i, j, k, l) {
+  console.log(settings.spielfeldArr.spielfeld[i][j][k]);
   // Prüfen, ob das Feld schon besetzt ist
-  if (feld.classList.contains(spieler) || feld.classList.contains(gegner)) {
-    // Verhindern, dass ein Spielstein gesetzt wird
+  if (settings.spielfeldArr.spielfeld[i][j][k][l] != '') {
     return false;
   }
-  // Dem Feld die Klasse des Spielers anhängen, der gerade an der Reihe ist
-  feld.classList.add(aktuelleKlasse);
-  // Das Feld deaktivieren, um weitere Klicks zu verhindern
-  feld.disabled = true;
+
+  settings.spielfeldArr.spielfeld[i][j][k][l] = settings.momentanerSpieler.icon;
+
+  console.log('danach ', settings.spielfeldArr.spielfeld);
   // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
   return true;
 }
 
-function zugBeenden() {
-  // Prüfen, ob der spieler, der gerade an der Reihe ist, gewonnen hat
-  if (siegPruefen() === true) {
-    // Ist das der Fall, wird das Spiel beendet
-    spielBeenden(false);
-
-    // zugBeenden-Funktion unterbrechen, um nicht zum anderen spieler zu wechseln
-    return;
+const aendereSpieler = (settings) => {
+  if (settings.momentanerSpieler.icon === 'X') {
+    // spieler beendet seinen Zug -> zum gegner wechseln
+    settings.momentanerSpieler = settings.helden.O;
+  } else {
+    // gegner beendet seinen Zug -> zum spieler wechseln
+    settings.momentanerSpieler = settings.helden.X;
   }
+  return settings;
+};
+
+function zugBeenden(settings) {
+  // Prüfen, ob der spieler, der gerade an der Reihe ist, gewonnen hat
+  // if (siegPruefen() === true) {
+  //   // Ist das der Fall, wird das Spiel beendet
+  //   spielBeenden(false);
+
+  // zugBeenden-Funktion unterbrechen, um nicht zum anderen spieler zu wechseln
+  // return;
+  // }
 
   // Prüfen, ob ein Unentschieden entstanden ist
-  if (unentschiedenPruefen() === true) {
-    // Ist das der Fall, wird das Spiel beendet
-    spielBeenden(true);
-  }
-
-  spielanzeigeAktualisieren();
+  // if (unentschiedenPruefen() === true) {
+  //   // Ist das der Fall, wird das Spiel beendet
+  //   spielBeenden(true);
+  // }
+  aendereSpieler(settings);
+  uebersichtAnzeigen(settings);
+  spielfeldAnzeigen(settings);
 
   // Ist der gegner an der Reihe, muss ein Computerzug ausgeführt werden
-  if (aktuelleKlasse === gegner) {
-    setTimeout(computerZugAusfuehren, 750);
-  }
-}
-
-function spielanzeigeAktualisieren() {
-  // Die Klasse des aktuellen Spielers von der Spielanzeige entwerfen
-  spielanzeige.classList.remove(spieler, gegner);
-
-  // Text der Spielanzeige anpassen: je nachdem, wer gerade am Zug ist
-  if (aktuelleKlasse === spieler) {
-    spielanzeige.innerText = 'Du bist am Zug.';
-  } else {
-    spielanzeige.innerText = 'Dein gegner ist am Zug.';
-  }
-
-  // Die Klasse des Spielers, der gerade am Zug ist an die Spielanzeige hängen
-  spielanzeige.classList.add(aktuelleKlasse);
+  // if (aktuelleKlasse === gegner) {
+  //   setTimeout(computerZugAusfuehren, 750);
+  // }
 }
 
 function siegPruefen() {
