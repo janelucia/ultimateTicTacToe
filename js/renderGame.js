@@ -34,8 +34,6 @@ const uebersichtAnzeigen = (settings) => {
 };
 
 const spielfeldAnzeigen = (settings) => {
-  console.log('render spielfeld');
-
   spielfeld.innerHTML = '';
 
   for (let [
@@ -44,26 +42,44 @@ const spielfeldAnzeigen = (settings) => {
   ] of settings.spielfeldArr.spielfeld.entries()) {
     const reiheSpielfelderDiv = document.createElement('div');
     reiheSpielfelderDiv.classList.add('rowBoards');
-    reiheSpielfelderDiv.innerText = i;
 
     for (let [j, reiheSpielfeldArr] of reiheSpielfelderArr.entries()) {
+      const spielstand = standPruefen(
+        selektor(settings.spielfeldArr.spielfeld, i, j),
+        settings.helden
+      );
       const reiheSpielfeldDiv = document.createElement('div');
       reiheSpielfeldDiv.classList.add('rowBoard');
-      reiheSpielfeldDiv.innerText = j;
+      if (spielstand === 'X') {
+        reiheSpielfeldDiv.classList.add('spielerX');
+        reiheSpielfeldDiv.innerText = 'X';
+      } else if (spielstand === 'O') {
+        reiheSpielfeldDiv.classList.add('spielerO');
+        reiheSpielfeldDiv.innerText = 'O';
+      } else if (spielstand === 'unentschieden') {
+        reiheSpielfeldDiv.classList.add('unentschieden');
+        reiheSpielfeldDiv.innerText = 'U';
+      } else if (
+        (i === settings.naechstesFeld.x && j === settings.naechstesFeld.y) ||
+        (settings.naechstesFeld.x === '' && settings.naechstesFeld.y === '')
+      ) {
+        reiheSpielfeldDiv.classList.add('naechstesFeld');
+      }
 
       for (let [k, reiheArr] of reiheSpielfeldArr.entries()) {
         const reiheDiv = document.createElement('div');
         reiheDiv.classList.add('row');
-        reiheDiv.innerText = k;
+
         for (let [l, feld] of reiheArr.entries()) {
           const feldDiv = document.createElement('div');
           feldDiv.classList.add('feld');
           if (feld !== '') {
-            // feldDiv.classList.add(feld === 'X' ? 'gegner' : 'spieler');
+            feldDiv.innerText = feld;
           }
-          feldDiv.innerText = l;
           feldDiv.addEventListener('click', () => {
-            console.log('clicked');
+            if (!reiheSpielfeldDiv.classList.contains('naechstesFeld')) {
+              return;
+            }
             klickVerarbeiten(settings, i, j, k, l);
           });
 

@@ -211,6 +211,23 @@ main a {
   transform: translateX(-50%) rotate(-45deg);
 }
 
+.naechstesFeld {
+  outline: thin solid coral;
+  cursor: pointer;
+}
+
+.spielerX .row {
+  color: gray;
+}
+
+.spielerO .row {
+  color: gray;
+}
+
+.unentschieden .row {
+  color: gray;
+}
+
 .hero {
   display: flex;
   width: 100%;

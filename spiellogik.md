@@ -5,3 +5,23 @@
 ## unentschieden
 5. ein kleines Feld, welches Unentschieden ausgeht, wird als unentschieden gewertet und die Spielerin, die als nächstes an der Reihe ist, darf sich ein anderes kleines Feld aus den übrigen aussuchen
 6. Wenn das große Tic Tac Toe Feld als unentschieden gewertet wird, ist das Spiel unentschieden
+
+## Pseudocode
+* wenn auf Spielfeld geklickt
+    * selektieren, welches Feld gemeint ist 
+    * prüfen ob Feld von Array frei ist 
+    * ja: Array mit Wert von Spieler befüllen. 
+    * nein: Befüllung verweigern
+* Spielstand prüfen 
+    * Sieg für Spieler A? 
+        * ja: zurückgeben, dass kleines Feld gewonnen wurde und prüfen, ob auch großes Feld gewonnen wurde
+    * Sieg für Spieler B?
+        * ja: zurückgeben, dass kleines Feld gewonnen wurde und prüfen, ob auch großes Feld gewonnen wurde
+    * Spiel läuft noch?
+        * return
+    * Unentschieden?
+        * Unentschieden in das Feld reinschreiben
+* nächstes Feld ermitteln, in dem weiter gespielt wird
+    * wenn das nächste Feld schon gewonnen oder unentschieden ist -> freie Feldwahl
+* Spieler wechseln und das nächste Spielfeld mitgeben, alle anderen sperren, falls nicht freie Feldwahl ist
+* 

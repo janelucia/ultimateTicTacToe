@@ -19,7 +19,23 @@ const helden = {
   O: { name: 'I am Hero 2', icon: 'O' },
 };
 
-const SIEG_KOMBINATIONEN = [];
+const SIEG_KOMBINATIONEN = (spielfeld, spieler) => {
+  const b = spielfeld;
+  const p = spieler;
+  const horizontal =
+    (b[0][0] === p && b[0][1] === p && b[0][2] === p) ||
+    (b[1][0] === p && b[1][1] === p && b[1][2] === p) ||
+    (b[2][0] === p && b[2][1] === p && b[2][2] === p);
+  const vertikal =
+    (b[0][0] === p && b[1][0] === p && b[2][0] === p) ||
+    (b[0][1] === p && b[1][1] === p && b[2][1] === p) ||
+    (b[0][2] === p && b[1][2] === p && b[2][2] === p);
+  const diagonal =
+    (b[0][0] === p && b[1][1] === p && b[2][2] === p) ||
+    (b[2][0] === p && b[1][1] === p && b[0][2] === p);
+
+  return horizontal || vertikal || diagonal;
+};
 
 overlayButton.addEventListener('click', spielStarten);
 
@@ -37,6 +53,7 @@ function spielStarten(helden) {
 
   // der Zufall entscheidet, wer beginnt
   let momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
+  let naechstesFeld = { x: '', y: '' };
 
   // zufälliges assignment des Icons
 
@@ -53,6 +70,7 @@ function spielStarten(helden) {
     helden,
     momentanerSpieler,
     spielfeldArr,
+    naechstesFeld,
   };
 
   console.log(settings);
@@ -72,12 +90,11 @@ function klickVerarbeiten(settings, i, j, k, l) {
   // Spielstein auf dieses Feld setzen
   if (spielsteinSetzen(settings, i, j, k, l) === true) {
     // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
-    zugBeenden(settings);
+    zugBeenden(settings, i, j, k, l);
   }
 }
 
 function spielsteinSetzen(settings, i, j, k, l) {
-  console.log(settings.spielfeldArr.spielfeld[i][j][k]);
   // Prüfen, ob das Feld schon besetzt ist
   if (settings.spielfeldArr.spielfeld[i][j][k][l] != '') {
     return false;
@@ -85,7 +102,6 @@ function spielsteinSetzen(settings, i, j, k, l) {
 
   settings.spielfeldArr.spielfeld[i][j][k][l] = settings.momentanerSpieler.icon;
 
-  console.log('danach ', settings.spielfeldArr.spielfeld);
   // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
   return true;
 }
@@ -101,21 +117,36 @@ const aendereSpieler = (settings) => {
   return settings;
 };
 
-function zugBeenden(settings) {
-  // Prüfen, ob der spieler, der gerade an der Reihe ist, gewonnen hat
-  // if (siegPruefen() === true) {
-  //   // Ist das der Fall, wird das Spiel beendet
-  //   spielBeenden(false);
+function zugBeenden(settings, i, j, k, l) {
+  const spielstand = standPruefen(
+    selektor(settings.spielfeldArr.spielfeld, i, j),
+    settings.helden
+  );
 
-  // zugBeenden-Funktion unterbrechen, um nicht zum anderen spieler zu wechseln
-  // return;
-  // }
+  const zuruecksetzenNaechstesFeld = () => {
+    settings.naechstesFeld = { x: '', y: '' };
+    return settings.naechstesFeld;
+  };
 
-  // Prüfen, ob ein Unentschieden entstanden ist
-  // if (unentschiedenPruefen() === true) {
-  //   // Ist das der Fall, wird das Spiel beendet
-  //   spielBeenden(true);
-  // }
+  // testen ob das Feld beendet wurde
+  if (
+    spielstand === 'X' ||
+    spielstand === 'O' ||
+    spielstand === 'unentschieden'
+  ) {
+    zuruecksetzenNaechstesFeld();
+  } else {
+    // prüfen, wo das nächste Mal reingeklickt werden darf
+    settings.naechstesFeld =
+      standPruefen(
+        selektor(settings.spielfeldArr.spielfeld, k, l),
+        settings.helden
+      ) === 'Spiel läuft noch'
+        ? { x: k, y: l }
+        : { x: '', y: '' };
+  }
+
+  spielBeenden(settings);
   aendereSpieler(settings);
   uebersichtAnzeigen(settings);
   spielfeldAnzeigen(settings);
@@ -126,64 +157,97 @@ function zugBeenden(settings) {
   // }
 }
 
-function siegPruefen() {
-  // Gehe alle Siegkombinationen durch
-  for (const kombination of SIEG_KOMBINATION) {
-    // Prüfe, ob alle 3 Felder der gleichen Klasse angehören
-    const gewonnen = kombination.every(function (feld) {
-      return feld.classList.contains(aktuelleKlasse);
-    });
-
-    if (gewonnen === true) {
-      // Beende die Funktion & signalisiere, dass der spieler gewonnen hat
-      return true;
-    }
-  }
-
-  // Signalisieren, dass das Spiel (noch) NICHT gewonnen ist
-  return false;
+// Selektor, der das gewollte Spielfeld aus den neun Spielfeldern raussucht
+function selektor(spielfeld, x, y) {
+  return spielfeld[x][y];
 }
 
-function spielBeenden(unentschieden) {
+// Stand prüfen - wo steht das Spiel gerade?
+function standPruefen(spielfeld, helden) {
+  if (SIEG_KOMBINATIONEN(spielfeld, helden.X.icon)) {
+    return helden.X.icon;
+  } else if (SIEG_KOMBINATIONEN(spielfeld, helden.O.icon)) {
+    return helden.O.icon;
+  } else {
+    for (let reihe of spielfeld) {
+      for (let feld of reihe) {
+        if (feld === '') {
+          return 'Spiel läuft noch';
+        }
+      }
+    }
+    return 'unentschieden';
+  }
+}
+
+function spielBeenden(settings) {
+  const grossesSpielfeld = settings.spielfeldArr.spielfeld.map(
+    (s) =>
+      //s
+      (s = s
+        .map((r) => standPruefen(r, settings.helden))
+        .map((f) => {
+          switch (f) {
+            case settings.helden.X.icon:
+              return settings.helden.X.icon;
+            case settings.helden.O.icon:
+              return settings.helden.O.icon;
+            case 'Spiel läuft noch':
+              return '';
+            case 'unentschieden':
+              return '';
+          }
+        }))
+  );
+
+  if (standPruefen(grossesSpielfeld, settings.helden) === 'Spiel läuft noch') {
+    if (settings.naechstesFeld.x === '' && settings.naechstesFeld.y === '') {
+      console.log('unentschieden');
+    }
+  } else {
+    console.log(standPruefen(grossesSpielfeld, settings.helden));
+  }
+  console.log(grossesSpielfeld);
+
   // Text für Overlay
-  if (unentschieden === true) {
-    overlayText.innerText = 'Unentschieden!';
-  } else if (aktuelleKlasse === spieler) {
-    overlayText.innerText = 'Du hast gewonnen!';
-    overlayText.classList.add(spieler);
-  } else {
-    overlayText.innerText = 'Dein gegner hat gewonnen!';
-    overlayText.classList.add(gegner);
-  }
+  // if (unentschieden === true) {
+  //   overlayText.innerText = 'Unentschieden!';
+  // } else if (aktuelleKlasse === spieler) {
+  //   overlayText.innerText = 'Du hast gewonnen!';
+  //   overlayText.classList.add(spieler);
+  // } else {
+  //   overlayText.innerText = 'Dein Gegner hat gewonnen!';
+  //   overlayText.classList.add(gegner);
+  // }
 
-  // Das Overlay sichtbar machen
-  overlay.classList.add(SICHTBAR_KLASSE);
+  // // Das Overlay sichtbar machen
+  // overlay.classList.add(SICHTBAR_KLASSE);
 }
 
-function unentschiedenPruefen() {
-  // Gehe alle Felder durch
-  for (const feld of felder) {
-    // Prüfe, ob das Feld noch unbesetzt ist
-    if (!feld.classList.contains(spieler) && !feld.classList.contains(gegner)) {
-      // Gibt es ein unbesetztes Feld, kann es kein Unentschieden sein
-      return false;
-    }
-  }
+// function unentschiedenPruefen() {
+//   // Gehe alle Felder durch
+//   for (const feld of felder) {
+//     // Prüfe, ob das Feld noch unbesetzt ist
+//     if (!feld.classList.contains(spieler) && !feld.classList.contains(gegner)) {
+//       // Gibt es ein unbesetztes Feld, kann es kein Unentschieden sein
+//       return false;
+//     }
+//   }
 
-  // Es gibt kein freies Feld mehr -> unentscheiden!
-  return true;
-}
+//   // Es gibt kein freies Feld mehr -> unentscheiden!
+//   return true;
+// }
 
-function computerZugAusfuehren() {
-  // Per Zufall ein Feld auswählen
-  const zufallsIndex = Math.floor(Math.random() * 9);
+// function computerZugAusfuehren() {
+//   // Per Zufall ein Feld auswählen
+//   const zufallsIndex = Math.floor(Math.random() * 9);
 
-  // Einen Spielstein auf dieses Feld setzen
-  if (spielsteinSetzen(felder[zufallsIndex]) === true) {
-    // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
-    zugBeenden();
-  } else {
-    // Wähle ein anderes Feld, wenn das Feld schon besetzt war
-    computerZugAusfuehren();
-  }
-}
+//   // Einen Spielstein auf dieses Feld setzen
+//   if (spielsteinSetzen(felder[zufallsIndex]) === true) {
+//     // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
+//     zugBeenden();
+//   } else {
+//     // Wähle ein anderes Feld, wenn das Feld schon besetzt war
+//     computerZugAusfuehren();
+//   }
+// }
