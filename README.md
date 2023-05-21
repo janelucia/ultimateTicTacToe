@@ -1,6 +1,9 @@
-# ultimateTickTackToe
+# ultimateTicTacToe
 
 Der ultimative Spielspaß mit dem Klassiker.
+
+## To Do
+* wie wird zwischen Hotseat, Multi- und Singleplayer unterschieden? eigene js Seiten, die auf Funktionen in der game.js zu greifen, aber eigene Abläufe haben? Wie Klick verhindern, wenn der andere dran ist, bei Multi- und Singleplayer, aber bei Hotseat erlauben?
 
 ## Komplexität (min. 6)
 

@@ -113,10 +113,10 @@ main a {
 }
 
 .single-multiplayer {
-  display: inline-block;
+  display: flex;
   margin: 32px;
   justify-content: center;
-  text-align: center;
+  align-items: center;
 }
 
 .spielfeld {

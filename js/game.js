@@ -19,16 +19,7 @@ const helden = {
   O: { name: 'I am Hero 2', icon: 'O' },
 };
 
-const SIEG_KOMBINATION = [
-  // [felder[0], felder[1], felder[2]],
-  // [felder[3], felder[4], felder[5]],
-  // [felder[6], felder[7], felder[8]],
-  // [felder[0], felder[3], felder[6]],
-  // [felder[1], felder[4], felder[7]],
-  // [felder[2], felder[5], felder[8]],
-  // [felder[0], felder[4], felder[8]],
-  // [felder[2], felder[4], felder[6]],
-];
+const SIEG_KOMBINATIONEN = [];
 
 overlayButton.addEventListener('click', spielStarten);
 

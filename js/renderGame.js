@@ -44,21 +44,24 @@ const spielfeldAnzeigen = (settings) => {
   ] of settings.spielfeldArr.spielfeld.entries()) {
     const reiheSpielfelderDiv = document.createElement('div');
     reiheSpielfelderDiv.classList.add('rowBoards');
+    reiheSpielfelderDiv.innerText = i;
 
     for (let [j, reiheSpielfeldArr] of reiheSpielfelderArr.entries()) {
       const reiheSpielfeldDiv = document.createElement('div');
       reiheSpielfeldDiv.classList.add('rowBoard');
+      reiheSpielfeldDiv.innerText = j;
 
       for (let [k, reiheArr] of reiheSpielfeldArr.entries()) {
         const reiheDiv = document.createElement('div');
         reiheDiv.classList.add('row');
-
+        reiheDiv.innerText = k;
         for (let [l, feld] of reiheArr.entries()) {
           const feldDiv = document.createElement('div');
           feldDiv.classList.add('feld');
           if (feld !== '') {
-            feldDiv.classList.add(feld === 'X' ? 'gegner' : 'spieler');
+            // feldDiv.classList.add(feld === 'X' ? 'gegner' : 'spieler');
           }
+          feldDiv.innerText = l;
           feldDiv.addEventListener('click', () => {
             console.log('clicked');
             klickVerarbeiten(settings, i, j, k, l);
