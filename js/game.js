@@ -181,6 +181,9 @@ function standPruefen(spielfeld, helden) {
 }
 
 function spielBeenden(settings) {
+  // großes Spielfeld mit dem Gewinner des jeweiligen Feldes
+  const naechstesFeld = document.getElementsByClassName('naechstesFeld');
+  console.log('naechstes Feld: ', naechstesFeld);
   const grossesSpielfeld = settings.spielfeldArr.spielfeld.map(
     (s) =>
       //s
@@ -200,28 +203,25 @@ function spielBeenden(settings) {
         }))
   );
 
-  if (standPruefen(grossesSpielfeld, settings.helden) === 'Spiel läuft noch') {
-    if (settings.naechstesFeld.x === '' && settings.naechstesFeld.y === '') {
-      console.log('unentschieden');
+  const standGrossesFeld = standPruefen(grossesSpielfeld, settings.helden);
+
+  if (standGrossesFeld === 'Spiel läuft noch') {
+    if (naechstesFeld.length === 0 || standGrossesFeld === 'unentschieden') {
+      overlayText.innerText = 'Unentschieden!';
+      overlay.classList.add(SICHTBAR_KLASSE);
+      return 'unentschieden';
     }
   } else {
-    console.log(standPruefen(grossesSpielfeld, settings.helden));
+    console.log(standGrossesFeld);
+    overlayText.innerText = `${standPruefen(
+      grossesSpielfeld,
+      settings.helden
+    )} hat gewonnen!`;
+    overlayText.classList.add('spieler' + standGrossesFeld);
+    overlay.classList.add(SICHTBAR_KLASSE);
+    return standGrossesFeld;
   }
   console.log(grossesSpielfeld);
-
-  // Text für Overlay
-  // if (unentschieden === true) {
-  //   overlayText.innerText = 'Unentschieden!';
-  // } else if (aktuelleKlasse === spieler) {
-  //   overlayText.innerText = 'Du hast gewonnen!';
-  //   overlayText.classList.add(spieler);
-  // } else {
-  //   overlayText.innerText = 'Dein Gegner hat gewonnen!';
-  //   overlayText.classList.add(gegner);
-  // }
-
-  // // Das Overlay sichtbar machen
-  // overlay.classList.add(SICHTBAR_KLASSE);
 }
 
 // function unentschiedenPruefen() {
