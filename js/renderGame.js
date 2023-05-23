@@ -1,12 +1,12 @@
-const uebersichtAnzeigen = (settings) => {
+const uebersichtAnzeigen = (zustand) => {
   spielanzeige.innerHTML = '';
 
   const spielerDiv = document.createElement('div');
   spielerDiv.classList.add('hero');
   const spieler = document.createElement('p');
-  spieler.innerText = 'Hero 1: ' + settings.helden.X.name;
+  spieler.innerText = 'Hero 1: ' + zustand.helden.X.name;
   const icon1 = document.createElement('p');
-  icon1.innerText = settings.helden.X.icon;
+  icon1.innerText = zustand.helden.X.icon;
   spielerDiv.appendChild(spieler);
   spielerDiv.appendChild(icon1);
 
@@ -15,84 +15,83 @@ const uebersichtAnzeigen = (settings) => {
   const gegnerDiv = document.createElement('div');
   gegnerDiv.classList.add('hero');
   const gegner = document.createElement('p');
-  gegner.innerText = 'Hero 2: ' + settings.helden.O.name;
+  gegner.innerText = 'Hero 2: ' + zustand.helden.O.name;
   const icon2 = document.createElement('p');
-  icon2.innerText = settings.helden.O.icon;
+  icon2.innerText = zustand.helden.O.icon;
   gegnerDiv.appendChild(gegner);
   gegnerDiv.appendChild(icon2);
 
   spielanzeige.appendChild(gegnerDiv);
 
-  const momentanerGamer = document.createElement('p');
-  if (settings.momentanerSpieler.name === settings.helden.X.name) {
-    momentanerGamer.innerText = 'Du bist dran!';
+  const momentanerSpielerAnzeigen = document.createElement('p');
+  if (zustand.momentanerSpieler.name === zustand.helden.X.name) {
+    momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
   } else {
-    momentanerGamer.innerText = 'Dein:e Gegner:in ist am Zug!';
+    momentanerSpielerAnzeigen.innerText = 'Dein:e Gegner:in ist am Zug!';
   }
 
-  spielanzeige.appendChild(momentanerGamer);
+  spielanzeige.appendChild(momentanerSpielerAnzeigen);
 };
 
-const spielfeldAnzeigen = (settings) => {
+const spielfeldAnzeigen = (zustand) => {
   spielfeld.innerHTML = '';
 
-  for (let [
-    i,
-    reiheSpielfelderArr,
-  ] of settings.spielfeldArr.spielfeld.entries()) {
-    const reiheSpielfelderDiv = document.createElement('div');
-    reiheSpielfelderDiv.classList.add('rowBoards');
+  for (let [l1, reiheGroßesSpielfeld] of zustand.spielfeld.entries()) {
+    const reiheGroßesSpielfeldDiv = document.createElement('div');
+    reiheGroßesSpielfeldDiv.classList.add('reihe-großes-spielfeld');
 
-    for (let [j, reiheSpielfeldArr] of reiheSpielfelderArr.entries()) {
+    for (let [l2, kleinesSpielfeld] of reiheGroßesSpielfeld.entries()) {
       const spielstand = standPruefen(
-        selektor(settings.spielfeldArr.spielfeld, i, j),
-        settings.helden
+        selektor(zustand.spielfeld, l1, l2),
+        zustand.helden
       );
-      const reiheSpielfeldDiv = document.createElement('div');
-      reiheSpielfeldDiv.classList.add('rowBoard');
+
+      const kleinesSpielfeldDiv = document.createElement('div');
+      kleinesSpielfeldDiv.classList.add('kleines-spielfeld');
       if (spielstand === 'X') {
-        reiheSpielfeldDiv.classList.add('spielerX');
-        reiheSpielfeldDiv.innerText = 'X';
+        kleinesSpielfeldDiv.classList.add('spieler-x');
+        kleinesSpielfeldDiv.innerText = 'X';
       } else if (spielstand === 'O') {
-        reiheSpielfeldDiv.classList.add('spielerO');
-        reiheSpielfeldDiv.innerText = 'O';
+        kleinesSpielfeldDiv.classList.add('spieler-o');
+        kleinesSpielfeldDiv.innerText = 'O';
       } else if (spielstand === 'unentschieden') {
-        reiheSpielfeldDiv.classList.add('unentschieden');
-        reiheSpielfeldDiv.innerText = 'U';
+        kleinesSpielfeldDiv.classList.add('unentschieden');
+        kleinesSpielfeldDiv.innerText = 'U';
       } else if (
-        (i === settings.naechstesFeld.x && j === settings.naechstesFeld.y) ||
-        (settings.naechstesFeld.x === '' && settings.naechstesFeld.y === '')
+        (l1 === zustand.momentanerZug.l3 && l2 === zustand.momentanerZug.l4) ||
+        (zustand.momentanerZug.l3 === '' && zustand.momentanerZug.l4 === '')
       ) {
-        reiheSpielfeldDiv.classList.add('naechstesFeld');
+        kleinesSpielfeldDiv.classList.add('naechstes-feld');
       }
 
-      for (let [k, reiheArr] of reiheSpielfeldArr.entries()) {
-        const reiheDiv = document.createElement('div');
-        reiheDiv.classList.add('row');
+      for (let [l3, reiheKleinesSpielfeld] of kleinesSpielfeld.entries()) {
+        const reiheKleinesSpielfeldDiv = document.createElement('div');
+        reiheKleinesSpielfeldDiv.classList.add('kleines-spielfeld-reihe');
 
-        for (let [l, feld] of reiheArr.entries()) {
+        for (let [l4, feld] of reiheKleinesSpielfeld.entries()) {
           const feldDiv = document.createElement('div');
           feldDiv.classList.add('feld');
           if (feld !== '') {
             feldDiv.innerText = feld;
           }
           feldDiv.addEventListener('click', () => {
-            if (!reiheSpielfeldDiv.classList.contains('naechstesFeld')) {
+            if (!kleinesSpielfeldDiv.classList.contains('naechstes-feld')) {
               return;
             }
-            klickVerarbeiten(settings, i, j, k, l);
+            zustand.momentanerZug = { l1, l2, l3, l4 };
+            zugBeginnen(zustand);
           });
 
-          reiheDiv.appendChild(feldDiv);
+          reiheKleinesSpielfeldDiv.appendChild(feldDiv);
         }
 
-        reiheSpielfeldDiv.appendChild(reiheDiv);
+        kleinesSpielfeldDiv.appendChild(reiheKleinesSpielfeldDiv);
       }
 
-      reiheSpielfelderDiv.appendChild(reiheSpielfeldDiv);
+      reiheGroßesSpielfeldDiv.appendChild(kleinesSpielfeldDiv);
     }
 
-    spielfeld.appendChild(reiheSpielfelderDiv);
+    spielfeld.appendChild(reiheGroßesSpielfeldDiv);
   }
 };
 

@@ -14,11 +14,6 @@ const overlay = document.querySelector('.' + OVERLAY_KLASSE);
 const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
-const helden = {
-  X: { name: 'I am Hero 1', icon: 'X' },
-  O: { name: 'I am Hero 2', icon: 'O' },
-};
-
 const SIEG_KOMBINATIONEN = (spielfeld, spieler) => {
   const b = spielfeld;
   const p = spieler;
@@ -37,129 +32,134 @@ const SIEG_KOMBINATIONEN = (spielfeld, spieler) => {
   return horizontal || vertikal || diagonal;
 };
 
-overlayButton.addEventListener('click', spielStarten);
+// Selektor, der das gewollte Spielfeld aus den neun Spielfeldern raussucht
+function selektor(spielfeld, x, y) {
+  return spielfeld[x][y];
+}
 
-function spielStarten(helden) {
+// Spielfeld erstellen
+const initialesSpielfeld = () => {
+  const spielfeldGenerieren = (level) =>
+    level === 0
+      ? ''
+      : [
+          spielfeldGenerieren(level - 1),
+          spielfeldGenerieren(level - 1),
+          spielfeldGenerieren(level - 1),
+        ];
+
+  return spielfeldGenerieren(4);
+};
+
+const spielzustand = (zustand) => {
+  const helden = {
+    X: { name: 'I am Hero 1', icon: 'X' },
+    O: { name: 'I am Hero 2', icon: 'O' },
+  };
+
+  // Spieler togglen
+  let momentanerSpieler;
+  if (!momentanerSpieler) {
+    // der Zufall entscheidet, wer beginnt
+    momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
+  } else if (momentanerSpieler.icon === 'X') {
+    momentanerSpieler = helden.O;
+  } else {
+    momentanerSpieler = helden.X;
+  }
+
+  let momentanerZug;
+  if (!momentanerZug) {
+    // l1-l4 stehen für die Level tiefen des vier Dim Arrays
+    momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
+  } else {
+    const { l1, l2, l3, l4 } = zustand.momentanerZug;
+    momentanerZug = { l1, l2, l3, l4 };
+  }
+
+  let spielfeld;
+  if (!spielfeld) {
+    spielfeld = initialesSpielfeld();
+  } else {
+    spielfeld = zustand.spielfeld;
+  }
+
+  // in Zustand wird abgespeichert, wie das momentane Feld aussieht und wer gerade am Zug ist
+  zustand = {
+    helden,
+    spielfeld,
+    momentanerSpieler,
+    momentanerZug,
+  };
+
+  return zustand;
+};
+
+function spielStarten() {
+  // momentanen Zustand des Spiels laden
+  let zustand = spielzustand();
+
   // Das Overlay wieder verstecken, falls es bereits sichtbar ist
   overlay.classList.remove(SICHTBAR_KLASSE);
 
   // Die Klasse des letzten Siegers vom Overlay-Text entfernen
   overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
-  const a = (l) => (l === 0 ? '' : [a(l - 1), a(l - 1), a(l - 1)]);
 
-  const spielfeldArr = {
-    spielfeld: a(4),
-  };
+  console.log(zustand);
 
-  // der Zufall entscheidet, wer beginnt
-  let momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
-  let naechstesFeld = { x: '', y: '' };
-
-  // zufälliges assignment des Icons
-
-  // const zufaelligesIcon = Math.round(Math.random());
-  // if (zufaelligesIcon === 0) {
-  //   helden.spieler.icon = 'X';
-  //   helden.gegner.icon = 'O';
-  // } else {
-  //   helden.spieler.icon = 'O';
-  //   helden.gegner.icon = 'X';
-  // }
-
-  const settings = {
-    helden,
-    momentanerSpieler,
-    spielfeldArr,
-    naechstesFeld,
-  };
-
-  console.log(settings);
-
-  uebersichtAnzeigen(settings);
-  spielfeldAnzeigen(settings);
+  uebersichtAnzeigen(zustand);
+  spielfeldAnzeigen(zustand);
 }
 
-function klickVerarbeiten(settings, i, j, k, l) {
-  // Den Klick verhindern, wenn der gegner gerade am Zug ist
-
-  // if (settings.momentanerSpieler.name === settings.helden.O.name) {
-  //   console.log('Du bist nicht dran');
-  //   return;
-  // }
-
+function zugBeginnen(zustand) {
   // Spielstein auf dieses Feld setzen
-  if (spielsteinSetzen(settings, i, j, k, l) === true) {
+  if (zug(zustand)) {
     // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
-    zugBeenden(settings, i, j, k, l);
+    zugBeenden(zustand);
   }
 }
 
-function spielsteinSetzen(settings, i, j, k, l) {
+function zug(zustand) {
   // Prüfen, ob das Feld schon besetzt ist
-  if (settings.spielfeldArr.spielfeld[i][j][k][l] != '') {
+  let { l1, l2, l3, l4 } = zustand.momentanerZug;
+  if (zustand.spielfeld[l1][l2][l3][l4] != '') {
     return false;
   }
 
-  settings.spielfeldArr.spielfeld[i][j][k][l] = settings.momentanerSpieler.icon;
+  zustand.spielfeld[l1][l2][l3][l4] = zustand.momentanerSpieler.icon;
 
   // Signalisieren, dass der Spielstein erfolgreich gesetzt wurde
   return true;
 }
 
-const aendereSpieler = (settings) => {
-  if (settings.momentanerSpieler.icon === 'X') {
-    // spieler beendet seinen Zug -> zum gegner wechseln
-    settings.momentanerSpieler = settings.helden.O;
-  } else {
-    // gegner beendet seinen Zug -> zum spieler wechseln
-    settings.momentanerSpieler = settings.helden.X;
-  }
-  return settings;
-};
-
-function zugBeenden(settings, i, j, k, l) {
+function zugBeenden(zustand) {
+  // momentanen Spielstand auslesen
   const spielstand = standPruefen(
-    selektor(settings.spielfeldArr.spielfeld, i, j),
-    settings.helden
+    selektor(
+      zustand.spielfeld,
+      zustand.momentanerZug.l1,
+      zustand.momentanerZug.l2
+    ),
+    zustand.helden
   );
 
-  const zuruecksetzenNaechstesFeld = () => {
-    settings.naechstesFeld = { x: '', y: '' };
-    return settings.naechstesFeld;
-  };
-
-  // testen ob das Feld beendet wurde
+  // testen ob das kleine Spielfeld beendet wurde
   if (
     spielstand === 'X' ||
     spielstand === 'O' ||
     spielstand === 'unentschieden'
   ) {
-    zuruecksetzenNaechstesFeld();
-  } else {
-    // prüfen, wo das nächste Mal reingeklickt werden darf
-    settings.naechstesFeld =
-      standPruefen(
-        selektor(settings.spielfeldArr.spielfeld, k, l),
-        settings.helden
-      ) === 'Spiel läuft noch'
-        ? { x: k, y: l }
-        : { x: '', y: '' };
+    // wenn das kleine Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
+    zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   }
 
-  spielBeenden(settings);
-  aendereSpieler(settings);
-  uebersichtAnzeigen(settings);
-  spielfeldAnzeigen(settings);
+  // Testen, ob jemand das Spiel gewonnen hat
+  spielBeenden(zustand);
 
-  // Ist der gegner an der Reihe, muss ein Computerzug ausgeführt werden
-  // if (aktuelleKlasse === gegner) {
-  //   setTimeout(computerZugAusfuehren, 750);
-  // }
-}
-
-// Selektor, der das gewollte Spielfeld aus den neun Spielfeldern raussucht
-function selektor(spielfeld, x, y) {
-  return spielfeld[x][y];
+  // neuen Zustand abspeichern
+  let neuerZustand = spielzustand(zustand);
+  uebersichtAnzeigen(neuerZustand);
+  spielfeldAnzeigen(neuerZustand);
 }
 
 // Stand prüfen - wo steht das Spiel gerade?
@@ -180,21 +180,21 @@ function standPruefen(spielfeld, helden) {
   }
 }
 
-function spielBeenden(settings) {
+function spielBeenden(zustand) {
   // großes Spielfeld mit dem Gewinner des jeweiligen Feldes
   const naechstesFeld = document.getElementsByClassName('naechstesFeld');
   console.log('naechstes Feld: ', naechstesFeld);
-  const grossesSpielfeld = settings.spielfeldArr.spielfeld.map(
+  const grossesSpielfeld = zustand.spielfeld.map(
     (s) =>
       //s
       (s = s
-        .map((r) => standPruefen(r, settings.helden))
+        .map((r) => standPruefen(r, zustand.helden))
         .map((f) => {
           switch (f) {
-            case settings.helden.X.icon:
-              return settings.helden.X.icon;
-            case settings.helden.O.icon:
-              return settings.helden.O.icon;
+            case zustand.helden.X.icon:
+              return zustand.helden.X.icon;
+            case zustand.helden.O.icon:
+              return zustand.helden.O.icon;
             case 'Spiel läuft noch':
               return '';
             case 'unentschieden':
@@ -203,22 +203,24 @@ function spielBeenden(settings) {
         }))
   );
 
-  const standGrossesFeld = standPruefen(grossesSpielfeld, settings.helden);
+  const standGrossesFeld = standPruefen(grossesSpielfeld, zustand.helden);
 
   if (standGrossesFeld === 'Spiel läuft noch') {
     if (naechstesFeld.length === 0 || standGrossesFeld === 'unentschieden') {
       overlayText.innerText = 'Unentschieden!';
       overlay.classList.add(SICHTBAR_KLASSE);
+      overlayButton.addEventListener('click', spielStarten);
       return 'unentschieden';
     }
   } else {
     console.log(standGrossesFeld);
     overlayText.innerText = `${standPruefen(
       grossesSpielfeld,
-      settings.helden
+      zustand.helden
     )} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);
     overlay.classList.add(SICHTBAR_KLASSE);
+    overlayButton.addEventListener('click', spielStarten);
     return standGrossesFeld;
   }
   console.log(grossesSpielfeld);

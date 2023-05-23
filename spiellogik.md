@@ -24,4 +24,5 @@
 * nächstes Feld ermitteln, in dem weiter gespielt wird
     * wenn das nächste Feld schon gewonnen oder unentschieden ist -> freie Feldwahl
 * Spieler wechseln und das nächste Spielfeld mitgeben, alle anderen sperren, falls nicht freie Feldwahl ist
-* 
+
+letzter commit, um wieder auf dem vorherigen Stand zu sein: 1e5e4c0

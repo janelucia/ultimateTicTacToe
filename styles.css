@@ -126,7 +126,7 @@ main a {
   max-height: fit-content;
 }
 
-.rowBoards {
+.reihe-großes-spielfeld {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-around;
@@ -134,11 +134,11 @@ main a {
   border: 2px solid transparent;
 }
 
-.rowBoards:not(:last-child) {
+.reihe-großes-spielfeld:not(:last-child) {
   border-bottom-color: #00ffca;
 }
 
-.rowBoard {
+.kleines-spielfeld {
   display: flex;
   flex-direction: column;
   width: 100px;
@@ -146,16 +146,16 @@ main a {
   padding: 4px;
 }
 
-.rowBoard {
+.kleines-spielfeld {
   border: 2px solid transparent;
   border-right-color: #00ffca;
 }
 
-.rowBoard:last-child {
+.kleines-spielfeld:last-child {
   border-right-color: transparent;
 }
 
-.row {
+.kleines-spielfeld-reihe {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -164,7 +164,7 @@ main a {
   border: 2px solid transparent;
 }
 
-.row:not(:last-child) {
+.kleines-spielfeld-reihe:not(:last-child) {
   border-bottom-color: #05bfdb;
 }
 
@@ -211,20 +211,20 @@ main a {
   transform: translateX(-50%) rotate(-45deg);
 }
 
-.naechstesFeld {
+.naechstes-feld {
   outline: thin solid coral;
   cursor: pointer;
 }
 
-.spielerX .row {
+.spieler-x .kleines-spielfeld-reihe {
   color: gray;
 }
 
-.spielerO .row {
+.spieler-o .kleines-spielfeld-reihe {
   color: gray;
 }
 
-.unentschieden .row {
+.unentschieden .kleines-spielfeld-reihe {
   color: gray;
 }
 
