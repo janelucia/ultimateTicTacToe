@@ -206,26 +206,26 @@ main a {
   box-sizing: border-box;
 }
 
-.feld.spieler::before,
-.spielanzeige.spieler ~ .spielfeld .feld:not([disabled]):hover::before {
+.feld.spieler-x::before,
+.spielanzeige.spieler-x ~ .spielfeld .feld:not([disabled]):hover::before {
   border: 1rem solid var(--spieler-farbe);
   border-radius: 50%;
   width: 80%;
   height: 80%;
 }
 
-.feld.gegner::before,
-.feld.gegner::after {
+.feld.spieler-o::before,
+.feld.spieler-o::after {
   background-color: var(--gegner-farbe);
   width: 1rem;
   height: 80%;
 }
 
-.feld.gegner::before {
+.feld.spieler-o::before {
   transform: translateX(50%) rotate(45deg);
 }
 
-.feld.gegner::after {
+.feld.spieler-o::after {
   transform: translateX(-50%) rotate(-45deg);
 }
 

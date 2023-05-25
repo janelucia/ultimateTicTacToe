@@ -79,14 +79,17 @@ const initialesSpielfeld = () => {
 const spielzustand = (spielzustand) => {
   let helden;
 
+  // generiert einen witzigen Namen für den Spieler
+  const zufaelligeNamen = spielerNamen.spieler.sort(() => Math.random() - 0.5);
+
   if (spielmodus() === 'hotseat') {
     helden = {
-      X: { name: 'I am Hero 1', icon: 'X' },
-      O: { name: 'I am Hero 2', icon: 'O' },
+      X: { name: zufaelligeNamen[0], icon: 'X' },
+      O: { name: zufaelligeNamen[1], icon: 'O' },
     };
   } else if (spielmodus() === 'singleplayer') {
     helden = {
-      X: { name: 'I am Hero 1', icon: 'X' },
+      X: { name: zufaelligeNamen[0], icon: 'X' },
       O: { name: 'Robo', icon: 'O' },
     };
   }

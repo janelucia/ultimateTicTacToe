@@ -49,6 +49,7 @@ const spielfeldAnzeigen = (zustand) => {
 
       const kleinesSpielfeldDiv = document.createElement('div');
       kleinesSpielfeldDiv.classList.add('kleines-spielfeld');
+      // Je nach dem, was in dem Feld steht, wird dem eine Klasse zugeordnet.
       if (spielstand === 'X') {
         kleinesSpielfeldDiv.classList.add('spieler-x');
         kleinesSpielfeldDiv.innerText = 'X';
