@@ -1,29 +1,30 @@
 const uebersichtAnzeigen = (zustand) => {
   spielanzeige.innerHTML = '';
 
-  const spielerDiv = document.createElement('div');
-  spielerDiv.classList.add('hero');
-  const spieler = document.createElement('p');
-  spieler.innerText = 'Hero 1: ' + zustand.helden.X.name;
-  const icon1 = document.createElement('p');
-  icon1.innerText = zustand.helden.X.icon;
-  spielerDiv.appendChild(spieler);
-  spielerDiv.appendChild(icon1);
+  const erstelleSpielerDiv = (spielerName, spielerIcon) => {
+    const spielerDiv = document.createElement('div');
+    spielerDiv.classList.add('hero');
 
-  spielanzeige.appendChild(spielerDiv);
+    const spieler = document.createElement('p');
+    spieler.innerText = spielerName;
 
-  const gegnerDiv = document.createElement('div');
-  gegnerDiv.classList.add('hero');
-  const gegner = document.createElement('p');
-  gegner.innerText = 'Hero 2: ' + zustand.helden.O.name;
-  const icon2 = document.createElement('p');
-  icon2.innerText = zustand.helden.O.icon;
-  gegnerDiv.appendChild(gegner);
-  gegnerDiv.appendChild(icon2);
+    const icon = document.createElement('p');
+    icon.innerText = spielerIcon;
 
-  spielanzeige.appendChild(gegnerDiv);
+    spielerDiv.appendChild(spieler);
+    spielerDiv.appendChild(icon);
+
+    return spielerDiv;
+  };
+
+  const spielerDivs = Object.entries(zustand.helden).map(([spieler, daten]) =>
+    erstelleSpielerDiv(`Hero ${spieler}: ${daten.name}`, daten.icon)
+  );
+
+  spielerDivs.forEach((spielerDiv) => spielanzeige.appendChild(spielerDiv));
 
   const momentanerSpielerAnzeigen = document.createElement('p');
+  console.log(zustand);
   if (zustand.momentanerSpieler.name === zustand.helden.X.name) {
     momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
   } else {

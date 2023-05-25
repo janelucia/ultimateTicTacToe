@@ -14,6 +14,12 @@ const overlay = document.querySelector('.' + OVERLAY_KLASSE);
 const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
+const spielmodus = () => {
+  let params = new URL(document.location).searchParams;
+  let modus = params.get('mode');
+  return modus;
+};
+
 const SIEG_KOMBINATIONEN = (spielfeld, spieler) => {
   const b = spielfeld;
   const p = spieler;
@@ -37,6 +43,24 @@ function selektor(spielfeld, x, y) {
   return spielfeld[x][y];
 }
 
+// Stand prüfen - wo steht das Spiel gerade?
+function standPruefen(spielfeld, helden) {
+  if (SIEG_KOMBINATIONEN(spielfeld, helden.X.icon)) {
+    return helden.X.icon;
+  } else if (SIEG_KOMBINATIONEN(spielfeld, helden.O.icon)) {
+    return helden.O.icon;
+  } else {
+    for (let reihe of spielfeld) {
+      for (let feld of reihe) {
+        if (feld === '') {
+          return 'Spiel läuft noch';
+        }
+      }
+    }
+    return 'unentschieden';
+  }
+}
+
 // Spielfeld erstellen
 const initialesSpielfeld = () => {
   const spielfeldGenerieren = (level) =>
@@ -51,48 +75,58 @@ const initialesSpielfeld = () => {
   return spielfeldGenerieren(4);
 };
 
-const spielzustand = (zustand) => {
-  const helden = {
-    X: { name: 'I am Hero 1', icon: 'X' },
-    O: { name: 'I am Hero 2', icon: 'O' },
-  };
+// speichert den momentanen Zustand des Spiels
+const spielzustand = (spielzustand) => {
+  let helden;
+
+  if (spielmodus() === 'hotseat') {
+    helden = {
+      X: { name: 'I am Hero 1', icon: 'X' },
+      O: { name: 'I am Hero 2', icon: 'O' },
+    };
+  } else if (spielmodus() === 'singleplayer') {
+    helden = {
+      X: { name: 'I am Hero 1', icon: 'X' },
+      O: { name: 'Robo', icon: 'O' },
+    };
+  }
 
   // Spieler togglen
   let momentanerSpieler;
-  if (!momentanerSpieler) {
+  if (!spielzustand) {
     // der Zufall entscheidet, wer beginnt
     momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
-  } else if (momentanerSpieler.icon === 'X') {
+  } else if (spielzustand.momentanerSpieler.icon === 'X') {
     momentanerSpieler = helden.O;
   } else {
     momentanerSpieler = helden.X;
   }
 
   let momentanerZug;
-  if (!momentanerZug) {
+  if (!spielzustand) {
     // l1-l4 stehen für die Level tiefen des vier Dim Arrays
     momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   } else {
-    const { l1, l2, l3, l4 } = zustand.momentanerZug;
+    const { l1, l2, l3, l4 } = spielzustand.momentanerZug;
     momentanerZug = { l1, l2, l3, l4 };
   }
 
   let spielfeld;
-  if (!spielfeld) {
+  if (!spielzustand) {
     spielfeld = initialesSpielfeld();
   } else {
-    spielfeld = zustand.spielfeld;
+    spielfeld = spielzustand.spielfeld;
   }
 
   // in Zustand wird abgespeichert, wie das momentane Feld aussieht und wer gerade am Zug ist
-  zustand = {
+  spielzustand = {
     helden,
     spielfeld,
     momentanerSpieler,
     momentanerZug,
   };
 
-  return zustand;
+  return spielzustand;
 };
 
 function spielStarten() {
@@ -105,17 +139,25 @@ function spielStarten() {
   // Die Klasse des letzten Siegers vom Overlay-Text entfernen
   overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
 
-  console.log(zustand);
-
   uebersichtAnzeigen(zustand);
   spielfeldAnzeigen(zustand);
+
+  if (
+    spielmodus() === 'singleplayer' &&
+    zustand.momentanerSpieler.name === 'Robo'
+  ) {
+    zugBeginnen(zustand);
+  }
 }
 
 function zugBeginnen(zustand) {
-  // Spielstein auf dieses Feld setzen
-  if (zug(zustand)) {
-    // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
-    zugBeenden(zustand);
+  if (
+    spielmodus() === 'singleplayer' &&
+    zustand.momentanerSpieler.name === 'Robo'
+  ) {
+    if (zug(macheZufaelligenZug(zustand))) zugBeenden(zustand);
+  } else {
+    if (zug(zustand)) zugBeenden(zustand);
   }
 }
 
@@ -123,6 +165,14 @@ function zug(zustand) {
   // Prüfen, ob das Feld schon besetzt ist
   let { l1, l2, l3, l4 } = zustand.momentanerZug;
   if (zustand.spielfeld[l1][l2][l3][l4] != '') {
+    // Falls Robo ein Feld nimmt, welches schon besetzt ist, darf er es nochmal versuchen
+    if (
+      spielmodus() === 'singleplayer' &&
+      zustand.momentanerSpieler.name === 'Robo'
+    ) {
+      zustand = macheZufaelligenZug(zustand);
+      console.log('He tried again: ', zustand);
+    }
     return false;
   }
 
@@ -143,6 +193,15 @@ function zugBeenden(zustand) {
     zustand.helden
   );
 
+  const spielstandNaechstesFeld = standPruefen(
+    selektor(
+      zustand.spielfeld,
+      zustand.momentanerZug.l3,
+      zustand.momentanerZug.l4
+    ),
+    zustand.helden
+  );
+
   // testen ob das kleine Spielfeld beendet wurde
   if (
     spielstand === 'X' ||
@@ -150,6 +209,13 @@ function zugBeenden(zustand) {
     spielstand === 'unentschieden'
   ) {
     // wenn das kleine Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
+    zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
+  } else if (
+    spielstandNaechstesFeld === 'X' ||
+    spielstandNaechstesFeld === 'O' ||
+    spielstandNaechstesFeld === 'unentschieden'
+  ) {
+    // wenn das nächste kleine Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
     zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   }
 
@@ -160,30 +226,18 @@ function zugBeenden(zustand) {
   let neuerZustand = spielzustand(zustand);
   uebersichtAnzeigen(neuerZustand);
   spielfeldAnzeigen(neuerZustand);
-}
 
-// Stand prüfen - wo steht das Spiel gerade?
-function standPruefen(spielfeld, helden) {
-  if (SIEG_KOMBINATIONEN(spielfeld, helden.X.icon)) {
-    return helden.X.icon;
-  } else if (SIEG_KOMBINATIONEN(spielfeld, helden.O.icon)) {
-    return helden.O.icon;
-  } else {
-    for (let reihe of spielfeld) {
-      for (let feld of reihe) {
-        if (feld === '') {
-          return 'Spiel läuft noch';
-        }
-      }
-    }
-    return 'unentschieden';
+  if (
+    spielmodus() === 'singleplayer' &&
+    neuerZustand.momentanerSpieler.name === 'Robo'
+  ) {
+    zugBeginnen(neuerZustand);
   }
 }
 
 function spielBeenden(zustand) {
   // großes Spielfeld mit dem Gewinner des jeweiligen Feldes
-  const naechstesFeld = document.getElementsByClassName('naechstesFeld');
-  console.log('naechstes Feld: ', naechstesFeld);
+  const naechstesFeld = document.getElementsByClassName('naechstes-feld');
   const grossesSpielfeld = zustand.spielfeld.map(
     (s) =>
       //s
@@ -205,15 +259,17 @@ function spielBeenden(zustand) {
 
   const standGrossesFeld = standPruefen(grossesSpielfeld, zustand.helden);
 
-  if (standGrossesFeld === 'Spiel läuft noch') {
-    if (naechstesFeld.length === 0 || standGrossesFeld === 'unentschieden') {
+  if (
+    standGrossesFeld === 'Spiel läuft noch' ||
+    standGrossesFeld === 'unentschieden'
+  ) {
+    if (naechstesFeld.length === 0) {
       overlayText.innerText = 'Unentschieden!';
       overlay.classList.add(SICHTBAR_KLASSE);
       overlayButton.addEventListener('click', spielStarten);
       return 'unentschieden';
     }
   } else {
-    console.log(standGrossesFeld);
     overlayText.innerText = `${standPruefen(
       grossesSpielfeld,
       zustand.helden
@@ -223,33 +279,47 @@ function spielBeenden(zustand) {
     overlayButton.addEventListener('click', spielStarten);
     return standGrossesFeld;
   }
-  console.log(grossesSpielfeld);
 }
 
-// function unentschiedenPruefen() {
-//   // Gehe alle Felder durch
-//   for (const feld of felder) {
-//     // Prüfe, ob das Feld noch unbesetzt ist
-//     if (!feld.classList.contains(spieler) && !feld.classList.contains(gegner)) {
-//       // Gibt es ein unbesetztes Feld, kann es kein Unentschieden sein
-//       return false;
-//     }
-//   }
+function macheZufaelligenZug(zustand) {
+  // Zufällige Indizes für jede Dimension generieren
 
-//   // Es gibt kein freies Feld mehr -> unentscheiden!
-//   return true;
-// }
+  console.log('mein Zug: ', zustand.momentanerZug);
+  const koordinaten = { l1: '', l2: '', l3: '', l4: '' };
 
-// function computerZugAusfuehren() {
-//   // Per Zufall ein Feld auswählen
-//   const zufallsIndex = Math.floor(Math.random() * 9);
+  // Wenn noch keine freie Feldwahl besteht, dann soll l1 von Koordinaten auf l3 des momentanen Zuges gesetzt werden
+  if (zustand.momentanerZug.l3 !== '') {
+    koordinaten.l1 = zustand.momentanerZug.l3;
+  } else {
+    koordinaten.l1 = Math.floor(Math.random() * zustand.spielfeld.length);
+  }
 
-//   // Einen Spielstein auf dieses Feld setzen
-//   if (spielsteinSetzen(felder[zufallsIndex]) === true) {
-//     // Beende den Zug, wenn der Spielstein erfolgreich gesetzt wurde
-//     zugBeenden();
-//   } else {
-//     // Wähle ein anderes Feld, wenn das Feld schon besetzt war
-//     computerZugAusfuehren();
-//   }
-// }
+  if (zustand.momentanerZug.l4 != '') {
+    koordinaten.l2 = zustand.momentanerZug.l4;
+  } else {
+    koordinaten.l2 = Math.floor(
+      Math.random() * zustand.spielfeld[koordinaten.l1].length
+    );
+  }
+
+  koordinaten.l3 = Math.floor(
+    Math.random() * zustand.spielfeld[koordinaten.l1][koordinaten.l2].length
+  );
+  koordinaten.l4 = Math.floor(
+    Math.random() *
+      zustand.spielfeld[koordinaten.l1][koordinaten.l2][koordinaten.l3].length
+  );
+
+  console.log('Robos Zug: ', koordinaten);
+
+  zustand.momentanerZug = koordinaten;
+  console.log('Robos Zug: ', zustand);
+
+  // Rückgabe der aktualisierten Spielfeld-Array
+  return zustand;
+}
+
+/*Fragen:
+ * Warum setzt Robo manchmal ins falsche Feld?
+ * Warum setzt Robo manchmal gar nicht? - erst nachdem man nochmal geklickt hat?
+ */
