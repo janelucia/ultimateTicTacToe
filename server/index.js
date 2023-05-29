@@ -7,17 +7,37 @@ let games = [];
 app.use(cors());
 app.use(express.json());
 
-app.get('/game', (req, res) => {
-  const game = { status: 'PLAYER_MISSING' };
-  res.json(game);
-});
+app.get('/game/:id', (req, res) => {});
 
 app.post('/game', (req, res) => {
   const id = Math.floor(Math.random() * 1e6);
-  games = [...games, { hero1: req.body.hero1, id: req.body.id }];
-  console.log(games);
+  games = [...games, { held1: req.body.held1, held2: undefined, id }];
+
   res.setHeader('Location', `${id}`);
   res.status(201).json({ location: `${id}` });
+});
+
+app.patch('/game/:id', (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body);
+  console.log(games);
+  const game = games.find((g) => g.id === parseInt(req.params.id));
+
+  if (!game) {
+    res.status(404).send();
+  }
+
+  const patchedGame = { ...game, held2: req.body.held2 };
+  console.log('Game', patchedGame);
+
+  games.map((g) => {
+    if (g.id === patchedGame.id) {
+      return patchedGame;
+    }
+    return g;
+  });
+
+  res.send();
 });
 
 app.listen(port, () => {

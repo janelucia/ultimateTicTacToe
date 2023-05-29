@@ -14,9 +14,17 @@ const overlay = document.querySelector('.' + OVERLAY_KLASSE);
 const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
+// Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
 const spielmodus = () => {
   let params = new URL(document.location).searchParams;
   let modus = params.get('mode');
+  if (modus === 'mehrspieler') {
+    const status = heldZumSpielHinzufuegen()
+      .then((data) => data.status)
+      .then((data) => console.log(data));
+  } else {
+    spielStarten();
+  }
   return modus;
 };
 
