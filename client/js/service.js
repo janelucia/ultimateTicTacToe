@@ -36,7 +36,7 @@ function pollNeuesMehrspielerSpiel(id) {
 async function neuesMehrspielerSpiel() {
   const spielErstellen = await neuesMehrspielerSpiel();
   linkRendern(spielErstellen);
-  pollNeuesMehrspielerSpiel(spielErstellen.id);
+  await pollNeuesMehrspielerSpiel(spielErstellen.id);
 }
 
 function idHolen() {
