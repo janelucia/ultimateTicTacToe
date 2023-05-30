@@ -4,7 +4,8 @@ const url = 'http://localhost:3000/game';
  * erstellt ein neues Spiel
  * @returns Pfad zur erstellten Spiel-Ressource
  */
-function neuesMehrspielerSpiel() {
+
+function neuesMehrspielerSpielErstellen() {
   return (
     fetch(url, {
       method: 'POST',
@@ -20,6 +21,24 @@ function neuesMehrspielerSpiel() {
   );
 }
 
+function pollNeuesMehrspielerSpiel(id) {
+  let statusHeld2;
+  do {
+    statusHeld2 = fetch(`${url}/${id}`, {
+      method: 'GET',
+    })
+      .then((d) => d.json())
+      .then((d) => console.log(d));
+  } while (statusHeld2 === 'Auf Verbindung warten');
+  return statusHeld2;
+}
+
+async function neuesMehrspielerSpiel() {
+  const spielErstellen = await neuesMehrspielerSpiel();
+  linkRendern(spielErstellen);
+  pollNeuesMehrspielerSpiel(spielErstellen.id);
+}
+
 function idHolen() {
   let params = new URL(document.location).searchParams;
   let id = params.get('joinGame');
@@ -29,7 +48,7 @@ function idHolen() {
 function heldZumSpielHinzufuegen() {
   const id = idHolen();
 
-  return fetch(url + '/' + id, {
+  return fetch(`${url}/${id}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

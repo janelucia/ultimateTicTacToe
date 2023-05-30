@@ -7,7 +7,14 @@ let games = [];
 app.use(cors());
 app.use(express.json());
 
-app.get('/game/:id', (req, res) => {});
+app.get('/game/:id', (req, res) => {
+  const game = games.find((g) => g.id === parseInt(req.params.id));
+  if (!game.held2) {
+    res.json('Auf Verbindung warten');
+  } else {
+    res.json('Held 2 gefunden');
+  }
+});
 
 app.post('/game', (req, res) => {
   const id = Math.floor(Math.random() * 1e6);
