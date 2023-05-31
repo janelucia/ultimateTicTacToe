@@ -14,6 +14,8 @@ const overlay = document.querySelector('.' + OVERLAY_KLASSE);
 const overlayText = document.querySelector('.' + OVERLAY_TEXT_KLASSE);
 const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
+let zufaelligeNamen;
+
 // Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
 const spielmodus = () => {
   let params = new URL(document.location).searchParams;
@@ -80,8 +82,10 @@ const initialesSpielfeld = () => {
 const spielzustand = (spielzustand) => {
   let helden;
 
-  // generiert einen witzigen Namen für den Spieler
-  const zufaelligeNamen = spielerNamen.spieler.sort(() => Math.random() - 0.5);
+  if (!zufaelligeNamen) {
+    // generiert einen witzigen Namen für den Spieler
+    zufaelligeNamen = spielerNamen.spieler.sort(() => Math.random() - 0.5);
+  }
 
   if (spielmodus() === 'hotseat') {
     helden = {
