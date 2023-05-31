@@ -9,11 +9,11 @@ app.use(express.json());
 
 app.get('/game/:id', (req, res) => {
   const game = games.find((g) => g.id === parseInt(req.params.id));
-  if (!game.held2) {
-    res.json('Auf Verbindung warten');
-  } else {
-    res.json('Held 2 gefunden');
+  console.log(games);
+  if (!game) {
+    res.status(404).send();
   }
+  res.json(game);
 });
 
 app.post('/game', (req, res) => {
@@ -25,9 +25,6 @@ app.post('/game', (req, res) => {
 });
 
 app.patch('/game/:id', (req, res) => {
-  console.log(req.params.id);
-  console.log(req.body);
-  console.log(games);
   const game = games.find((g) => g.id === parseInt(req.params.id));
 
   if (!game) {
@@ -35,9 +32,8 @@ app.patch('/game/:id', (req, res) => {
   }
 
   const patchedGame = { ...game, held2: req.body.held2 };
-  console.log('Game', patchedGame);
 
-  games.map((g) => {
+  games = games.map((g) => {
     if (g.id === patchedGame.id) {
       return patchedGame;
     }

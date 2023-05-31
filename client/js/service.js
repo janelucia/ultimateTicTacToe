@@ -23,20 +23,23 @@ function neuesMehrspielerSpielErstellen() {
 
 function pollNeuesMehrspielerSpiel(id) {
   let statusHeld2;
-  do {
+  let held2Finden = setInterval(() => {
     statusHeld2 = fetch(`${url}/${id}`, {
       method: 'GET',
     })
       .then((d) => d.json())
-      .then((d) => console.log(d));
-  } while (statusHeld2 === 'Auf Verbindung warten');
+      .then((d) => console.log(d)); // Wieso funktioniert dieses Console.log nicht?
+  }, 5000);
+  if (held2Finden.held2) {
+    clearInterval(held2Finden);
+  }
   return statusHeld2;
 }
 
 async function neuesMehrspielerSpiel() {
-  const spielErstellen = await neuesMehrspielerSpiel();
+  const spielErstellen = await neuesMehrspielerSpielErstellen();
   linkRendern(spielErstellen);
-  await pollNeuesMehrspielerSpiel(spielErstellen.id);
+  pollNeuesMehrspielerSpiel(spielErstellen.location);
 }
 
 function idHolen() {
