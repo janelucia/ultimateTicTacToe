@@ -21,25 +21,31 @@ function neuesMehrspielerSpielErstellen() {
   );
 }
 
-function pollNeuesMehrspielerSpiel(id) {
-  let statusHeld2;
-  let held2Finden = setInterval(() => {
-    statusHeld2 = fetch(`${url}/${id}`, {
-      method: 'GET',
-    })
-      .then((d) => d.json())
-      .then((d) => console.log(d)); // Wieso funktioniert dieses Console.log nicht?
-  }, 5000);
-  if (held2Finden.held2) {
-    clearInterval(held2Finden);
-  }
+async function pollNeuesMehrspielerSpiel(id) {
+  const statusHeld2 = await new Promise((aufloesen) => {
+    let held2Finden = setInterval(async () => {
+      const antwort = await fetch(`${url}/${id}`, {
+        method: 'GET',
+      });
+      const json = await antwort.json();
+      if (json.held2) {
+        clearInterval(held2Finden);
+        aufloesen(json);
+      }
+    }, 5000);
+  });
   return statusHeld2;
 }
 
 async function neuesMehrspielerSpiel() {
   const spielErstellen = await neuesMehrspielerSpielErstellen();
   linkRendern(spielErstellen);
-  pollNeuesMehrspielerSpiel(spielErstellen.location);
+  const status = await pollNeuesMehrspielerSpiel(spielErstellen.location);
+  console.log(status);
+  if (status) {
+    // TODO: welcher Held?
+    window.location = `/client/game.html?mode=mehrspieler&joinGame=${status.id}`;
+  }
 }
 
 function idHolen() {

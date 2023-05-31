@@ -18,13 +18,6 @@ const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 const spielmodus = () => {
   let params = new URL(document.location).searchParams;
   let modus = params.get('mode');
-  if (modus === 'mehrspieler') {
-    const status = heldZumSpielHinzufuegen()
-      .then((data) => data.status)
-      .then((data) => console.log(data));
-  } else {
-    spielStarten();
-  }
   return modus;
 };
 
@@ -141,8 +134,16 @@ const spielzustand = (spielzustand) => {
 };
 
 function spielStarten() {
-  // momentanen Zustand des Spiels laden
-  let zustand = spielzustand();
+  let zustand;
+  if (spielmodus() === 'mehrspieler') {
+    const status = heldZumSpielHinzufuegen().then((data) => data.status);
+    if (status === 200) {
+      const zustand = spielzustand();
+    }
+  } else {
+    // momentanen Zustand des Spiels laden
+    zustand = spielzustand();
+  }
 
   // Das Overlay wieder verstecken, falls es bereits sichtbar ist
   overlay.classList.remove(SICHTBAR_KLASSE);

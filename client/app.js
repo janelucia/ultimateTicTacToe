@@ -4,6 +4,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (currentPath.endsWith('/gegnersuche.html')) {
     await neuesMehrspielerSpiel();
   } else if (currentPath.endsWith('/game.html')) {
-    spielmodus();
+    spielStarten();
   }
 });
