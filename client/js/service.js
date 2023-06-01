@@ -13,7 +13,7 @@ function neuesMehrspielerSpielErstellen() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        held1: 'Held 1',
+        X: 'Held 1',
       }),
     })
       // kann nicht location header auslesen wegen CORS, deshalb wird auf body zurückgegriffen
@@ -28,7 +28,7 @@ async function pollNeuesMehrspielerSpiel(id) {
         method: 'GET',
       });
       const json = await antwort.json();
-      if (json.held2) {
+      if (json.helden.O) {
         clearInterval(held2Finden);
         aufloesen(json);
       }
@@ -43,15 +43,18 @@ async function neuesMehrspielerSpiel() {
   const status = await pollNeuesMehrspielerSpiel(spielErstellen.location);
   console.log(status);
   if (status) {
-    // TODO: welcher Held?
-    window.location = `/client/game.html?mode=mehrspieler&joinGame=${status.id}&held=held1`;
+    window.location = `/client/game.html?mode=mehrspieler&joinGame=${status.id}&held=X`;
   }
 }
 
 function idHolen() {
   let params = new URL(document.location).searchParams;
-  let id = params.get('joinGame');
-  return id;
+  return params.get('joinGame');
+}
+
+function aktuellerSpielerHolen() {
+  let params = new URL(document.location).searchParams;
+  return params.get('held');
 }
 
 function heldZumSpielHinzufuegen() {
@@ -63,7 +66,38 @@ function heldZumSpielHinzufuegen() {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      held2: 'Held 2',
+      O: 'Held 2',
+    }),
+  });
+}
+
+async function spielstandHolen() {
+  const aktuellerSpieler = aktuellerSpielerHolen();
+  const id = idHolen();
+  const spielstand = await new Promise((aufloesen) => {
+    let spielstandFinden = setInterval(async () => {
+      const antwort = await fetch(`${url}/${id}`, {
+        method: 'GET',
+      });
+      const json = await antwort.json();
+      if (json.momentanerSpieler.icon === aktuellerSpieler) {
+        clearInterval(spielstandFinden);
+        aufloesen(json);
+      }
+    }, 5000);
+  });
+  return spielstand;
+}
+
+async function spielstandUpdate(zustand) {
+  const id = idHolen();
+  return fetch(`${url}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      zustand,
     }),
   });
 }

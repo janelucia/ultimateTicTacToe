@@ -18,7 +18,10 @@ app.get('/game/:id', (req, res) => {
 
 app.post('/game', (req, res) => {
   const id = Math.floor(Math.random() * 1e6);
-  games = [...games, { held1: req.body.held1, held2: undefined, id }];
+  games = [
+    ...games,
+    { helden: { X: { name: req.body.X, icon: 'X' }, O: undefined }, id },
+  ];
 
   res.setHeader('Location', `${id}`);
   res.status(201).json({ location: `${id}` });
@@ -28,10 +31,18 @@ app.patch('/game/:id', (req, res) => {
   const game = games.find((g) => g.id === parseInt(req.params.id));
 
   if (!game) {
-    res.status(404).send();
+    return res.status(404).send();
   }
 
-  const patchedGame = { ...game, held2: req.body.held2 };
+  const O = { name: req.body.O, icon: 'O' };
+
+  const momentanerSpieler = Math.random() < 0.5 ? game.helden.X : O;
+
+  const patchedGame = {
+    ...game,
+    helden: { ...game.helden, O },
+    momentanerSpieler,
+  };
 
   games = games.map((g) => {
     if (g.id === patchedGame.id) {
@@ -40,7 +51,31 @@ app.patch('/game/:id', (req, res) => {
     return g;
   });
 
-  res.json(patchedGame);
+  return res.json(patchedGame);
+});
+
+app.put('game/:id', (req, res) => {
+  const game = games.find((g) => g.id === parseInt(req.params.id));
+
+  if (!game) {
+    return res.status(404).send();
+  }
+
+  const momentanerSpieler =
+    game.momentanerSpieler.icon === game.helden.X.icon
+      ? game.helden.O
+      : game.helden.X;
+
+  const patchedGame = { ...game, momentanerSpieler, momentanenZug, spielfeld };
+
+  games = games.map((g) => {
+    if (g.id === patchedGame.id) {
+      return patchedGame;
+    }
+    return g;
+  });
+
+  return res.json(patchedGame);
 });
 
 app.listen(port, () => {

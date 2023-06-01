@@ -78,18 +78,9 @@ const initialesSpielfeld = () => {
   return spielfeldGenerieren(4);
 };
 
-// speichert den momentanen Zustand des Spiels
-const spielzustand = async (spielzustand) => {
+const heldenErstellen = () => {
   let helden;
-
-  // beim Mehrspielermodus wird auf den Spielzustand gewartet, da dieser ein Promise ist
-  if (spielmodus() === 'mehrspieler') {
-    let heldenHolen = await spielzustand;
-    helden = {
-      X: { name: heldenHolen.held1, icon: 'X' },
-      O: { name: heldenHolen.held2, icon: 'O' },
-    };
-  } else if (!zufaelligeNamen) {
+  if (!zufaelligeNamen) {
     // generiert einen witzigen Namen für den Spieler, wenn diese nicht im Mehrspielermodus sind - IDEE: vielleicht auslagern und schon auf der Indexseite anbieten per Button?
     zufaelligeNamen = spielerNamen.spieler.sort(() => Math.random() - 0.5);
     if (spielmodus() === 'hotseat') {
@@ -104,58 +95,81 @@ const spielzustand = async (spielzustand) => {
       };
     }
   }
+  return helden;
+};
 
-  // Spieler togglen
-  let momentanerSpieler;
-  if (!spielzustand.momentanerSpieler) {
-    // der Zufall entscheidet, wer beginnt
-    momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
-  } else if (spielzustand.momentanerSpieler.icon === 'X') {
-    momentanerSpieler = helden.O;
+// der Zufall entscheidet, wer beginnt
+const werFaengtAn = (helden) => {
+  return Math.random() < 0.5 ? helden.X : helden.O;
+};
+
+// Spieler togglen
+const heldenClientSideTogglen = (data) => {
+  if (data.momentanerSpieler.icon === 'X') {
+    return data.helden.O;
   } else {
-    momentanerSpieler = helden.X;
+    return data.helden.X;
+  }
+};
+
+// speichert den momentanen Zustand des Spiels
+const spielzustand = async (spielzustand) => {
+  let data = await spielzustand;
+  let helden = await spielzustand.helden;
+  let momentanerSpieler = await spielzustand.momentanerSpieler;
+
+  console.log(data);
+
+  if (spielmodus() !== 'mehrspieler') {
+    momentanerSpieler = heldenClientSideTogglen(data);
   }
 
   let momentanerZug;
-  if (!spielzustand.momentanerZug) {
+  if (!data || !data.momentanerZug) {
     // l1-l4 stehen für die Level tiefen des vier Dim Arrays
     momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   } else {
-    const { l1, l2, l3, l4 } = spielzustand.momentanerZug;
+    const { l1, l2, l3, l4 } = data.momentanerZug;
     momentanerZug = { l1, l2, l3, l4 };
   }
 
   let spielfeld;
-  if (!spielzustand.spielfeld) {
+  if (!data || !data.spielfeld) {
     spielfeld = initialesSpielfeld();
   } else {
-    spielfeld = spielzustand.spielfeld;
+    spielfeld = data.spielfeld;
   }
 
-  // in Zustand wird abgespeichert, wie das momentane Feld aussieht und wer gerade am Zug ist
-  spielzustand = {
+  // in data wird abgespeichert, wie das momentane Feld aussieht und wer gerade am Zug ist
+  data = {
     helden,
     spielfeld,
     momentanerSpieler,
     momentanerZug,
   };
 
-  return spielzustand;
+  console.log(data);
+
+  return data;
 };
 
 async function spielStarten() {
   let zustand;
   if (spielmodus() === 'mehrspieler') {
     const held2Hinzufuegen = await heldZumSpielHinzufuegen();
-    const game = held2Hinzufuegen.json();
+    const game = await held2Hinzufuegen.json();
     console.log(held2Hinzufuegen.status);
     if (held2Hinzufuegen.status === 200) {
-      zustand = spielzustand(game);
+      zustand = await spielzustand(game);
     }
   } else {
     // momentanen Zustand des Spiels laden
-    zustand = spielzustand();
+    let helden = heldenErstellen();
+    let momentanerSpieler = werFaengtAn(helden);
+    zustand = await spielzustand({ helden, momentanerSpieler });
   }
+
+  console.log(zustand);
 
   // Das Overlay wieder verstecken, falls es bereits sichtbar ist
   overlay.classList.remove(SICHTBAR_KLASSE);
@@ -179,9 +193,13 @@ function zugBeginnen(zustand) {
     spielmodus() === 'singleplayer' &&
     zustand.momentanerSpieler.name === 'Robo'
   ) {
-    if (zug(macheZufaelligenZug(zustand))) zugBeenden(zustand);
+    if (zug(macheZufaelligenZug(zustand))) {
+      zugBeenden(zustand);
+    }
   } else {
-    if (zug(zustand)) zugBeenden(zustand);
+    if (zug(zustand)) {
+      zugBeenden(zustand);
+    }
   }
 }
 
@@ -206,7 +224,7 @@ function zug(zustand) {
   return true;
 }
 
-function zugBeenden(zustand) {
+async function zugBeenden(zustand) {
   // momentanen Spielstand auslesen
   const spielstand = standPruefen(
     selektor(
@@ -247,7 +265,14 @@ function zugBeenden(zustand) {
   spielBeenden(zustand);
 
   // neuen Zustand abspeichern
-  let neuerZustand = spielzustand(zustand);
+  let neuerZustand = await spielzustand(zustand);
+
+  if (spielmodus() === 'mehrspieler') {
+    neuerZustand = await spielstandUpdate(neuerZustand);
+  }
+
+  console.log('neuer Zustand', neuerZustand);
+
   uebersichtAnzeigen(neuerZustand);
   spielfeldAnzeigen(neuerZustand);
 
@@ -256,6 +281,10 @@ function zugBeenden(zustand) {
     neuerZustand.momentanerSpieler.name === 'Robo'
   ) {
     zugBeginnen(neuerZustand);
+  } else if (spielmodus() === 'mehrspieler') {
+    neuerZustand = await spielstandHolen();
+    uebersichtAnzeigen(neuerZustand);
+    spielfeldAnzeigen(neuerZustand);
   }
 }
 
