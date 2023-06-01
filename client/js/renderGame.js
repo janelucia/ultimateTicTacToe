@@ -25,7 +25,19 @@ const uebersichtAnzeigen = (zustand) => {
 
   const momentanerSpielerAnzeigen = document.createElement('p');
   console.log(zustand);
-  if (zustand.momentanerSpieler.name === zustand.helden.X.name) {
+
+  // in den searchparams bei der einen URL: held = held1, darüber soll unterschieden werden, wer held1 und wer held2 ist - das muss noch implementiert werden!
+  const held1Params = new URL(document.location).searchParams;
+  const modus = held1Params.get('held');
+  console.log(modus);
+  // TODO: anzeigen wer an der Reihe ist -
+  if (
+    spielmodus() === 'mehrspieler' &&
+    modus !== null &&
+    zustand.momentanerSpieler.name === zustand.helden.X.name
+  ) {
+    momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
+  } else if (zustand.momentanerSpieler.name === zustand.helden.X.name) {
     momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
   } else {
     momentanerSpielerAnzeigen.innerText = 'Dein:e Gegner:in ist am Zug!';

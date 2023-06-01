@@ -79,29 +79,35 @@ const initialesSpielfeld = () => {
 };
 
 // speichert den momentanen Zustand des Spiels
-const spielzustand = (spielzustand) => {
+const spielzustand = async (spielzustand) => {
   let helden;
 
-  if (!zufaelligeNamen) {
-    // generiert einen witzigen Namen für den Spieler
+  // beim Mehrspielermodus wird auf den Spielzustand gewartet, da dieser ein Promise ist
+  if (spielmodus() === 'mehrspieler') {
+    let heldenHolen = await spielzustand;
+    helden = {
+      X: { name: heldenHolen.held1, icon: 'X' },
+      O: { name: heldenHolen.held2, icon: 'O' },
+    };
+  } else if (!zufaelligeNamen) {
+    // generiert einen witzigen Namen für den Spieler, wenn diese nicht im Mehrspielermodus sind - IDEE: vielleicht auslagern und schon auf der Indexseite anbieten per Button?
     zufaelligeNamen = spielerNamen.spieler.sort(() => Math.random() - 0.5);
-  }
-
-  if (spielmodus() === 'hotseat') {
-    helden = {
-      X: { name: zufaelligeNamen[0], icon: 'X' },
-      O: { name: zufaelligeNamen[1], icon: 'O' },
-    };
-  } else if (spielmodus() === 'singleplayer') {
-    helden = {
-      X: { name: zufaelligeNamen[0], icon: 'X' },
-      O: { name: 'Robo', icon: 'O' },
-    };
+    if (spielmodus() === 'hotseat') {
+      helden = {
+        X: { name: zufaelligeNamen[0], icon: 'X' },
+        O: { name: zufaelligeNamen[1], icon: 'O' },
+      };
+    } else if (spielmodus() === 'singleplayer') {
+      helden = {
+        X: { name: zufaelligeNamen[0], icon: 'X' },
+        O: { name: 'Robo', icon: 'O' },
+      };
+    }
   }
 
   // Spieler togglen
   let momentanerSpieler;
-  if (!spielzustand) {
+  if (!spielzustand.momentanerSpieler) {
     // der Zufall entscheidet, wer beginnt
     momentanerSpieler = Math.random() < 0.5 ? helden.X : helden.O;
   } else if (spielzustand.momentanerSpieler.icon === 'X') {
@@ -111,7 +117,7 @@ const spielzustand = (spielzustand) => {
   }
 
   let momentanerZug;
-  if (!spielzustand) {
+  if (!spielzustand.momentanerZug) {
     // l1-l4 stehen für die Level tiefen des vier Dim Arrays
     momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   } else {
@@ -120,7 +126,7 @@ const spielzustand = (spielzustand) => {
   }
 
   let spielfeld;
-  if (!spielzustand) {
+  if (!spielzustand.spielfeld) {
     spielfeld = initialesSpielfeld();
   } else {
     spielfeld = spielzustand.spielfeld;
@@ -137,12 +143,14 @@ const spielzustand = (spielzustand) => {
   return spielzustand;
 };
 
-function spielStarten() {
+async function spielStarten() {
   let zustand;
   if (spielmodus() === 'mehrspieler') {
-    const status = heldZumSpielHinzufuegen().then((data) => data.status);
-    if (status === 200) {
-      const zustand = spielzustand();
+    const held2Hinzufuegen = await heldZumSpielHinzufuegen();
+    const game = held2Hinzufuegen.json();
+    console.log(held2Hinzufuegen.status);
+    if (held2Hinzufuegen.status === 200) {
+      zustand = spielzustand(game);
     }
   } else {
     // momentanen Zustand des Spiels laden
@@ -155,8 +163,8 @@ function spielStarten() {
   // Die Klasse des letzten Siegers vom Overlay-Text entfernen
   overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
 
-  uebersichtAnzeigen(zustand);
-  spielfeldAnzeigen(zustand);
+  uebersichtAnzeigen(await zustand);
+  spielfeldAnzeigen(await zustand);
 
   if (
     spielmodus() === 'singleplayer' &&

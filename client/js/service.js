@@ -44,7 +44,7 @@ async function neuesMehrspielerSpiel() {
   console.log(status);
   if (status) {
     // TODO: welcher Held?
-    window.location = `/client/game.html?mode=mehrspieler&joinGame=${status.id}`;
+    window.location = `/client/game.html?mode=mehrspieler&joinGame=${status.id}&held=held1`;
   }
 }
 

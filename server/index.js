@@ -40,7 +40,7 @@ app.patch('/game/:id', (req, res) => {
     return g;
   });
 
-  res.send();
+  res.json(patchedGame);
 });
 
 app.listen(port, () => {
