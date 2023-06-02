@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="app.js" defer></script>
+    <script src="js/namenSetzen.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/svg" href="tic-tac-toe.svg" />
     <link
@@ -33,9 +34,17 @@
           <img src="assets/tic-tac-toe.svg" alt="Logo" />
         </div>
         <div class="right-side">
-          <h2>Herzlich Willkommen, Spieler!</h2>
+          <h2></h2>
           <p>Bitte gib deinen Namen ein:</p>
-          <input type="text" id="spielername" class="input-spielername" />
+          <input
+            type="text"
+            id="spielername"
+            class="input-spielername"
+            oninput="heldenNamenSetzen()"
+          />
+          <p style="color: gainsboro; font-size: small">
+            ! In Hotseat werden die Namen zufällig gewürfelt.
+          </p>
           <div class="single-multiplayer">
             <a href="game.html?mode=singleplayer">Singleplayer</a>
             <a href="game.html?mode=hotseat">Hotseat</a>

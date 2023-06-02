@@ -19,8 +19,7 @@ let zufaelligeNamen;
 // Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
 const spielmodus = () => {
   let params = new URL(document.location).searchParams;
-  let modus = params.get('mode');
-  return modus;
+  return params.get('mode');
 };
 
 const SIEG_KOMBINATIONEN = (spielfeld, spieler) => {
@@ -82,15 +81,18 @@ const heldenErstellen = () => {
   let helden;
   if (!zufaelligeNamen) {
     // generiert einen witzigen Namen für den Spieler, wenn diese nicht im Mehrspielermodus sind - IDEE: vielleicht auslagern und schon auf der Indexseite anbieten per Button?
-    zufaelligeNamen = spielerNamen.spieler.sort(() => Math.random() - 0.5);
+    zufaelligeNamen = zufaelligeNamenWuerfeln();
     if (spielmodus() === 'hotseat') {
       helden = {
         X: { name: zufaelligeNamen[0], icon: 'X' },
         O: { name: zufaelligeNamen[1], icon: 'O' },
       };
     } else if (spielmodus() === 'singleplayer') {
+      let nameX = !sessionStorage.getItem('name')
+        ? zufaelligeNamen[0]
+        : JSON.parse(sessionStorage.getItem('name'));
       helden = {
-        X: { name: zufaelligeNamen[0], icon: 'X' },
+        X: { name: nameX, icon: 'X' },
         O: { name: 'Robo', icon: 'O' },
       };
     }
@@ -155,18 +157,11 @@ const spielzustand = async (spielzustand) => {
 
 async function spielStarten() {
   let zustand;
+  // momentanen Zustand des Spiels laden
   if (spielmodus() === 'mehrspieler') {
-    const held2Hinzufuegen = await heldZumSpielHinzufuegen();
-    const game = await held2Hinzufuegen.json();
-    console.log(held2Hinzufuegen.status);
-    if (held2Hinzufuegen.status === 200) {
-      zustand = await spielzustand(game);
-    }
+    zustand = await mehrspielerModus(zustand);
   } else {
-    // momentanen Zustand des Spiels laden
-    let helden = heldenErstellen();
-    let momentanerSpieler = werFaengtAn(helden);
-    zustand = await spielzustand({ helden, momentanerSpieler });
+    zustand = await lokalesSpiel(zustand);
   }
 
   console.log(zustand);
@@ -185,7 +180,33 @@ async function spielStarten() {
     zustand.momentanerSpieler.name === 'Robo'
   ) {
     zugBeginnen(zustand);
+  } else if (spielmodus() === 'mehrspieler' && zustand.momentanerSpieler) {
   }
+}
+
+async function lokalesSpiel(zustand) {
+  let helden = heldenErstellen();
+  let momentanerSpieler = werFaengtAn(helden);
+  zustand = await spielzustand({ helden, momentanerSpieler });
+  return zustand;
+}
+
+async function mehrspielerModus(zustand) {
+  if (istSpielErsteller() === false) {
+    // TODO: Name vom Spieler holen
+    const held2Hinzufuegen = await heldZumSpielHinzufuegen('Held 2');
+    const game = await held2Hinzufuegen.json();
+    console.log(game);
+    if (held2Hinzufuegen.status === 200) {
+      zustand = await spielzustand(game);
+    }
+  } else {
+    const informationenHolen = localStorage.getItem('status');
+    const spiel = JSON.parse(informationenHolen);
+    console.log(spiel);
+    zustand = await spielzustand(spiel);
+  }
+  return zustand;
 }
 
 function zugBeginnen(zustand) {
@@ -267,11 +288,14 @@ async function zugBeenden(zustand) {
   // neuen Zustand abspeichern
   let neuerZustand = await spielzustand(zustand);
 
+  console.log('neuer Zustand', neuerZustand);
+
   if (spielmodus() === 'mehrspieler') {
-    neuerZustand = await spielstandUpdate(neuerZustand);
+    let update = await spielstandUpdate(neuerZustand);
+    neuerZustand = await update.json();
   }
 
-  console.log('neuer Zustand', neuerZustand);
+  console.log('neuer Zustand nach mehrspieler', neuerZustand);
 
   uebersichtAnzeigen(neuerZustand);
   spielfeldAnzeigen(neuerZustand);

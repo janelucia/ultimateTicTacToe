@@ -54,7 +54,7 @@ app.patch('/game/:id', (req, res) => {
   return res.json(patchedGame);
 });
 
-app.put('game/:id', (req, res) => {
+app.put('/game/:id', (req, res) => {
   const game = games.find((g) => g.id === parseInt(req.params.id));
 
   if (!game) {
@@ -66,7 +66,11 @@ app.put('game/:id', (req, res) => {
       ? game.helden.O
       : game.helden.X;
 
-  const patchedGame = { ...game, momentanerSpieler, momentanenZug, spielfeld };
+  let momentanerZug = req.body.spielzustand.momentanerZug;
+
+  let spielfeld = req.body.spielzustand.spielfeld;
+
+  const patchedGame = { ...game, momentanerSpieler, momentanerZug, spielfeld };
 
   games = games.map((g) => {
     if (g.id === patchedGame.id) {
