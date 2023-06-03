@@ -1,28 +1,43 @@
-function heldenNamenSetzen() {
+function inputFeldHeldenNamen() {
   const namenInput = document.getElementById('spielername').value;
   if (namenInput === '') {
     sessionStorage.removeItem('name');
     heldenNamenInputRendern();
     return;
   }
-  sessionStorage.setItem('name', JSON.stringify(namenInput));
+  console.debug(namenInput);
+  sessionStorageNameSetzen(namenInput);
   heldenNamenInputRendern();
 }
 
-function zufaelligeNamenWuerfeln() {
+function zufaelligeNamenWuerfelnAusfuehren() {
+  let zufaelligeNamen = zufaelligeNamenWuerfelnArray();
+  let namenInput = zufaelligeNamen[0];
+
+  let input = document.getElementById('spielername');
+  input.value = namenInput;
+
+  sessionStorageNameSetzen(namenInput);
+  heldenNamenInputRendern();
+}
+
+function sessionStorageNameSetzen(namen) {
+  sessionStorage.setItem('name', namen);
+}
+
+function zufaelligeNamenWuerfelnArray() {
   return spielerNamen.spieler.sort(() => Math.random() - 0.5);
 }
 
 function heldenNamenInputRendern() {
-  const ueberschrift = document.querySelector('.right-side h2');
+  const ueberschrift = document.querySelector('.rechte-seite h2');
 
   const sessionStorageName = sessionStorage.getItem('name');
 
-  if (!sessionStorageName) {
-    ueberschrift.innerText = 'Herzlich Willkommen, Spieler!';
-  } else {
-    ueberschrift.innerText = `Herzlich Willkommen, ${JSON.parse(
-      sessionStorageName
-    )}!`;
-  }
+  ueberschrift.innerText = `Herzlich Willkommen, ${
+    !sessionStorageName ? 'Spieler!' : sessionStorageName
+  }`;
+
+  let input = document.getElementById('spielername');
+  input.value = sessionStorageName;
 }

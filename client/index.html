@@ -1,58 +1,13 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="app.js" defer></script>
-    <script src="js/namenSetzen.js" defer></script>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" type="image/svg" href="tic-tac-toe.svg" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-    <title>Ultimate Tick Tack Toe</title>
+    <script>
+      window.location = '/client/lobby.html';
+    </script>
+    <title>Weiterleitung</title>
   </head>
-  <body>
-    <header>
-      <div class="header-left">
-        <div><img src="assets/tic-tac-toe.svg" alt="Logo" /></div>
-        <div>
-          <a href="index.html">
-            <span class="material-symbols-outlined"> menu </span>
-          </a>
-        </div>
-      </div>
-      <div></div>
-    </header>
-    <main>
-      <h1>Ultimate Tic Tac Toe</h1>
-      <br />
-      <div class="oberflaeche">
-        <div class="left-side">
-          <img src="assets/tic-tac-toe.svg" alt="Logo" />
-        </div>
-        <div class="right-side">
-          <h2></h2>
-          <p>Bitte gib deinen Namen ein:</p>
-          <input
-            type="text"
-            id="spielername"
-            class="input-spielername"
-            oninput="heldenNamenSetzen()"
-          />
-          <p style="color: gainsboro; font-size: small">
-            ! In Hotseat werden die Namen zufällig gewürfelt.
-          </p>
-          <div class="single-multiplayer">
-            <a href="game.html?mode=singleplayer">Singleplayer</a>
-            <a href="game.html?mode=hotseat">Hotseat</a>
-            <a href="gegnersuche.html">Multiplayer</a>
-          </div>
-        </div>
-      </div>
-    </main>
-    <footer>Made with ❤ | by Katharina and Jane</footer>
-  </body>
+  <body></body>
 </html>

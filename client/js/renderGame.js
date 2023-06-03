@@ -1,4 +1,4 @@
-const uebersichtAnzeigen = (zustand) => {
+const uebersichtAnzeigen = async (zustand) => {
   spielanzeige.innerHTML = '';
 
   const erstelleSpielerDiv = (spielerName, spielerIcon) => {
@@ -27,9 +27,9 @@ const uebersichtAnzeigen = (zustand) => {
 
   if (
     spielmodus() === 'mehrspieler' &&
-    ((istSpielErsteller() &&
+    (((await istSpielErsteller()) &&
       zustand.momentanerSpieler.icon === zustand.helden.X.icon) ||
-      (!istSpielErsteller() &&
+      (!(await istSpielErsteller()) &&
         zustand.momentanerSpieler.icon === zustand.helden.O.icon))
   ) {
     momentanerSpielerAnzeigen.innerText = 'Du bist dran!';

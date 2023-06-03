@@ -20,7 +20,13 @@ app.post('/game', (req, res) => {
   const id = Math.floor(Math.random() * 1e6);
   games = [
     ...games,
-    { helden: { X: { name: req.body.X, icon: 'X' }, O: undefined }, id },
+    {
+      helden: {
+        X: { id: req.body.X.id, name: req.body.X.name, icon: 'X' },
+        O: undefined,
+      },
+      id,
+    },
   ];
 
   res.setHeader('Location', `${id}`);
@@ -32,9 +38,11 @@ app.patch('/game/:id', (req, res) => {
 
   if (!game) {
     return res.status(404).send();
+  } else if (game.helden.O) {
+    return res.json(game);
   }
 
-  const O = { name: req.body.O, icon: 'O' };
+  const O = { id: req.body.O.id, name: req.body.O.name, icon: 'O' };
 
   const momentanerSpieler = Math.random() < 0.5 ? game.helden.X : O;
 

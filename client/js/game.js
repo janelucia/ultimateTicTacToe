@@ -16,12 +16,6 @@ const overlayButton = document.querySelector('.' + OVERLAY_BUTTON_KLASSE);
 
 let zufaelligeNamen;
 
-// Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
-const spielmodus = () => {
-  let params = new URL(document.location).searchParams;
-  return params.get('mode');
-};
-
 const SIEG_KOMBINATIONEN = (spielfeld, spieler) => {
   const b = spielfeld;
   const p = spieler;
@@ -81,7 +75,7 @@ const heldenErstellen = () => {
   let helden;
   if (!zufaelligeNamen) {
     // generiert einen witzigen Namen für den Spieler, wenn diese nicht im Mehrspielermodus sind - IDEE: vielleicht auslagern und schon auf der Indexseite anbieten per Button?
-    zufaelligeNamen = zufaelligeNamenWuerfeln();
+    zufaelligeNamen = zufaelligeNamenWuerfelnArray();
     if (spielmodus() === 'hotseat') {
       helden = {
         X: { name: zufaelligeNamen[0], icon: 'X' },
@@ -191,24 +185,6 @@ async function lokalesSpiel(zustand) {
   return zustand;
 }
 
-async function mehrspielerModus(zustand) {
-  if (istSpielErsteller() === false) {
-    // TODO: Name vom Spieler holen
-    const held2Hinzufuegen = await heldZumSpielHinzufuegen('Held 2');
-    const game = await held2Hinzufuegen.json();
-    console.log(game);
-    if (held2Hinzufuegen.status === 200) {
-      zustand = await spielzustand(game);
-    }
-  } else {
-    const informationenHolen = localStorage.getItem('status');
-    const spiel = JSON.parse(informationenHolen);
-    console.log(spiel);
-    zustand = await spielzustand(spiel);
-  }
-  return zustand;
-}
-
 function zugBeginnen(zustand) {
   if (
     spielmodus() === 'singleplayer' &&
@@ -306,7 +282,7 @@ async function zugBeenden(zustand) {
   ) {
     zugBeginnen(neuerZustand);
   } else if (spielmodus() === 'mehrspieler') {
-    neuerZustand = await spielstandHolen();
+    neuerZustand = await aufSpielstandWarten();
     uebersichtAnzeigen(neuerZustand);
     spielfeldAnzeigen(neuerZustand);
   }

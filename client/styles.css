@@ -117,20 +117,31 @@ main a {
   flex-direction: column;
 }
 
-.right-side {
+.rechte-seite {
   display: flex;
   flex-direction: column;
 }
 
 .input-spielername {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.input-spielername button {
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.input-feld {
   display: block;
-  margin: 0 auto;
   border-radius: 8px;
   border: 2px solid black;
   padding: 5px;
 }
 
-.single-multiplayer {
+.einzel-mehrspieler {
   display: flex;
   margin: 32px;
   justify-content: center;
@@ -304,7 +315,7 @@ main a {
     justify-content: space-around;
   }
 
-  .left-side {
+  .linke-seite {
     display: flex;
     justify-content: center;
     text-align: center;
