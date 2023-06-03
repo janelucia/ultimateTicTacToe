@@ -25,16 +25,25 @@ const uebersichtAnzeigen = async (zustand) => {
 
   const momentanerSpielerAnzeigen = document.createElement('p');
 
-  if (
-    spielmodus() === 'mehrspieler' &&
-    (((await istSpielErsteller()) &&
-      zustand.momentanerSpieler.icon === zustand.helden.X.icon) ||
-      (!(await istSpielErsteller()) &&
-        zustand.momentanerSpieler.icon === zustand.helden.O.icon))
-  ) {
-    momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
+  const heldIdentifizieren = sessionStorageInformationen();
+
+  if (spielmodus() === 'mehrspieler') {
+    if (
+      parseInt(heldIdentifizieren.id) === parseInt(zustand.momentanerSpieler.id)
+    ) {
+      momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
+    } else {
+      momentanerSpielerAnzeigen.innerText = 'Der gegnerische Held ist am Zug!';
+    }
   } else {
-    momentanerSpielerAnzeigen.innerText = 'Der gegnerische Held ist am Zug!';
+    if (
+      zustand.momentanerSpieler.icon === zustand.helden.X.icon ||
+      zustand.momentanerSpieler.icon === zustand.helden.O.icon
+    ) {
+      momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
+    } else {
+      momentanerSpielerAnzeigen.innerText = 'Der gegnerische Held ist am Zug!';
+    }
   }
 
   spielanzeige.appendChild(momentanerSpielerAnzeigen);
@@ -83,7 +92,13 @@ const spielfeldAnzeigen = (zustand) => {
             feldDiv.innerText = feld;
           }
           feldDiv.addEventListener('click', () => {
+            const heldIdentifizieren = sessionStorageInformationen();
             if (!kleinesSpielfeldDiv.classList.contains('naechstes-feld')) {
+              return;
+            } else if (
+              parseInt(heldIdentifizieren.id) !==
+              parseInt(zustand.momentanerSpieler.id)
+            ) {
               return;
             }
             zustand.momentanerZug = { l1, l2, l3, l4 };

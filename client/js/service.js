@@ -1,6 +1,3 @@
-const SERVER_URL = 'http://localhost:3000';
-const GAME_ENDPOINT = `${SERVER_URL}/game`;
-
 /**
  * erstellt ein neues Spiel
  * @returns Pfad zur erstellten Spiel-Ressource
@@ -33,7 +30,7 @@ async function pollNeuesMehrspielerSpiel(id) {
         clearInterval(held2Finden);
         aufloesen(json);
       }
-    }, 3000);
+    }, PULL_TIMEOUT);
   });
   return statusHeld2;
 }
@@ -70,20 +67,19 @@ async function spielstandHolen() {
   return await antwort.json();
 }
 
-async function aufSpielstandWarten(heldId) {
+async function aufSpielstandWarten(aktuellerSpieler) {
   const spielId = spielIdHolen();
-  const aktuellerSpieler = istSpielErsteller();
   const spielstand = await new Promise((aufloesen) => {
     let spielstandFinden = setInterval(async () => {
       const antwort = await fetch(`${GAME_ENDPOINT}/${spielId}`, {
         method: 'GET',
       });
       const json = await antwort.json();
-      if (json.momentanerSpieler.icon === aktuellerSpieler) {
+      if (json.momentanerSpieler.id === aktuellerSpieler) {
         clearInterval(spielstandFinden);
         aufloesen(json);
       }
-    }, 5000);
+    }, PULL_TIMEOUT);
   });
   return spielstand;
 }
@@ -100,3 +96,10 @@ async function spielstandUpdate(zustand) {
     }),
   });
 }
+
+/* TODO:
+ * Gewinner anzeigen
+ * pullen nach dem Gewinnen verhindern
+ * Spieler abspeichern
+ * Spieler und ihre Spiele (unterschieden in gewonnen und nicht) anzeigen
+ */

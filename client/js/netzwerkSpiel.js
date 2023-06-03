@@ -1,37 +1,24 @@
 async function mehrspielerModus(zustand) {
   let heldInformationenHolen = sessionStorageInformationen();
-  if (!heldInformationenHolen.name) {
-    const zufaelligerName = sessionStorageNameSetzen();
-    heldInformationenHolen = {
-      ...heldInformationenHolen,
-      name: zufaelligerName[0],
-    };
-  }
 
   const spielInformationen = await spielstandHolen();
 
-  if (heldInformationenHolen.id !== spielInformationen.helden.X.id) {
+  if (
+    !spielInformationen.helden.O &&
+    heldInformationenHolen.id !== spielInformationen.helden.X.id
+  ) {
     const held2Hinzufuegen = await heldZumSpielHinzufuegen(
       heldInformationenHolen
     );
     const game = await held2Hinzufuegen.json();
-    console.log(game);
     if (held2Hinzufuegen.status === 200) {
       zustand = await spielzustand(game);
     }
   } else {
-    const informationenHolen = spielInformationen;
-    zustand = await spielzustand(informationenHolen);
+    zustand = await spielzustand(spielInformationen);
   }
 
   return zustand;
-}
-
-async function istSpielErsteller() {
-  const heldInfo = sessionStorageInformationen();
-  const spiel = await spielstandHolen();
-  console.log(spiel);
-  return spiel.helden.X.id === heldInfo.id;
 }
 
 // Darstellung auf verschiedenen Seiten, wenn der Mehrspieler-Modus genutzt wird

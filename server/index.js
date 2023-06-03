@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 let games = [];
+let spieler = [];
 
 app.use(cors());
 app.use(express.json());
@@ -18,6 +19,21 @@ app.get('/game/:id', (req, res) => {
 
 app.post('/game', (req, res) => {
   const id = Math.floor(Math.random() * 1e6);
+
+  const spielerUeberpruefen = spieler.find((s) => s.id === req.body.X.id);
+  if (spielerUeberpruefen) {
+    spieler = [
+      ...spieler,
+      {
+        id: req.body.X.id,
+        spieleGespielt: undefined,
+        spieleGewonnen: undefined,
+      },
+    ];
+  }
+
+  console.log(spieler);
+
   games = [
     ...games,
     {
@@ -40,6 +56,18 @@ app.patch('/game/:id', (req, res) => {
     return res.status(404).send();
   } else if (game.helden.O) {
     return res.json(game);
+  }
+
+  const spielerUeberpruefen = spieler.find((s) => s.id === req.body.O.id);
+  if (spielerUeberpruefen) {
+    spieler = [
+      ...spieler,
+      {
+        id: req.body.O.id,
+        spieleGespielt: undefined,
+        spieleGewonnen: undefined,
+      },
+    ];
   }
 
   const O = { id: req.body.O.id, name: req.body.O.name, icon: 'O' };
@@ -78,7 +106,17 @@ app.put('/game/:id', (req, res) => {
 
   let spielfeld = req.body.spielzustand.spielfeld;
 
-  const patchedGame = { ...game, momentanerSpieler, momentanerZug, spielfeld };
+  let gewinner = req.body.spielzustand.gewinner;
+
+  console.log(gewinner);
+
+  const patchedGame = {
+    ...game,
+    momentanerSpieler,
+    momentanerZug,
+    spielfeld,
+    gewinner,
+  };
 
   games = games.map((g) => {
     if (g.id === patchedGame.id) {
