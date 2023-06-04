@@ -222,9 +222,6 @@ async function zugBeenden(zustand) {
     zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   }
 
-  // Testen, ob jemand das Spiel gewonnen hat
-  spielBeenden(zustand);
-
   // neuen Zustand abspeichern
   let neuerZustand = await spielzustand(zustand);
 
@@ -235,6 +232,11 @@ async function zugBeenden(zustand) {
 
   uebersichtAnzeigen(neuerZustand);
   spielfeldAnzeigen(neuerZustand);
+
+  // Testen, ob jemand das Spiel gewonnen hat
+  if (spielBeenden(zustand)) {
+    return;
+  }
 
   if (
     spielmodus() === 'singleplayer' &&
@@ -249,7 +251,7 @@ async function zugBeenden(zustand) {
   }
 }
 
-function spielBeenden(zustand) {
+async function spielBeenden(zustand) {
   // großes Spielfeld mit dem Gewinner des jeweiligen Feldes
   const naechstesFeld = document.getElementsByClassName('naechstes-feld');
   const grossesSpielfeld = großesFeldErstellen(zustand);
@@ -271,22 +273,25 @@ function spielBeenden(zustand) {
         }
         spielStarten();
       });
-      return 'unentschieden';
+      return true;
     }
   } else {
+    if (spielmodus() === 'mehrspieler') {
+      console.log(zustand);
+      const gewinnerId = zustand.helden[standGrossesFeld].id;
+      await spielerListeUpdaten({ spielId: zustand.id, gewinnerId });
+    }
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);
     overlay.classList.add(SICHTBAR_KLASSE);
     overlayButton.addEventListener('click', async () => {
-      if (spielmodus() === 'mehrspieler') {
-        zustand = { ...zustand, gewinner: [...gewinner, standGrossesFeld] };
-        console.log(zustand);
-        await spielstandZuruecksetzenUndGewinnerSetzen(zustand);
-      }
+      await spielstandZuruecksetzenUndGewinnerSetzen(zustand);
       spielStarten();
     });
-    return standGrossesFeld;
+    return true;
   }
+
+  return false;
 }
 
 async function spielstandZuruecksetzenUndGewinnerSetzen(zustand) {

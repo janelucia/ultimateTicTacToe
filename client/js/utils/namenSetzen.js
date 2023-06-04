@@ -1,4 +1,4 @@
-function inputFeldHeldenNamen() {
+async function inputFeldHeldenNamen() {
   const namenInput = document.getElementById('spielername').value;
   if (namenInput === '') {
     sessionStorage.removeItem('name');
@@ -7,10 +7,11 @@ function inputFeldHeldenNamen() {
   }
   console.debug(namenInput);
   sessionStorageNameSetzen(namenInput);
+
   heldenNamenInputRendern();
 }
 
-function zufaelligeNamenWuerfelnAusfuehren() {
+async function zufaelligeNamenWuerfelnAusfuehren() {
   let zufaelligeNamen = zufaelligeNamenWuerfelnArray();
   let namenInput = zufaelligeNamen[0];
 
@@ -18,6 +19,8 @@ function zufaelligeNamenWuerfelnAusfuehren() {
   input.value = namenInput;
 
   sessionStorageNameSetzen(namenInput);
+  await spielerListeUpdaten();
+
   heldenNamenInputRendern();
 }
 

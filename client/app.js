@@ -4,6 +4,7 @@ browserIdSetzen();
 document.addEventListener('DOMContentLoaded', async () => {
   const currentPath = window.location.pathname;
   if (currentPath.endsWith('/lobby.html')) {
+    await spielerZurListeHinzufuegen();
     heldenNamenInputRendern();
     if (spielIdHolen()) {
       gegnerIndexSeiteRendern();
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else if (currentPath.endsWith('/game.html')) {
     leerenNamenVerhindern();
     spielStarten();
+    await spielerListeUpdaten();
   }
 });
 
@@ -26,7 +28,7 @@ function browserIdSetzen() {
   console.log(id);
 }
 
-function leerenNamenVerhindern() {
+async function leerenNamenVerhindern() {
   const namenHolen = sessionStorageInformationen();
   let namen = namenHolen.name;
   console.log(namen);
@@ -37,6 +39,8 @@ function leerenNamenVerhindern() {
   namen = zufaelligeNamen[0];
 
   sessionStorageNameSetzen(namen);
+  await spielerListeUpdaten();
+
   return namenHolen === namen;
 }
 

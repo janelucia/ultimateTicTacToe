@@ -97,9 +97,34 @@ async function spielstandUpdate(zustand) {
   });
 }
 
+async function spielerZurListeHinzufuegen() {
+  const spielerInfosHolen = sessionStorageInformationen();
+  return fetch(`${SPIELER_ENDPOINT}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spieler: spielerInfosHolen,
+    }),
+  });
+}
+
+async function spielerListeUpdaten(gewinner) {
+  const spielerInfosHolen = sessionStorageInformationen();
+  const spielId = spielIdHolen();
+  return fetch(`${SPIELER_ENDPOINT}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spieler: spielerInfosHolen,
+      spiele: { spielId, gewinner },
+    }),
+  });
+}
+
 /* TODO:
- * Gewinner anzeigen
- * pullen nach dem Gewinnen verhindern
- * Spieler abspeichern
  * Spieler und ihre Spiele (unterschieden in gewonnen und nicht) anzeigen
  */

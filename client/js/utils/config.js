@@ -1,6 +1,7 @@
 // Konstanten für den service
 const SERVER_URL = 'http://localhost:3000';
 const GAME_ENDPOINT = `${SERVER_URL}/game`;
+const SPIELER_ENDPOINT = `${SERVER_URL}/spieler`;
 const PULL_TIMEOUT = 1000;
 
 // Konstanten für das Spiel

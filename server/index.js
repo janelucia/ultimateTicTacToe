@@ -10,7 +10,6 @@ app.use(express.json());
 
 app.get('/game/:id', (req, res) => {
   const game = games.find((g) => g.id === parseInt(req.params.id));
-  console.log(games);
   if (!game) {
     res.status(404).send();
   }
@@ -19,20 +18,6 @@ app.get('/game/:id', (req, res) => {
 
 app.post('/game', (req, res) => {
   const id = Math.floor(Math.random() * 1e6);
-
-  const spielerUeberpruefen = spieler.find((s) => s.id === req.body.X.id);
-  if (spielerUeberpruefen) {
-    spieler = [
-      ...spieler,
-      {
-        id: req.body.X.id,
-        spieleGespielt: undefined,
-        spieleGewonnen: undefined,
-      },
-    ];
-  }
-
-  console.log(spieler);
 
   games = [
     ...games,
@@ -56,18 +41,6 @@ app.patch('/game/:id', (req, res) => {
     return res.status(404).send();
   } else if (game.helden.O) {
     return res.json(game);
-  }
-
-  const spielerUeberpruefen = spieler.find((s) => s.id === req.body.O.id);
-  if (spielerUeberpruefen) {
-    spieler = [
-      ...spieler,
-      {
-        id: req.body.O.id,
-        spieleGespielt: undefined,
-        spieleGewonnen: undefined,
-      },
-    ];
   }
 
   const O = { id: req.body.O.id, name: req.body.O.name, icon: 'O' };
@@ -106,16 +79,11 @@ app.put('/game/:id', (req, res) => {
 
   let spielfeld = req.body.spielzustand.spielfeld;
 
-  let gewinner = req.body.spielzustand.gewinner;
-
-  console.log(gewinner);
-
   const patchedGame = {
     ...game,
     momentanerSpieler,
     momentanerZug,
     spielfeld,
-    gewinner,
   };
 
   games = games.map((g) => {
@@ -126,6 +94,89 @@ app.put('/game/:id', (req, res) => {
   });
 
   return res.json(patchedGame);
+});
+
+app.post('/spieler', (req, res) => {
+  const held = spieler.find((d) => d.heldId === req.body.spieler.id);
+
+  if (held) {
+    return res.send();
+  }
+
+  spieler = [
+    ...spieler,
+    {
+      heldId: req.body.spieler.id,
+      name: req.body.spieler.name,
+      spiele: [],
+    },
+  ];
+
+  console.log(spieler);
+
+  res.status(201).send();
+});
+
+app.put('/spieler', (req, res) => {
+  const held = spieler.find((d) => d.heldId === req.body.spieler.id);
+
+  console.log('Held', held);
+
+  if (!held) {
+    return res.status(404).send();
+  }
+
+  let updateSpieler;
+  const name = req.body.spieler.name;
+
+  const heldenSpiele = req.body.spiele;
+  const spielId = req.body.spiele.spielId;
+  const gewinner = req.body.spiele.gewinnerId;
+
+  const testSpielId = held.spiele.find((d) => d.spielId === spielId);
+
+  console.log('spiele', heldenSpiele);
+  console.log('spieleID', spielId);
+  console.log('Helden Spiel ID', held.spiele.spielId);
+  console.log(testSpielId);
+
+  if (!spielId) {
+    updateSpieler = {
+      ...held,
+      name,
+    };
+  } else if (!testSpielId) {
+    updateSpieler = {
+      ...held,
+      name,
+      spiele: [...held.spiele, { spielId }],
+    };
+  } else if (gewinner) {
+    const spiel = heldenSpiele.find((d) => d.spielId === spielId);
+    gewinner = gewinner === held.id;
+    console.log('Gewinner', gewinner);
+    updateSpieler = {
+      ...held,
+      spiele: [
+        ...held.spiele.filter((d) => d.spielId !== spiel.spielId),
+        { ...spiel, gewinner: [...gewinner, gewinner] },
+      ],
+    };
+  } else if (testSpielId) {
+    return res.send();
+  }
+
+  spieler = spieler.map((s) => {
+    if (s.heldId === updateSpieler.heldId) {
+      return updateSpieler;
+    }
+    return s;
+  });
+
+  console.log(spieler);
+  console.log(held);
+
+  return res.send();
 });
 
 app.listen(port, () => {
