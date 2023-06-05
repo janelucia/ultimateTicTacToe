@@ -234,7 +234,7 @@ async function zugBeenden(zustand) {
   spielfeldAnzeigen(neuerZustand);
 
   // Testen, ob jemand das Spiel gewonnen hat
-  if (spielBeenden(zustand)) {
+  if (spielBeenden(zustand) === true) {
     return;
   }
 

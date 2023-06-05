@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (currentPath.endsWith('/lobby.html')) {
     await spielerZurListeHinzufuegen();
     heldenNamenInputRendern();
-    if (spielIdHolen()) {
+    if (lobbyIdHolen()) {
       gegnerIndexSeiteRendern();
     }
   } else if (currentPath.endsWith('/gegnersuche.html')) {
@@ -50,9 +50,9 @@ function sessionStorageInformationen() {
   return { id, name };
 }
 
-function spielIdHolen() {
-  const spielIdHolen = new URL(document.location).searchParams;
-  return spielIdHolen.get('spielBeitreten');
+function lobbyIdHolen() {
+  const lobbyIdHolen = new URL(document.location).searchParams;
+  return lobbyIdHolen.get('spielBeitreten');
 }
 
 // Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)

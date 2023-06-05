@@ -5,7 +5,7 @@
 
 function neuesMehrspielerSpielErstellen(held) {
   return (
-    fetch(GAME_ENDPOINT, {
+    fetch(LOBBY_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ function neuesMehrspielerSpielErstellen(held) {
 async function pollNeuesMehrspielerSpiel(id) {
   const statusHeld2 = await new Promise((aufloesen) => {
     let held2Finden = setInterval(async () => {
-      const antwort = await fetch(`${GAME_ENDPOINT}/${id}`, {
+      const antwort = await fetch(`${LOBBY_ENDPOINT}/${id}`, {
         method: 'GET',
       });
       const json = await antwort.json();
@@ -46,9 +46,9 @@ async function neuesMehrspielerSpiel(held) {
 }
 
 function heldZumSpielHinzufuegen(heldName) {
-  const spielId = spielIdHolen();
+  const lobbyId = lobbyIdHolen();
 
-  return fetch(`${GAME_ENDPOINT}/${spielId}`, {
+  return fetch(`${LOBBY_ENDPOINT}/${lobbyId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -60,18 +60,18 @@ function heldZumSpielHinzufuegen(heldName) {
 }
 
 async function spielstandHolen() {
-  const spielId = spielIdHolen();
-  const antwort = await fetch(`${GAME_ENDPOINT}/${spielId}`, {
+  const lobbyId = lobbyIdHolen();
+  const antwort = await fetch(`${LOBBY_ENDPOINT}/${lobbyId}`, {
     method: 'GET',
   });
   return await antwort.json();
 }
 
 async function aufSpielstandWarten(aktuellerSpieler) {
-  const spielId = spielIdHolen();
+  const spielId = lobbyIdHolen();
   const spielstand = await new Promise((aufloesen) => {
     let spielstandFinden = setInterval(async () => {
-      const antwort = await fetch(`${GAME_ENDPOINT}/${spielId}`, {
+      const antwort = await fetch(`${LOBBY_ENDPOINT}/${spielId}`, {
         method: 'GET',
       });
       const json = await antwort.json();
@@ -85,8 +85,8 @@ async function aufSpielstandWarten(aktuellerSpieler) {
 }
 
 async function spielstandUpdate(zustand) {
-  const id = spielIdHolen();
-  return fetch(`${GAME_ENDPOINT}/${id}`, {
+  const id = lobbyIdHolen();
+  return fetch(`${LOBBY_ENDPOINT}/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -110,9 +110,8 @@ async function spielerZurListeHinzufuegen() {
   });
 }
 
-async function spielerListeUpdaten(gewinner) {
+async function spielerListeUpdaten(gewinner, spielId) {
   const spielerInfosHolen = sessionStorageInformationen();
-  const spielId = spielIdHolen();
   return fetch(`${SPIELER_ENDPOINT}`, {
     method: 'PUT',
     headers: {

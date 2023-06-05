@@ -2,31 +2,33 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const port = 3000;
-let games = [];
+let lobbies = [];
 let spieler = [];
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/game/:id', (req, res) => {
-  const game = games.find((g) => g.id === parseInt(req.params.id));
-  if (!game) {
+app.get('/lobby/:id', (req, res) => {
+  const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
+  if (!lobby) {
     res.status(404).send();
   }
-  res.json(game);
+  res.json(lobby);
 });
 
-app.post('/game', (req, res) => {
-  const id = Math.floor(Math.random() * 1e6);
+app.post('/lobby', (req, res) => {
+  let id = Math.floor(Math.random() * 1e6);
+  let spielId = id++;
 
-  games = [
-    ...games,
+  lobbies = [
+    ...lobbies,
     {
       helden: {
         X: { id: req.body.X.id, name: req.body.X.name, icon: 'X' },
         O: undefined,
       },
       id,
+      spiele: [{ spielId }],
     },
   ];
 
@@ -34,63 +36,63 @@ app.post('/game', (req, res) => {
   res.status(201).json({ location: `${id}` });
 });
 
-app.patch('/game/:id', (req, res) => {
-  const game = games.find((g) => g.id === parseInt(req.params.id));
+app.patch('/lobby/:id', (req, res) => {
+  const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
 
-  if (!game) {
+  if (!lobby) {
     return res.status(404).send();
-  } else if (game.helden.O) {
-    return res.json(game);
+  } else if (lobby.helden.O) {
+    return res.json(lobby);
   }
 
   const O = { id: req.body.O.id, name: req.body.O.name, icon: 'O' };
 
-  const momentanerSpieler = Math.random() < 0.5 ? game.helden.X : O;
+  const momentanerSpieler = Math.random() < 0.5 ? lobby.helden.X : O;
 
   const patchedGame = {
-    ...game,
-    helden: { ...game.helden, O },
+    ...lobby,
+    helden: { ...lobby.helden, O },
     momentanerSpieler,
   };
 
-  games = games.map((g) => {
-    if (g.id === patchedGame.id) {
+  lobbies = lobbies.map((l) => {
+    if (l.id === patchedGame.id) {
       return patchedGame;
     }
-    return g;
+    return l;
   });
 
   return res.json(patchedGame);
 });
 
-app.put('/game/:id', (req, res) => {
-  const game = games.find((g) => g.id === parseInt(req.params.id));
+app.put('/lobby/:id', (req, res) => {
+  const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
 
-  if (!game) {
+  if (!lobby) {
     return res.status(404).send();
   }
 
   const momentanerSpieler =
-    game.momentanerSpieler.icon === game.helden.X.icon
-      ? game.helden.O
-      : game.helden.X;
+    lobby.momentanerSpieler.icon === lobby.helden.X.icon
+      ? lobby.helden.O
+      : lobby.helden.X;
 
   let momentanerZug = req.body.spielzustand.momentanerZug;
 
   let spielfeld = req.body.spielzustand.spielfeld;
 
   const patchedGame = {
-    ...game,
+    ...lobby,
     momentanerSpieler,
     momentanerZug,
     spielfeld,
   };
 
-  games = games.map((g) => {
-    if (g.id === patchedGame.id) {
+  lobbies = lobbies.map((l) => {
+    if (l.id === patchedGame.id) {
       return patchedGame;
     }
-    return g;
+    return l;
   });
 
   return res.json(patchedGame);
@@ -120,7 +122,7 @@ app.post('/spieler', (req, res) => {
 app.put('/spieler', (req, res) => {
   const held = spieler.find((d) => d.heldId === req.body.spieler.id);
 
-  console.log('Held', held);
+  console.log('Held', spieler);
 
   if (!held) {
     return res.status(404).send();
