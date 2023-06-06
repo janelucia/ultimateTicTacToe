@@ -13,7 +13,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     leerenNamenVerhindern();
     await neuesMehrspielerSpiel(sessionStorageInformationen());
   } else if (currentPath.endsWith('/game.html')) {
-    leerenNamenVerhindern();
+    if (spielmodus() !== 'hotseat') {
+      leerenNamenVerhindern();
+    }
     spielStarten();
     await spielerListeUpdaten();
   }
@@ -60,3 +62,12 @@ const spielmodus = () => {
   let params = new URL(document.location).searchParams;
   return params.get('mode');
 };
+
+// Hamburger Menü
+
+function clickHamburger() {
+  const hamburger = document.querySelector('.hamburger');
+  hamburger.classList.toggle('cross');
+  const menu = document.querySelector('.menu');
+  menu.classList.toggle('menuOpen');
+}

@@ -4,12 +4,12 @@
 }
 
 body {
-  background-color: #0a4d68;
+  background-color: #252525;
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 100vh;
+  max-height: 100vh;
   margin: 16px;
 }
 
@@ -23,16 +23,6 @@ header {
 
 header img {
   width: 32px;
-}
-
-header a {
-  display: flex;
-  color: black;
-  border-radius: 8px;
-  background-color: #00ffca;
-  text-decoration: none;
-  cursor: pointer;
-  padding: 4px 8px;
 }
 
 h1 {
@@ -88,6 +78,78 @@ main a {
 
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+.menu {
+  background-color: #252525;
+  position: fixed;
+  padding-top: 35px;
+  z-index: 3;
+  width: 300px;
+  height: 90vh;
+  transform: translateX(1000%);
+  box-shadow: 1px 1px 6px #222;
+  transition: all 250ms ease-in-out;
+  right: 0;
+  border: 3px solid #088395;
+}
+
+.menuItem {
+  color: white;
+  margin: 16px;
+  font-size: 25px;
+  border-bottom: 2px solid #088395;
+}
+
+.menuItem a {
+  text-decoration: none;
+  color: white;
+}
+
+.menuOpen {
+  transform: translateX(0%) !important;
+}
+
+.menuItem:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.hamburger {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  background-color: #00ffca;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 5px 0px 0px 5px;
+  z-index: 4;
+  right: 0;
+  cursor: pointer;
+}
+
+.slice {
+  width: 22px;
+  height: 3px;
+  margin: 2.5px 0px;
+  background-color: black;
+  border-radius: 5px;
+  transform-origin: left;
+  transition: all 250ms ease-in-out;
+}
+
+.cross .slice:nth-of-type(1) {
+  transform: rotate(45deg);
+}
+
+.cross .slice:nth-of-type(2) {
+  opacity: 0;
+}
+
+.cross .slice:nth-of-type(3) {
+  transform: rotate(-45deg);
 }
 
 .spielanzeige {
@@ -205,6 +267,11 @@ main a {
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  color: white;
+
+  width: 10px;
+  height: 25px;
+  position: relative;
 }
 
 .feld:last-child {
@@ -246,19 +313,55 @@ main a {
 }
 
 .spieler-x .kleines-spielfeld-reihe {
-  color: gray;
+  color: lightgray;
 }
 
 .spieler-o .kleines-spielfeld-reihe {
-  color: gray;
+  color: lightgray;
 }
 
 .unentschieden .kleines-spielfeld-reihe {
-  color: gray;
+  color: lightgray;
+}
+
+.x-gewinnt {
+  color: rgba(0, 255, 202, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px; 
+  height: 100px;  
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.o-gewinnt {
+  color: rgba(8, 131, 149, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em; 
+  width: 100px;
+  height: 100px;  
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.unentschieden {
+  color: rgba(128, 128, 128, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em; 
+  width: 100px;
+  height: 100px;  
+  display: flex;
+  justify-content: center; 
+  align-items: center;
 }
 
 .overlay {
-  background-color: #0a4d68;
+  background-color: #252525;
   position: fixed;
   inset: 0;
   display: flex;
@@ -298,6 +401,65 @@ main a {
   opacity: 1;
   pointer-events: all;
   transition: opacity 1.5s;
+}
+
+/* Heldentafel */
+
+table {
+  border-collapse: collapse;
+  color: white;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+}
+
+tr:first-child {
+  border-bottom: 2px solid #088395;
+}
+
+td:first-child {
+  border-right: 2px solid #088395;
+  width: 65%;
+}
+  
+td:last-child {
+  width: 35%;
+}
+
+/* Profilseite */
+
+.profilbild {
+  width: 200px;
+  height: auto;
+  margin: 16px;
+}
+
+.profil-spielername {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.profil-spielername label {
+  color: white;
+  margin-right: 10px;
+}
+
+.profil-spielername input {
+  background-color: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: medium;
+    width: 150px;
+}
+
+.profil-spielername input:hover {
+  background-color: #088395;
+  border-radius: 8px;
+  padding: 4px;
 }
 
 @media (min-width: 768px) {

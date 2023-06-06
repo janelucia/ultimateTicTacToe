@@ -67,13 +67,13 @@ const spielfeldAnzeigen = (zustand) => {
       // Je nach dem, was in dem Feld steht, wird dem eine Klasse zugeordnet.
       if (spielstand === 'X') {
         kleinesSpielfeldDiv.classList.add('spieler-x');
-        kleinesSpielfeldDiv.innerText = 'X';
+        kleinesSpielfeldDiv.innerHTML = '<span class="x-gewinnt">X</span>';
       } else if (spielstand === 'O') {
         kleinesSpielfeldDiv.classList.add('spieler-o');
-        kleinesSpielfeldDiv.innerText = 'O';
+        kleinesSpielfeldDiv.innerHTML = '<span class="o-gewinnt">O</span>';
       } else if (spielstand === 'unentschieden') {
         kleinesSpielfeldDiv.classList.add('unentschieden');
-        kleinesSpielfeldDiv.innerText = 'U';
+        kleinesSpielfeldDiv.innerHTML = '<span class="unentschieden">U</span>';
       } else if (
         (l1 === zustand.momentanerZug.l3 && l2 === zustand.momentanerZug.l4) ||
         (zustand.momentanerZug.l3 === '' && zustand.momentanerZug.l4 === '')
@@ -95,11 +95,13 @@ const spielfeldAnzeigen = (zustand) => {
             const heldIdentifizieren = sessionStorageInformationen();
             if (!kleinesSpielfeldDiv.classList.contains('naechstes-feld')) {
               return;
-            } else if (
-              parseInt(heldIdentifizieren.id) !==
-              parseInt(zustand.momentanerSpieler.id)
-            ) {
-              return;
+            } else if (spielmodus() === 'multiplayer') {
+              if (
+                parseInt(heldIdentifizieren.id) !==
+                parseInt(zustand.momentanerSpieler.id)
+              ) {
+                return;
+              }
             }
             zustand.momentanerZug = { l1, l2, l3, l4 };
             zugBeginnen(zustand);

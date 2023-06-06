@@ -4,24 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
     <script src="app.js" defer></script>
-    <script src="js/service.js" defer></script>
     <script src="js/game.js" defer></script>
-    <script src="js/renderGame.js" defer></script>
-    <script src="js/netzwerkSpiel.js" defer></script>
-    <script src="js/utils/namenSetzen.js" defer></script>
-    <script src="js/utils/spielerNamen.js" defer></script>
-    <script src="js/utils/config.js" defer></script>
-    <script src="js/lokalesSpiel.js" defer></script>
-    <title>Ultimate Tic Tac Toe</title>
-
+    <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/svg" href="/client/assets/tic-tac-toe.svg" />
-
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
+    <title>Ultimate Tic Tac Toe</title>
   </head>
   <body>
     <header>
@@ -46,12 +37,20 @@
       </div>
     </header>
     <main>
-      <div class="spielanzeige"></div>
-      <div class="spielfeld"></div>
-      <div class="overlay">
-        <p class="overlay-text">Platzhalter</p>
-        <button class="overlay-button">Nochmal spielen!</button>
+      <h2>Mein Profil</h2>
+      <img
+        class="profilbild"
+        src="assets/blank-profile-picture.png"
+        alt="leeres Profilbild"
+      />
+      <div class="profil-spielername">
+        <label for="nameInput">Name:</label>
+        <input type="text" id="nameInput" />
+        <button onclick="saveName()">Save</button>
       </div>
+      <br />
+      <p>Gewonnene Spiele:</p>
+      <p>Gespielte Spiele:</p>
     </main>
     <footer>Made with ❤ | by Katharina and Jane</footer>
   </body>
