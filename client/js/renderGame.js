@@ -36,13 +36,10 @@ const uebersichtAnzeigen = async (zustand) => {
       momentanerSpielerAnzeigen.innerText = 'Der gegnerische Held ist am Zug!';
     }
   } else {
-    if (
-      zustand.momentanerSpieler.icon === zustand.helden.X.icon ||
-      zustand.momentanerSpieler.icon === zustand.helden.O.icon
-    ) {
-      momentanerSpielerAnzeigen.innerText = 'Du bist dran!';
+    if (zustand.momentanerSpieler.icon === zustand.helden.X.icon) {
+      momentanerSpielerAnzeigen.innerText = `${zustand.helden.X.name} ist dran!`;
     } else {
-      momentanerSpielerAnzeigen.innerText = 'Der gegnerische Held ist am Zug!';
+      momentanerSpielerAnzeigen.innerText = `${zustand.helden.O.name} ist dran!`;
     }
   }
 

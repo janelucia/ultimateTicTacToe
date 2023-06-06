@@ -1,22 +1,17 @@
 const heldenErstellen = () => {
   let helden;
-  if (!zufaelligeNamen) {
-    // generiert einen witzigen Namen für den Spieler, wenn diese nicht im Mehrspielermodus sind - IDEE: vielleicht auslagern und schon auf der Indexseite anbieten per Button?
+  if (spielmodus() === 'hotseat') {
     zufaelligeNamen = zufaelligeNamenWuerfelnArray();
-    if (spielmodus() === 'hotseat') {
-      helden = {
-        X: { name: zufaelligeNamen[0], icon: 'X' },
-        O: { name: zufaelligeNamen[1], icon: 'O' },
-      };
-    } else if (spielmodus() === 'singleplayer') {
-      let nameX = !sessionStorage.getItem('name')
-        ? zufaelligeNamen[0]
-        : JSON.parse(sessionStorage.getItem('name'));
-      helden = {
-        X: { name: nameX, icon: 'X' },
-        O: { name: 'Robo', icon: 'O' },
-      };
-    }
+    helden = {
+      X: { name: zufaelligeNamen[0], icon: 'X' },
+      O: { name: zufaelligeNamen[1], icon: 'O' },
+    };
+  } else if (spielmodus() === 'singleplayer') {
+    let spielerX = sessionStorageInformationen();
+    helden = {
+      X: { name: spielerX.name, icon: 'X' },
+      O: { name: 'Robo', icon: 'O' },
+    };
   }
   return helden;
 };
