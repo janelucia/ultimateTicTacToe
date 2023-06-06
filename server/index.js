@@ -67,9 +67,14 @@ app.patch('/lobby/:id', (req, res) => {
 
 app.put('/lobby/:id', (req, res) => {
   const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
+  const gewinner = req.body.spielzustand.gewinner;
 
   if (!lobby) {
     return res.status(404).send();
+  }
+
+  if (gewinner) {
+    const spiel = lobby.spiele.find((s) => !s.gewinner);
   }
 
   const momentanerSpieler =

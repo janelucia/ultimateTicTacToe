@@ -277,8 +277,11 @@ async function spielBeenden(zustand) {
     }
   } else {
     if (spielmodus() === 'mehrspieler') {
-      console.log(zustand);
+      console.log('zustand vor gewinner setzen: ', zustand);
       const gewinnerId = zustand.helden[standGrossesFeld].id;
+      zustand = { ...zustand, gewinner: { gewinnerId } };
+      console.log('zustand nach Gewinner: ', zustand);
+      await spielstandUpdate(zustand);
       await spielerListeUpdaten({ spielId: zustand.id, gewinnerId });
     }
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;

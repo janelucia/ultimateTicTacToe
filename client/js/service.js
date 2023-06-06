@@ -41,7 +41,6 @@ async function neuesMehrspielerSpiel(held) {
   const status = await pollNeuesMehrspielerSpiel(spielErstellen.location);
   if (status) {
     window.location = `/client/game.html?mode=mehrspieler&spielBeitreten=${status.id}`;
-    localStorage.setItem('status', JSON.stringify(status));
   }
 }
 

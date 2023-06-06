@@ -3,6 +3,8 @@ async function mehrspielerModus(zustand) {
 
   const spielInformationen = await spielstandHolen();
 
+  console.log('spielinfos: ', spielInformationen);
+
   if (
     !spielInformationen.helden.O &&
     heldInformationenHolen.id !== spielInformationen.helden.X.id
