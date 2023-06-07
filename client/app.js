@@ -16,9 +16,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else if (currentPath.endsWith('/game.html')) {
     await spielerAnlegen();
     if (spielmodus() !== 'hotseat') {
-      leerenNamenVerhindern();
+      await leerenNamenVerhindern();
     }
     spielStarten();
+  } else if (currentPath.endsWith('/profil.html')) {
+    await leerenNamenVerhindern();
+    renderSpieleUebersicht();
   }
 });
 

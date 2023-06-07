@@ -110,6 +110,20 @@ async function weiteresMehrspielerSpielErstellen(zustand) {
   });
 }
 
+async function alleSpielerHolen() {
+  return fetch(`${SPIELER_ENDPOINT}`, {
+    method: 'GET',
+  });
+}
+
+async function spielerHolen() {
+  const spielerInfosHolen = sessionStorageInformationen();
+  const spielerId = spielerInfosHolen.id;
+  return fetch(`${SPIELER_ENDPOINT}/${spielerId}`, {
+    method: 'GET',
+  });
+}
+
 async function spielerAnlegen() {
   const spielerInfosHolen = sessionStorageInformationen();
   return fetch(`${SPIELER_ENDPOINT}`, {

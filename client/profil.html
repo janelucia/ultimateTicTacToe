@@ -5,7 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="app.js" defer></script>
-    <script src="js/game.js" defer></script>
+    <script src="js/spieleUebersichtRendern.js" defer></script>
+    <script src="js/utils/config.js" defer></script>
+    <script src="js/utils/namenSetzen.js" defer></script>
+    <script src="js/utils/spielerNamen.js" defer></script>
+    <script src="js/service.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/svg" href="/client/assets/tic-tac-toe.svg" />
     <link
@@ -28,29 +32,28 @@
             <a href="/client/lobby.html">Startseite</a>
           </div>
           <div class="menuItem">
-            <a href="/client/profil.html">Mein Profil</a>
+            <a href="/client/heldentafel.html">Heldentafel</a>
           </div>
           <div class="menuItem">
-            <a href="/client/heldentafel.html">Heldentafel</a>
+            <a href="/client/profil.html">Mein Profil</a>
           </div>
         </div>
       </div>
     </header>
     <main>
       <h2>Mein Profil</h2>
-      <img
-        class="profilbild"
-        src="assets/blank-profile-picture.png"
-        alt="leeres Profilbild"
-      />
-      <div class="profil-spielername">
-        <label for="nameInput">Name:</label>
-        <input type="text" id="nameInput" />
-        <button onclick="saveName()">Save</button>
-      </div>
-      <br />
-      <p>Gewonnene Spiele:</p>
-      <p>Gespielte Spiele:</p>
+      <div class="profil-spielername"></div>
+      <h3 class="gespielte-spiele">Gespielte Spiele:</h3>
+      <h3 class="gewonnene-spiele">Gewonnene Spiele:</h3>
+      <ul class="gewonnen-singleplayer">
+        Singleplayer
+      </ul>
+      <ul class="gewonnen-hotseat">
+        Hotseat
+      </ul>
+      <ul class="gewonnen-mehrspieler">
+        Mehrspieler
+      </ul>
     </main>
     <footer>Made with ❤ | by Katharina and Jane</footer>
   </body>

@@ -14,3 +14,13 @@ const overlayText = document.querySelector('.overlay-text');
 const overlayButton = document.querySelector('.overlay-button');
 
 let zufaelligeNamen;
+
+// Profil rendern
+const profilNameDiv = document.querySelector('.profil-spielername');
+
+// Konstanten, um die Spieleuebersicht zu Rendern
+const gespielteSpieleHeader = document.querySelector('.gespielte-spiele');
+const gewonneneSpieleHeader = document.querySelector('.gewonnene-spiele');
+const gewonnenSingleplayerUl = document.querySelector('.gewonnen-singleplayer');
+const gewonnenHotseatUl = document.querySelector('.gewonnen-hotseat');
+const gewonnenmehrspielerUl = document.querySelector('.gewonnen-mehrspieler');

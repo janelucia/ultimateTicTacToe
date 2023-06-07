@@ -144,6 +144,23 @@ app.post('/lobby/:id', (req, res) => {
   return res.json(patchedGame);
 });
 
+app.get('/spieler', (req, res) => {
+  if (!spieler) {
+    return res.status(404).send();
+  }
+  return res.json(spieler);
+});
+
+app.get('/spieler/:id', (req, res) => {
+  const held = spieler.find((d) => d.heldId === req.params.id);
+
+  if (!held) {
+    return res.status(404).send();
+  }
+
+  return res.json(held);
+});
+
 app.post('/spieler', (req, res) => {
   const held = spieler.find((d) => d.heldId === req.body.spieler.id);
 
