@@ -89,7 +89,11 @@ const spielzustand = async (spielzustand) => {
   let momentanesSpiel = await data.momentanesSpiel;
 
   if (spielmodus() !== 'mehrspieler') {
-    momentanerSpieler = heldenClientSideTogglen(data);
+    if (!momentanerSpieler) {
+      momentanerSpieler = werFaengtAn(helden);
+    } else {
+      momentanerSpieler = heldenClientSideTogglen(data);
+    }
   }
 
   let momentanerZug;
@@ -161,6 +165,11 @@ function zugBeginnen(zustand) {
   ) {
     if (zug(macheZufaelligenZug(zustand))) {
       zugBeenden(zustand);
+    } else {
+      // TODO: Funktioniert nicht - wieso?
+      while (!zug(macheZufaelligenZug(zustand))) {
+        zug(macheZufaelligenZug(zustand));
+      }
     }
   } else {
     if (zug(zustand)) {
@@ -173,14 +182,6 @@ function zug(zustand) {
   // Prüfen, ob das Feld schon besetzt ist
   let { l1, l2, l3, l4 } = zustand.momentanerZug;
   if (zustand.spielfeld[l1][l2][l3][l4] != '') {
-    // Falls Robo ein Feld nimmt, welches schon besetzt ist, darf er es nochmal versuchen
-    if (
-      spielmodus() === 'singleplayer' &&
-      zustand.momentanerSpieler.name === 'Robo'
-    ) {
-      zustand = macheZufaelligenZug(zustand);
-      console.log('He tried again: ', zustand);
-    }
     return false;
   }
 
@@ -263,42 +264,36 @@ async function spielBeenden(zustand) {
     standGrossesFeld === 'Spiel läuft noch' ||
     standGrossesFeld === 'unentschieden'
   ) {
+    // TODO unentschieden richtig implementieren
     if (naechstesFeld.length === 0) {
-      if (spielmodus() === 'mehrspieler') {
-        zustand = spielstandZuruecksetzen(zustand);
-        await weiteresMehrspielerSpielErstellen(zustand);
-        zustand = { ...zustand, gewinner: { unentschieden: 'unentschieden' } };
-        await spielerListeUpdaten({
-          spielId: zustand.momentanesSpiel,
-          // TODO unentschieden richtig implementieren
-          unentschieden: 'unentschieden',
-        });
-      }
+      const gewinnerId = 'unentschieden';
+      await updateSpielerListeGewinner(zustand, gewinnerId);
 
       // overlay - wer hat gewonnen
       overlayText.innerText = 'Unentschieden!';
       overlay.classList.add(SICHTBAR_KLASSE);
       overlayButton.addEventListener('click', async () => {
+        if (spielmodus() === 'mehrspieler') {
+          zustand = spielstandZuruecksetzen(zustand);
+          await weiteresMehrspielerSpielErstellen(zustand);
+        }
         spielStarten();
       });
       return true;
     }
   } else {
-    if (spielmodus() === 'mehrspieler') {
-      const gewinnerId = zustand.helden[standGrossesFeld].id;
-      console.log('Gewinnerid', gewinnerId);
-      await spielerListeUpdaten({
-        spielId: zustand.momentanesSpiel,
-        gewinnerId,
-        spielmodus: 'mehrspieler',
-      });
-    }
+    const gewinnerId = zustand.helden[standGrossesFeld].id;
+    console.log('Gewinnerid', gewinnerId);
+    updateSpielerListeGewinner(zustand, gewinnerId);
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);
     overlay.classList.add(SICHTBAR_KLASSE);
     overlayButton.addEventListener('click', async () => {
-      zustand = spielstandZuruecksetzen(zustand);
-      await weiteresMehrspielerSpielErstellen(zustand);
+      if (spielmodus() === 'mehrspieler') {
+        zustand = spielstandZuruecksetzen(zustand);
+        await weiteresMehrspielerSpielErstellen(zustand);
+      }
+
       spielStarten();
     });
     return true;
@@ -307,8 +302,51 @@ async function spielBeenden(zustand) {
   return false;
 }
 
+async function updateSpielerListeGewinner(zustand, gewinnerId) {
+  if (spielmodus() === 'mehrspieler') {
+    // const zuege = zuegeZaehlen(
+    //   zustand,
+    //   zustand.helden[standGrossesFeld].icon
+    // );
+    await spielerListeUpdaten({
+      spielId: zustand.momentanesSpiel,
+      gewinnerId,
+      spielmodus: 'mehrspieler',
+    });
+  } else if (spielmodus() === 'singleplayer') {
+    await spielerListeUpdaten({
+      spielId: zustand.momentanesSpiel,
+      gewinnerId,
+      spielmodus: 'singleplayer',
+    });
+  } else {
+    // TODO: Was soll bei Hotseat als Gewinner gespeichert werden? So könnte man sagen, dass der Acc ja immer X ist und darüber kann man dann sagen, wie oft Spiele gewonnen oder verloren wurden
+    await spielerListeUpdaten({
+      spielId: zustand.momentanesSpiel,
+      gewinnerId,
+      spielmodus: 'Hotseat',
+    });
+  }
+}
+
 function spielstandZuruecksetzen(zustand) {
   zustand.spielfeld = initialesSpielfeld();
   zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   return zustand;
 }
+
+// TODO: wenn noch Zeit ist - Zuege zählen
+// function zuegeZaehlen(zustand, gewinnerIcon) {
+//   console.log(zustand.spielfeld);
+//   const zaehler = zustand.spielfeld.reduce((acc, momentan) => {
+//     if (Array.isArray(momentan)) {
+//       return acc + zuegeZaehlen(momentan, gewinnerIcon);
+//     } else if (momentan === gewinnerIcon) {
+//       return acc + 1;
+//     } else {
+//       return acc;
+//     }
+//   }, 0);
+
+//   return zaehler;
+// }

@@ -1,15 +1,15 @@
 const heldenErstellen = () => {
   let helden;
+  let spielerX = sessionStorageInformationen();
   if (spielmodus() === 'hotseat') {
     zufaelligeNamen = zufaelligeNamenWuerfelnArray();
     helden = {
-      X: { name: zufaelligeNamen[0], icon: 'X' },
+      X: { id: spielerX.id, name: spielerX.name, icon: 'X' },
       O: { name: zufaelligeNamen[1], icon: 'O' },
     };
   } else if (spielmodus() === 'singleplayer') {
-    let spielerX = sessionStorageInformationen();
     helden = {
-      X: { name: spielerX.name, icon: 'X' },
+      X: { id: spielerX.id, name: spielerX.name, icon: 'X' },
       O: { name: 'Robo', icon: 'O' },
     };
   }
@@ -19,6 +19,10 @@ const heldenErstellen = () => {
 // der Zufall entscheidet, wer beginnt
 const werFaengtAn = (helden) => {
   return Math.random() < 0.5 ? helden.X : helden.O;
+};
+
+const momentanesSpiel = () => {
+  return Math.floor(Math.random() * 1e6);
 };
 
 // Spieler togglen
@@ -31,9 +35,24 @@ const heldenClientSideTogglen = (data) => {
 };
 
 async function lokalesSpiel(zustand) {
-  let helden = heldenErstellen();
-  let momentanerSpieler = werFaengtAn(helden);
-  zustand = await spielzustand({ helden, momentanerSpieler });
+  let helden;
+  let momentanesSpielId = momentanesSpiel();
+  if (!zustand) {
+    helden = heldenErstellen();
+    zustand = await spielzustand({
+      helden,
+      momentanesSpiel: momentanesSpielId,
+    });
+  } else {
+    zustand = {
+      ...zustand,
+      momentanesSpiel: momentanesSpielId,
+      momentanerZug: { l1: '', l2: '', l3: '', l4: '' },
+      spielfeld: initialesSpielfeld(),
+    };
+    zustand = await spielzustand(zustand);
+  }
+
   return zustand;
 }
 

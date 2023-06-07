@@ -10,9 +10,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       gegnerIndexSeiteRendern();
     }
   } else if (currentPath.endsWith('/gegnersuche.html')) {
-    leerenNamenVerhindern();
+    await spielerAnlegen();
+    await leerenNamenVerhindern();
     await neuesMehrspielerSpiel(sessionStorageInformationen());
   } else if (currentPath.endsWith('/game.html')) {
+    await spielerAnlegen();
     if (spielmodus() !== 'hotseat') {
       leerenNamenVerhindern();
     }
