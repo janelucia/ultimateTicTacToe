@@ -41,9 +41,9 @@ h2 {
 footer {
   color: white;
   align-self: center;
-  position:absolute;
+  position: absolute;
   margin: 16px 0;
-  bottom:0;
+  bottom: 0;
 }
 
 main {
@@ -333,10 +333,10 @@ main a {
   position: absolute;
   z-index: 1;
   font-size: 8em;
-  width: 100px; 
-  height: 100px;  
+  width: 100px;
+  height: 100px;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
 }
 
@@ -344,11 +344,11 @@ main a {
   color: rgba(8, 131, 149, 0.5);
   position: absolute;
   z-index: 1;
-  font-size: 8em; 
+  font-size: 8em;
   width: 100px;
-  height: 100px;  
+  height: 100px;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
 }
 
@@ -356,11 +356,11 @@ main a {
   color: rgba(128, 128, 128, 0.5);
   position: absolute;
   z-index: 1;
-  font-size: 8em; 
+  font-size: 8em;
   width: 100px;
-  height: 100px;  
+  height: 100px;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
 }
 
@@ -414,7 +414,8 @@ table {
   color: white;
 }
 
-th, td {
+th,
+td {
   padding: 8px;
   text-align: left;
 }
@@ -427,7 +428,7 @@ td:first-child {
   border-right: 2px solid #088395;
   width: 65%;
 }
-  
+
 td:last-child {
   width: 35%;
 }
@@ -453,11 +454,11 @@ td:last-child {
 
 .profil-spielername input {
   background-color: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    font-size: medium;
-    width: 150px;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: medium;
+  width: 150px;
 }
 
 .profil-spielername input:hover {
@@ -495,6 +496,4 @@ td:last-child {
     width: 90%;
     height: 90%;
   }
-
-  
 }

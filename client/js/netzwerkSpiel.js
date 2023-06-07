@@ -12,9 +12,9 @@ async function mehrspielerModus(zustand) {
     const held2Hinzufuegen = await heldZumSpielHinzufuegen(
       heldInformationenHolen
     );
-    const game = await held2Hinzufuegen.json();
+    const spiel = await held2Hinzufuegen.json();
     if (held2Hinzufuegen.status === 200) {
-      zustand = await spielzustand(game);
+      zustand = await spielzustand(spiel);
     }
   } else {
     zustand = await spielzustand(spielInformationen);

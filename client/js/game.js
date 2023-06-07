@@ -84,8 +84,9 @@ function großesFeldErstellen(zustand) {
 // speichert den momentanen Zustand des Spiels
 const spielzustand = async (spielzustand) => {
   let data = await spielzustand;
-  let helden = await spielzustand.helden;
-  let momentanerSpieler = await spielzustand.momentanerSpieler;
+  let helden = await data.helden;
+  let momentanerSpieler = await data.momentanerSpieler;
+  let momentanesSpiel = await data.momentanesSpiel;
 
   if (spielmodus() !== 'mehrspieler') {
     momentanerSpieler = heldenClientSideTogglen(data);
@@ -109,6 +110,7 @@ const spielzustand = async (spielzustand) => {
 
   // in data wird abgespeichert, wie das momentane Feld aussieht und wer gerade am Zug ist
   data = {
+    momentanesSpiel,
     helden,
     spielfeld,
     momentanerSpieler,
@@ -133,9 +135,6 @@ async function spielStarten() {
 
   // Das Overlay wieder verstecken, falls es bereits sichtbar ist
   overlay.classList.remove(SICHTBAR_KLASSE);
-
-  // Die Klasse des letzten Siegers vom Overlay-Text entfernen
-  overlayText.classList.remove(SPIELER_KLASSE, GEGNER_KLASSE);
 
   uebersichtAnzeigen(await zustand);
   spielfeldAnzeigen(await zustand);
@@ -265,30 +264,41 @@ async function spielBeenden(zustand) {
     standGrossesFeld === 'unentschieden'
   ) {
     if (naechstesFeld.length === 0) {
+      if (spielmodus() === 'mehrspieler') {
+        zustand = spielstandZuruecksetzen(zustand);
+        await weiteresMehrspielerSpielErstellen(zustand);
+        zustand = { ...zustand, gewinner: { unentschieden: 'unentschieden' } };
+        await spielerListeUpdaten({
+          spielId: zustand.momentanesSpiel,
+          // TODO unentschieden richtig implementieren
+          unentschieden: 'unentschieden',
+        });
+      }
+
+      // overlay - wer hat gewonnen
       overlayText.innerText = 'Unentschieden!';
       overlay.classList.add(SICHTBAR_KLASSE);
       overlayButton.addEventListener('click', async () => {
-        if (spielmodus() === 'mehrspieler') {
-          await spielstandZuruecksetzenUndGewinnerSetzen(zustand);
-        }
         spielStarten();
       });
       return true;
     }
   } else {
     if (spielmodus() === 'mehrspieler') {
-      console.log('zustand vor gewinner setzen: ', zustand);
       const gewinnerId = zustand.helden[standGrossesFeld].id;
-      zustand = { ...zustand, gewinner: { gewinnerId } };
-      console.log('zustand nach Gewinner: ', zustand);
-      await spielstandUpdate(zustand);
-      await spielerListeUpdaten({ spielId: zustand.id, gewinnerId });
+      console.log('Gewinnerid', gewinnerId);
+      await spielerListeUpdaten({
+        spielId: zustand.momentanesSpiel,
+        gewinnerId,
+        spielmodus: 'mehrspieler',
+      });
     }
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);
     overlay.classList.add(SICHTBAR_KLASSE);
     overlayButton.addEventListener('click', async () => {
-      await spielstandZuruecksetzenUndGewinnerSetzen(zustand);
+      zustand = spielstandZuruecksetzen(zustand);
+      await weiteresMehrspielerSpielErstellen(zustand);
       spielStarten();
     });
     return true;
@@ -297,8 +307,8 @@ async function spielBeenden(zustand) {
   return false;
 }
 
-async function spielstandZuruecksetzenUndGewinnerSetzen(zustand) {
-  zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
+function spielstandZuruecksetzen(zustand) {
   zustand.spielfeld = initialesSpielfeld();
-  await spielstandUpdate(zustand);
+  zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
+  return zustand;
 }

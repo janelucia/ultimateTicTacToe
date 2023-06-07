@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs'); //write to filesystem,um lobbies und spieler nachhaltig zu speichern
-const filename = 'zustand.json'; //um den Zustand zu speichern - nochmal beides nachlesen! oder better sql lite
+const lobbiesFile = 'lobbies.json'; //um den Zustand zu speichern
+const spielerFile = 'spieler.json';
 const app = express();
 const port = 3000;
 let lobbies = [];
@@ -20,7 +21,10 @@ app.get('/lobby/:id', (req, res) => {
 
 app.post('/lobby', (req, res) => {
   let id = Math.floor(Math.random() * 1e6);
-  let spielId = id++;
+  let spielId = Math.floor(Math.random() * 1e6);
+  do {
+    spielId = Math.floor(Math.random() * 1e6);
+  } while (id === spielId);
 
   lobbies = [
     ...lobbies,
@@ -30,7 +34,7 @@ app.post('/lobby', (req, res) => {
         O: undefined,
       },
       id,
-      spiele: [{ spielId }],
+      momentanesSpiel: spielId,
     },
   ];
 
@@ -69,14 +73,9 @@ app.patch('/lobby/:id', (req, res) => {
 
 app.put('/lobby/:id', (req, res) => {
   const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
-  const gewinner = req.body.spielzustand.gewinner;
 
   if (!lobby) {
     return res.status(404).send();
-  }
-
-  if (gewinner) {
-    const spiel = lobby.spiele.find((s) => !s.gewinner);
   }
 
   const momentanerSpieler =
@@ -88,8 +87,48 @@ app.put('/lobby/:id', (req, res) => {
 
   let spielfeld = req.body.spielzustand.spielfeld;
 
-  const patchedGame = {
+  let patchedGame = {
     ...lobby,
+    momentanerSpieler,
+    momentanerZug,
+    spielfeld,
+  };
+
+  lobbies = lobbies.map((l) => {
+    if (l.id === patchedGame.id) {
+      return patchedGame;
+    }
+    return l;
+  });
+
+  return res.json(patchedGame);
+});
+
+app.post('/lobby/:id', (req, res) => {
+  const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
+
+  if (!lobby) {
+    return res.status(404).send();
+  }
+
+  let spielId;
+
+  do {
+    spielId = Math.floor(Math.random() * 1e6);
+  } while (lobby.id === spielId);
+
+  const momentanesSpiel = spielId;
+
+  const momentanerSpieler =
+    Math.random() < 0.5 ? lobby.helden.X : lobby.helden.O;
+
+  const momentanerZug = req.body.zustand.momentanerZug;
+
+  const spielfeld = req.body.zustand.spielfeld;
+
+  let patchedGame = {
+    ...lobby,
+    momentanesSpiel,
     momentanerSpieler,
     momentanerZug,
     spielfeld,
@@ -121,59 +160,23 @@ app.post('/spieler', (req, res) => {
     },
   ];
 
-  console.log(spieler);
-
   res.status(201).send();
 });
 
-app.put('/spieler', (req, res) => {
-  const held = spieler.find((d) => d.heldId === req.body.spieler.id);
-
-  console.log('Held', spieler);
+app.patch('/spieler/:id', (req, res) => {
+  const name = req.body.spieler;
+  const held = spieler.find((d) => d.heldId === req.params.id);
 
   if (!held) {
     return res.status(404).send();
   }
 
-  let updateSpieler;
-  const name = req.body.spieler.name;
+  // wenn noch kein Spiel gespielt wird, dann wird hier nur der Namen vom Helden geändert, falls der User einen neuen Namen angibt.
 
-  const heldenSpiele = req.body.spiele;
-  const spielId = req.body.spiele.spielId;
-  const gewinner = req.body.spiele.gewinnerId;
-
-  const testSpielId = held.spiele.find((d) => d.spielId === spielId);
-
-  console.log('spiele', heldenSpiele);
-  console.log('spieleID', spielId);
-  console.log('Helden Spiel ID', held.spiele.spielId);
-  console.log(testSpielId);
-
-  if (!spielId) {
-    updateSpieler = {
-      ...held,
-      name,
-    };
-  } else if (!testSpielId) {
-    updateSpieler = {
-      ...held,
-      name,
-      spiele: [...held.spiele, { spielId }],
-    };
-  } else if (gewinner) {
-    const spiel = heldenSpiele.find((d) => d.spielId === spielId);
-    gewinner = gewinner === held.id;
-    console.log('Gewinner', gewinner);
-    updateSpieler = {
-      ...held,
-      spiele: [
-        ...held.spiele.filter((d) => d.spielId !== spiel.spielId),
-        { ...spiel, gewinner: [...gewinner, gewinner] },
-      ],
-    };
-  } else if (testSpielId) {
-    return res.send();
-  }
+  let updateSpieler = {
+    ...held,
+    name,
+  };
 
   spieler = spieler.map((s) => {
     if (s.heldId === updateSpieler.heldId) {
@@ -182,8 +185,48 @@ app.put('/spieler', (req, res) => {
     return s;
   });
 
-  console.log(spieler);
-  console.log(held);
+  console.log('Spieler: ', spieler);
+
+  res.send();
+});
+
+app.put('/spieler', (req, res) => {
+  const held = spieler.find((d) => d.heldId === req.body.spieler.id);
+
+  if (!held) {
+    return res.status(404).send();
+  }
+
+  console.log('Zustand', req.body.zustand);
+
+  let updateSpieler;
+
+  const spielId = req.body.zustand.spielId;
+  const spielmodus = req.body.zustand.spielmodus;
+  const gewinner = req.body.zustand.gewinnerId;
+
+  const spielIdSuchen = held.spiele.find((d) => d.spielId === spielId);
+
+  if (spielIdSuchen) {
+    return res.status(404).send('Spiel und Gewinner existieren schon');
+  }
+
+  // falls noch kein Spiel mit der Spielid existiert, dann wird diese gesetzt. Da die Funktion erst am Ende des jeweiligen Spiel aufgerufen wird, wird das Spiel und der Gewinner gleichzeitig gesetzt
+  let istGewinner = gewinner === held.heldId;
+
+  updateSpieler = {
+    ...held,
+    spiele: [...held.spiele, { spielId, gewinner: istGewinner, spielmodus }],
+  };
+
+  console.log('Update Spieler', updateSpieler);
+
+  spieler = spieler.map((s) => {
+    if (s.heldId === updateSpieler.heldId) {
+      return updateSpieler;
+    }
+    return s;
+  });
 
   return res.send();
 });

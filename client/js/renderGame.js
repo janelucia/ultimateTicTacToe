@@ -63,14 +63,11 @@ const spielfeldAnzeigen = (zustand) => {
       kleinesSpielfeldDiv.classList.add('kleines-spielfeld');
       // Je nach dem, was in dem Feld steht, wird dem eine Klasse zugeordnet.
       if (spielstand === 'X') {
-        kleinesSpielfeldDiv.classList.add('spieler-x');
-        kleinesSpielfeldDiv.innerHTML = '<span class="x-gewinnt">X</span>';
+        renderGewinnerKleinesFeld(kleinesSpielfeldDiv, 'x');
       } else if (spielstand === 'O') {
-        kleinesSpielfeldDiv.classList.add('spieler-o');
-        kleinesSpielfeldDiv.innerHTML = '<span class="o-gewinnt">O</span>';
+        renderGewinnerKleinesFeld(kleinesSpielfeldDiv, 'o');
       } else if (spielstand === 'unentschieden') {
-        kleinesSpielfeldDiv.classList.add('unentschieden');
-        kleinesSpielfeldDiv.innerHTML = '<span class="unentschieden">U</span>';
+        renderGewinnerKleinesFeld(kleinesSpielfeldDiv, 'u');
       } else if (
         (l1 === zustand.momentanerZug.l3 && l2 === zustand.momentanerZug.l4) ||
         (zustand.momentanerZug.l3 === '' && zustand.momentanerZug.l4 === '')
@@ -92,7 +89,7 @@ const spielfeldAnzeigen = (zustand) => {
             const heldIdentifizieren = sessionStorageInformationen();
             if (!kleinesSpielfeldDiv.classList.contains('naechstes-feld')) {
               return;
-            } else if (spielmodus() === 'multiplayer') {
+            } else if (spielmodus() === 'mehrspieler') {
               if (
                 parseInt(heldIdentifizieren.id) !==
                 parseInt(zustand.momentanerSpieler.id)
@@ -117,4 +114,24 @@ const spielfeldAnzeigen = (zustand) => {
   }
 };
 
-// position relative and absolute nutzen für positioning
+/**
+ *
+ * @param {HTMLElement} element
+ * @param {String} gewinner
+ */
+function renderGewinnerKleinesFeld(element, gewinner) {
+  if (gewinner === 'U') {
+    element.classList.add('unentschieden');
+  } else {
+    element.classList.add(`spieler-${gewinner}`);
+  }
+
+  const kleinesSpielfeldSpan = document.createElement('span');
+  if (gewinner === 'U') {
+    kleinesSpielfeldSpan.classList.add('unentschieden');
+  } else {
+    kleinesSpielfeldSpan.classList.add(`${gewinner}-gewinnt`);
+  }
+  kleinesSpielfeldSpan.innerText = gewinner.toLocaleUpperCase();
+  element.appendChild(kleinesSpielfeldSpan);
+}

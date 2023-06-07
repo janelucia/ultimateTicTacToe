@@ -4,7 +4,7 @@ browserIdSetzen();
 document.addEventListener('DOMContentLoaded', async () => {
   const currentPath = window.location.pathname;
   if (currentPath.endsWith('/lobby.html')) {
-    await spielerZurListeHinzufuegen();
+    await spielerAnlegen();
     heldenNamenInputRendern();
     if (lobbyIdHolen()) {
       gegnerIndexSeiteRendern();
@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       leerenNamenVerhindern();
     }
     spielStarten();
-    await spielerListeUpdaten();
   }
 });
 
@@ -33,7 +32,6 @@ function browserIdSetzen() {
 async function leerenNamenVerhindern() {
   const namenHolen = sessionStorageInformationen();
   let namen = namenHolen.name;
-  console.log(namen);
   if (namen) {
     return;
   }
@@ -41,7 +39,7 @@ async function leerenNamenVerhindern() {
   namen = zufaelligeNamen[0];
 
   sessionStorageNameSetzen(namen);
-  await spielerListeUpdaten();
+  await spielerNamenAendern();
 
   return namenHolen === namen;
 }
@@ -57,7 +55,10 @@ function lobbyIdHolen() {
   return lobbyIdHolen.get('spielBeitreten');
 }
 
-// Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
+/**
+ * Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
+ * @returns {('mehrspieler' | 'singleplayer' | 'hotseat')}
+ */
 const spielmodus = () => {
   let params = new URL(document.location).searchParams;
   return params.get('mode');

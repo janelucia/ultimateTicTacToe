@@ -19,7 +19,7 @@ async function zufaelligeNamenWuerfelnAusfuehren() {
   input.value = namenInput;
 
   sessionStorageNameSetzen(namenInput);
-  await spielerListeUpdaten();
+  await spielerNamenAendern();
 
   heldenNamenInputRendern();
 }

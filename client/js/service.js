@@ -96,7 +96,21 @@ async function spielstandUpdate(zustand) {
   });
 }
 
-async function spielerZurListeHinzufuegen() {
+async function weiteresMehrspielerSpielErstellen(zustand) {
+  const id = lobbyIdHolen();
+  console.log('lobbyId', id);
+  return fetch(`${LOBBY_ENDPOINT}/${id}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      zustand,
+    }),
+  });
+}
+
+async function spielerAnlegen() {
   const spielerInfosHolen = sessionStorageInformationen();
   return fetch(`${SPIELER_ENDPOINT}`, {
     method: 'POST',
@@ -109,7 +123,21 @@ async function spielerZurListeHinzufuegen() {
   });
 }
 
-async function spielerListeUpdaten(gewinner, spielId) {
+async function spielerNamenAendern() {
+  const spielerInfosHolen = sessionStorageInformationen();
+  const spielerId = spielerInfosHolen.id;
+  return fetch(`${SPIELER_ENDPOINT}/${spielerId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      spieler: spielerInfosHolen.name,
+    }),
+  });
+}
+
+async function spielerListeUpdaten(zustand) {
   const spielerInfosHolen = sessionStorageInformationen();
   return fetch(`${SPIELER_ENDPOINT}`, {
     method: 'PUT',
@@ -118,7 +146,7 @@ async function spielerListeUpdaten(gewinner, spielId) {
     },
     body: JSON.stringify({
       spieler: spielerInfosHolen,
-      spiele: { spielId, gewinner },
+      zustand,
     }),
   });
 }
