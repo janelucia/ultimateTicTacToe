@@ -319,7 +319,6 @@ async function updateSpielerListeGewinner(zustand, gewinner) {
       spielmodus: 'einzelspieler',
     });
   } else {
-    // TODO: Was soll bei Hotseat als Gewinner gespeichert werden? So könnte man sagen, dass der Acc ja immer X ist und darüber kann man dann sagen, wie oft Spiele gewonnen oder verloren wurden
     await spielerListeUpdaten({
       spielId: zustand.momentanesSpiel,
       gewinnerId: gewinner.id,
