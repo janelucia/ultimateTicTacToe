@@ -21,11 +21,13 @@ const profilNameDiv = document.querySelector('.profil-spielername');
 // Konstanten, um die Spieleuebersicht zu Rendern
 const gespielteSpieleHeader = document.querySelector('.gespielte-spiele');
 const gewonneneSpieleHeader = document.querySelector('.gewonnene-spiele');
-const gewonnenEinzelspielerUl = document.querySelector(
+const gewonnenEinzelspielerHeader = document.querySelector(
   '.gewonnen-einzelspieler'
 );
-const gewonnenHotseatUl = document.querySelector('.gewonnen-hotseat');
-const gewonnenmehrspielerUl = document.querySelector('.gewonnen-mehrspieler');
+const gewonnenHotseatHeader = document.querySelector('.gewonnen-hotseat');
+const gewonnenmehrspielerHeader = document.querySelector(
+  '.gewonnen-mehrspieler'
+);
 
 // Heldentafel
 const table = document.querySelector('table');

@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     spielStarten();
   } else if (currentPath.endsWith('/profil.html')) {
-    await leerenNamenVerhindern();
     renderSpieleUebersicht();
   } else if (currentPath.endsWith('/heldentafel.html')) {
     spielerListeHolen();

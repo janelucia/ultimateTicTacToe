@@ -40,23 +40,23 @@ async function renderSpieleUebersicht() {
   profilNameP.innerText = data.held;
   profilNameDiv.appendChild(profilNameP);
 
-  const gespielteSpieleSpan = document.createElement('span');
+  const gespielteSpieleSpan = document.createElement('p');
   gespielteSpieleSpan.innerText = data.zaehlenGespielt;
   gespielteSpieleHeader.appendChild(gespielteSpieleSpan);
 
-  const gewonneneSpieleSpan = document.createElement('span');
+  const gewonneneSpieleSpan = document.createElement('p');
   gewonneneSpieleSpan.innerText = data.zaehlenGewinner;
   gewonneneSpieleHeader.appendChild(gewonneneSpieleSpan);
 
-  const gewonneneEinzelspielerSpan = document.createElement('span');
+  const gewonneneEinzelspielerSpan = document.createElement('p');
   gewonneneEinzelspielerSpan.innerText = data.zaehlenEinzelspieler;
-  gewonnenEinzelspielerUl.appendChild(gewonneneEinzelspielerSpan);
+  gewonnenEinzelspielerHeader.appendChild(gewonneneEinzelspielerSpan);
 
-  const gewonneneHotseatSpan = document.createElement('span');
+  const gewonneneHotseatSpan = document.createElement('p');
   gewonneneHotseatSpan.innerText = data.zaehlenHotseat;
-  gewonnenHotseatUl.appendChild(gewonneneHotseatSpan);
+  gewonnenHotseatHeader.appendChild(gewonneneHotseatSpan);
 
-  const gewonneneMehrspielerSpan = document.createElement('span');
+  const gewonneneMehrspielerSpan = document.createElement('p');
   gewonneneMehrspielerSpan.innerText = data.zaehlenMehrspieler;
-  gewonnenmehrspielerUl.appendChild(gewonneneMehrspielerSpan);
+  gewonnenmehrspielerHeader.appendChild(gewonneneMehrspielerSpan);
 }

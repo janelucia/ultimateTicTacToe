@@ -36,6 +36,10 @@ h2 {
   font-weight: normal;
 }
 
+h4 {
+  color: white;
+}
+
 /*TODO: Was wenn wir zu viele Leute in der Heldenliste haben? Dann müsste ein untergründiges Scrollen implementiert werden */
 
 footer {
@@ -493,6 +497,43 @@ td:last-child {
   padding: 4px;
 } */
 
+.uebersicht-spiele {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-width: fit-content;
+  margin: 0 auto;
+}
+
+.gespielte-spiele,
+.gewonnene-spiele,
+.gewonnen-einzelspieler,
+.gewonnen-hotseat,
+.gewonnen-mehrspieler {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.gespielte-spiele p,
+.gewonnen-einzelspieler p,
+.gewonnen-hotseat p,
+.gewonnen-mehrspieler p {
+  font-size: large;
+}
+
+.gewonnene-spiele p {
+  font-size: xx-large;
+  position: relative;
+}
+
+.gewonnene-spiele p::after {
+  content: '\1F389';
+  font-size: 24px;
+  margin-left: 5px;
+}
+
 @media (min-width: 768px) {
   .spielfeld {
     width: 50vw;
@@ -504,6 +545,18 @@ td:last-child {
 
   table {
     width: 50%;
+  }
+
+  .gespielte-spiele,
+  .gewonnene-spiele,
+  .gewonnen-einzelspieler,
+  .gewonnen-hotseat,
+  .gewonnen-mehrspieler {
+    gap: 16px;
+  }
+
+  .uebersicht-spiele {
+    width: 25%;
   }
 }
 

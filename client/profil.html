@@ -35,7 +35,9 @@
             <a href="/client/heldentafel.html">Heldentafel</a>
           </div>
           <div class="menuItem">
-            <a href="/client/profil.html">Mein Profil</a>
+            <a href="/client/profil.html" onclick="leerenNamenVerhindern()"
+              >Mein Profil</a
+            >
           </div>
         </div>
       </div>
@@ -43,17 +45,23 @@
     <main>
       <h2>Mein Profil</h2>
       <div class="profil-spielername"></div>
-      <h3 class="gespielte-spiele">Gespielte Spiele:</h3>
-      <h3 class="gewonnene-spiele">Gewonnene Spiele:</h3>
-      <ul class="gewonnen-einzelspieler">
-        Einzelspieler
-      </ul>
-      <ul class="gewonnen-hotseat">
-        Hotseat
-      </ul>
-      <ul class="gewonnen-mehrspieler">
-        Mehrspieler
-      </ul>
+      <div class="uebersicht-spiele">
+        <div class="gespielte-spiele">
+          <h3>Gespielte Spiele:</h3>
+        </div>
+        <div class="gewonnene-spiele">
+          <h3>Gewonnene Spiele:</h3>
+        </div>
+        <div class="gewonnen-einzelspieler">
+          <h4>Einzelspieler</h4>
+        </div>
+        <div class="gewonnen-hotseat">
+          <h4>Hotseat</h4>
+        </div>
+        <div class="gewonnen-mehrspieler">
+          <h4>Mehrspieler</h4>
+        </div>
+      </div>
     </main>
     <footer>Made with ❤ | by Katharina and Jane</footer>
   </body>
