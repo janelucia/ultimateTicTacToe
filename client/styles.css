@@ -421,12 +421,18 @@ ul {
 table {
   border-collapse: collapse;
   color: white;
+  width: 100%;
 }
 
 th,
 td {
   padding: 8px;
   text-align: left;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  text-align: right;
 }
 
 tr:first-child {
@@ -440,6 +446,11 @@ td:first-child {
 
 td:last-child {
   width: 1/3;
+}
+
+.highlight-spieler {
+  color: #00ffca;
+  font-weight: bolder;
 }
 
 /* Profilseite */
@@ -489,6 +500,10 @@ td:last-child {
   }
   .hero {
     width: 25vw;
+  }
+
+  table {
+    width: 50%;
   }
 }
 

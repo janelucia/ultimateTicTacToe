@@ -164,7 +164,3 @@ async function spielerListeUpdaten(zustand) {
     }),
   });
 }
-
-/* TODO:
- * Spieler und ihre Spiele (unterschieden in gewonnen und nicht) anzeigen
- */
