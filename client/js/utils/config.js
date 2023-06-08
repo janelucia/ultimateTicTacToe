@@ -24,3 +24,6 @@ const gewonneneSpieleHeader = document.querySelector('.gewonnene-spiele');
 const gewonnenSingleplayerUl = document.querySelector('.gewonnen-singleplayer');
 const gewonnenHotseatUl = document.querySelector('.gewonnen-hotseat');
 const gewonnenmehrspielerUl = document.querySelector('.gewonnen-mehrspieler');
+
+// Heldentafel
+const table = document.querySelector('table');

@@ -221,6 +221,7 @@ app.put('/spieler', (req, res) => {
   const spielId = req.body.zustand.spielId;
   const spielmodus = req.body.zustand.spielmodus;
   const gewinner = req.body.zustand.gewinnerId;
+  const zuegeGewinner = req.body.zustand.zuegeGewinner;
 
   const spielIdSuchen = held.spiele.find((d) => d.spielId === spielId);
 
@@ -233,7 +234,10 @@ app.put('/spieler', (req, res) => {
 
   updateSpieler = {
     ...held,
-    spiele: [...held.spiele, { spielId, gewinner: istGewinner, spielmodus }],
+    spiele: [
+      ...held.spiele,
+      { spielId, gewinner: istGewinner, zuegeGewinner, spielmodus },
+    ],
   };
 
   console.log('Update Spieler', updateSpieler);

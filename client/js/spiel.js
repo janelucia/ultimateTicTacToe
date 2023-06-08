@@ -163,14 +163,11 @@ function zugBeginnen(zustand) {
     spielmodus() === 'singleplayer' &&
     zustand.momentanerSpieler.name === 'Robo'
   ) {
-    if (zug(macheZufaelligenZug(zustand))) {
-      zugBeenden(zustand);
-    } else {
-      // TODO: Funktioniert nicht - wieso?
-      while (!zug(macheZufaelligenZug(zustand))) {
-        zug(macheZufaelligenZug(zustand));
-      }
+    let roboMachtZug;
+    while (!roboMachtZug) {
+      roboMachtZug = zug(macheZufaelligenZug(zustand));
     }
+    zugBeenden(zustand);
   } else {
     if (zug(zustand)) {
       zugBeenden(zustand);
@@ -282,9 +279,9 @@ async function spielBeenden(zustand) {
       return true;
     }
   } else {
-    const gewinnerId = zustand.helden[standGrossesFeld].id;
-    console.log('Gewinnerid', gewinnerId);
-    updateSpielerListeGewinner(zustand, gewinnerId);
+    const gewinner = zustand.helden[standGrossesFeld];
+    console.log('Gewinnerid', gewinner);
+    updateSpielerListeGewinner(zustand, gewinner);
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);
     overlay.classList.add(SICHTBAR_KLASSE);
@@ -302,28 +299,31 @@ async function spielBeenden(zustand) {
   return false;
 }
 
-async function updateSpielerListeGewinner(zustand, gewinnerId) {
+async function updateSpielerListeGewinner(zustand, gewinner) {
+  const flachesSpielfeldArray = flachesArrayErstellen(zustand.spielfeld);
+  const zuegeGewinner = zuegeZaehlen(flachesSpielfeldArray, gewinner.icon);
+  console.log('occurence ', zuegeGewinner);
+
   if (spielmodus() === 'mehrspieler') {
-    // const zuege = zuegeZaehlen(
-    //   zustand,
-    //   zustand.helden[standGrossesFeld].icon
-    // );
     await spielerListeUpdaten({
       spielId: zustand.momentanesSpiel,
-      gewinnerId,
+      gewinnerId: gewinner.id,
+      zuegeGewinner,
       spielmodus: 'mehrspieler',
     });
   } else if (spielmodus() === 'singleplayer') {
     await spielerListeUpdaten({
       spielId: zustand.momentanesSpiel,
-      gewinnerId,
+      gewinnerId: gewinner.id,
+      zuegeGewinner,
       spielmodus: 'singleplayer',
     });
   } else {
     // TODO: Was soll bei Hotseat als Gewinner gespeichert werden? So könnte man sagen, dass der Acc ja immer X ist und darüber kann man dann sagen, wie oft Spiele gewonnen oder verloren wurden
     await spielerListeUpdaten({
       spielId: zustand.momentanesSpiel,
-      gewinnerId,
+      gewinnerId: gewinner.id,
+      zuegeGewinner,
       spielmodus: 'Hotseat',
     });
   }
@@ -335,18 +335,25 @@ function spielstandZuruecksetzen(zustand) {
   return zustand;
 }
 
-// TODO: wenn noch Zeit ist - Zuege zählen
-// function zuegeZaehlen(zustand, gewinnerIcon) {
-//   console.log(zustand.spielfeld);
-//   const zaehler = zustand.spielfeld.reduce((acc, momentan) => {
-//     if (Array.isArray(momentan)) {
-//       return acc + zuegeZaehlen(momentan, gewinnerIcon);
-//     } else if (momentan === gewinnerIcon) {
-//       return acc + 1;
-//     } else {
-//       return acc;
-//     }
-//   }, 0);
+function flachesArrayErstellen(array) {
+  const flachesArray = [];
+  for (let element of array) {
+    if (Array.isArray(element)) {
+      flachesArray.push(...flachesArrayErstellen(element));
+    } else {
+      flachesArray.push(element);
+    }
+  }
 
-//   return zaehler;
-// }
+  return flachesArray;
+}
+
+function zuegeZaehlen(flachesArray, icon) {
+  return flachesArray.reduce((acc, curr) => {
+    if (curr === icon) {
+      return acc + 1;
+    } else {
+      return acc;
+    }
+  }, 0);
+}
