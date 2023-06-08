@@ -34,7 +34,7 @@ const linkRendern = async (spielErstellen) => {
 function gegnerIndexSeiteRendern() {
   // rechte Seite holen und alles entfernen, was nicht mit Input zu tun hat
   const spielId = lobbyIdHolen();
-  const spielLink = `game.html?mode=mehrspieler&spielBeitreten=${spielId}`;
+  const spielLink = `spiel.html?mode=mehrspieler&spielBeitreten=${spielId}`;
 
   const rechteSeite = document.getElementsByClassName('rechte-seite');
   const children = rechteSeite[0].children;

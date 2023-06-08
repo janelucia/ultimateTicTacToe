@@ -40,7 +40,7 @@ async function neuesMehrspielerSpiel(held) {
   linkRendern(spielErstellen);
   const status = await pollNeuesMehrspielerSpiel(spielErstellen.location);
   if (status) {
-    window.location = `/client/game.html?mode=mehrspieler&spielBeitreten=${status.id}`;
+    window.location = `/client/spiel.html?mode=mehrspieler&spielBeitreten=${status.id}`;
   }
 }
 

@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await spielerAnlegen();
     await leerenNamenVerhindern();
     await neuesMehrspielerSpiel(sessionStorageInformationen());
-  } else if (currentPath.endsWith('/game.html')) {
+  } else if (currentPath.endsWith('/spiel.html')) {
     await spielerAnlegen();
     if (spielmodus() !== 'hotseat') {
       await leerenNamenVerhindern();
