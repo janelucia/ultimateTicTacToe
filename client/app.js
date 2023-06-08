@@ -63,8 +63,8 @@ function lobbyIdHolen() {
 }
 
 /**
- * Spielmodus bestimmen (Singleplayer, Hotseat oder Robo)
- * @returns {('mehrspieler' | 'singleplayer' | 'hotseat')}
+ * Spielmodus bestimmen (Einzelspieler, Hotseat oder Robo)
+ * @returns {('mehrspieler' | 'einzelspieler' | 'hotseat')}
  */
 const spielmodus = () => {
   let params = new URL(document.location).searchParams;

@@ -3,7 +3,7 @@
 Der ultimative Spielspaß mit dem Klassiker.
 
 ## To Do
-* wie wird zwischen Hotseat, Multi- und Singleplayer unterschieden? eigene js Seiten, die auf Funktionen in der game.js zu greifen, aber eigene Abläufe haben? Wie Klick verhindern, wenn der andere dran ist, bei Multi- und Singleplayer, aber bei Hotseat erlauben?
+* wie wird zwischen Hotseat, Mehr- und Einzelspieler unterschieden? eigene js Seiten, die auf Funktionen in der game.js zu greifen, aber eigene Abläufe haben? Wie Klick verhindern, wenn der andere dran ist, bei Mehr- und Einzelspieler, aber bei Hotseat erlauben?
 
 ## Komplexität (min. 6)
 
@@ -15,7 +15,7 @@ Der ultimative Spielspaß mit dem Klassiker.
 
 ## Zusätzlich
 
-- eine Singleplayer Version zu erstellen
+- eine Einzelspieler Version zu erstellen
 - Historien und Bestenliste mittels eigenen User Agent
 - Anmeldung (keine externen Dienste) für Netzwerk
 

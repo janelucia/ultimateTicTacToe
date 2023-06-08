@@ -2,34 +2,34 @@ async function spielerInfos() {
   let json = await spielerHolen();
   let data = await json.json();
 
-  let countGespielt = data.spiele.length;
-  let countSingleplayer = 0;
-  let countHotseat = 0;
-  let countMehrspieler = 0;
-  let countGewinner = 0;
+  let zaehlenGespielt = data.spiele.length;
+  let zaehlenEinzelspieler = 0;
+  let zaehlenHotseat = 0;
+  let zaehlenMehrspieler = 0;
+  let zaehlenGewinner = 0;
 
   for (let i = 0; i < data.spiele.length; i++) {
     if (data.spiele[i].gewinner === true) {
-      countGewinner++;
+      zaehlenGewinner++;
     }
-    if (data.spiele[i].spielmodus === 'singleplayer') {
-      countSingleplayer++;
+    if (data.spiele[i].spielmodus === 'einzelspieler') {
+      zaehlenEinzelspieler++;
     } else if (data.spiele[i].spielmodus === 'hotseat') {
-      countHotseat++;
+      zaehlenHotseat++;
     } else {
-      countMehrspieler++;
+      zaehlenMehrspieler++;
     }
   }
 
-  console.log(countGespielt);
+  console.log(zaehlenGespielt);
 
   return {
     held: data.name,
-    countGespielt,
-    countGewinner,
-    countSingleplayer,
-    countHotseat,
-    countMehrspieler,
+    zaehlenGespielt,
+    zaehlenGewinner,
+    zaehlenEinzelspieler,
+    zaehlenHotseat,
+    zaehlenMehrspieler,
   };
 }
 
@@ -41,22 +41,22 @@ async function renderSpieleUebersicht() {
   profilNameDiv.appendChild(profilNameP);
 
   const gespielteSpieleSpan = document.createElement('span');
-  gespielteSpieleSpan.innerText = data.countGespielt;
+  gespielteSpieleSpan.innerText = data.zaehlenGespielt;
   gespielteSpieleHeader.appendChild(gespielteSpieleSpan);
 
   const gewonneneSpieleSpan = document.createElement('span');
-  gewonneneSpieleSpan.innerText = data.countGewinner;
+  gewonneneSpieleSpan.innerText = data.zaehlenGewinner;
   gewonneneSpieleHeader.appendChild(gewonneneSpieleSpan);
 
-  const gewonneneSingleplayerSpan = document.createElement('span');
-  gewonneneSingleplayerSpan.innerText = data.countSingleplayer;
-  gewonnenSingleplayerUl.appendChild(gewonneneSingleplayerSpan);
+  const gewonneneEinzelspielerSpan = document.createElement('span');
+  gewonneneEinzelspielerSpan.innerText = data.zaehlenEinzelspieler;
+  gewonnenEinzelspielerUl.appendChild(gewonneneEinzelspielerSpan);
 
   const gewonneneHotseatSpan = document.createElement('span');
-  gewonneneHotseatSpan.innerText = data.countHotseat;
+  gewonneneHotseatSpan.innerText = data.zaehlenHotseat;
   gewonnenHotseatUl.appendChild(gewonneneHotseatSpan);
 
   const gewonneneMehrspielerSpan = document.createElement('span');
-  gewonneneMehrspielerSpan.innerText = data.countMehrspieler;
+  gewonneneMehrspielerSpan.innerText = data.zaehlenMehrspieler;
   gewonnenmehrspielerUl.appendChild(gewonneneMehrspielerSpan);
 }

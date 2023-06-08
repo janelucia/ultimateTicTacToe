@@ -7,7 +7,7 @@ const heldenErstellen = () => {
       X: { id: spielerX.id, name: spielerX.name, icon: 'X' },
       O: { name: zufaelligeNamen[1], icon: 'O' },
     };
-  } else if (spielmodus() === 'singleplayer') {
+  } else if (spielmodus() === 'einzelspieler') {
     helden = {
       X: { id: spielerX.id, name: spielerX.name, icon: 'X' },
       O: { name: 'Robo', icon: 'O' },
@@ -58,7 +58,7 @@ async function lokalesSpiel(zustand) {
 
 // Hotseat
 
-// Singleplayer
+// Einzelspieler
 
 function macheZufaelligenZug(zustand) {
   // Zufällige Indizes für jede Dimension generieren

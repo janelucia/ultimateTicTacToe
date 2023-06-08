@@ -144,7 +144,7 @@ async function spielStarten() {
   spielfeldAnzeigen(await zustand);
 
   if (
-    spielmodus() === 'singleplayer' &&
+    spielmodus() === 'einzelspieler' &&
     zustand.momentanerSpieler.name === 'Robo'
   ) {
     zugBeginnen(zustand);
@@ -160,7 +160,7 @@ async function spielStarten() {
 
 function zugBeginnen(zustand) {
   if (
-    spielmodus() === 'singleplayer' &&
+    spielmodus() === 'einzelspieler' &&
     zustand.momentanerSpieler.name === 'Robo'
   ) {
     let roboMachtZug;
@@ -236,7 +236,7 @@ async function zugBeenden(zustand) {
   }
 
   if (
-    spielmodus() === 'singleplayer' &&
+    spielmodus() === 'einzelspieler' &&
     neuerZustand.momentanerSpieler.name === 'Robo'
   ) {
     zugBeginnen(neuerZustand);
@@ -311,12 +311,12 @@ async function updateSpielerListeGewinner(zustand, gewinner) {
       zuegeGewinner,
       spielmodus: 'mehrspieler',
     });
-  } else if (spielmodus() === 'singleplayer') {
+  } else if (spielmodus() === 'einzelspieler') {
     await spielerListeUpdaten({
       spielId: zustand.momentanesSpiel,
       gewinnerId: gewinner.id,
       zuegeGewinner,
-      spielmodus: 'singleplayer',
+      spielmodus: 'einzelspieler',
     });
   } else {
     // TODO: Was soll bei Hotseat als Gewinner gespeichert werden? So könnte man sagen, dass der Acc ja immer X ist und darüber kann man dann sagen, wie oft Spiele gewonnen oder verloren wurden
