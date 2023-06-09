@@ -1,5 +1,5 @@
 async function mehrspielerModus(zustand) {
-  let heldInformationenHolen = sessionStorageInformationen();
+  let heldInformationenHolen = localStorageInformationen();
 
   const spielInformationen = await spielstandHolen();
 

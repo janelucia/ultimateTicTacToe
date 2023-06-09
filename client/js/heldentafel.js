@@ -31,8 +31,8 @@ const spielerListeHolen = async () => {
 };
 
 function renderHeldentafel(sortiertesArr) {
-  const spielerSessionStorage = sessionStorageInformationen();
-  const spielerId = spielerSessionStorage.id;
+  const spielerLocalStorage = localStorageInformationen();
+  const spielerId = spielerLocalStorage.id;
   const table = document.querySelector('table');
 
   while (table.rows.length > 1) {

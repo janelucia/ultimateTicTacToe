@@ -128,7 +128,7 @@ const spielzustand = async (spielzustand) => {
 
 async function spielStarten() {
   let zustand;
-  const heldIdentifizieren = sessionStorageInformationen();
+  const heldIdentifizieren = localStorageInformationen();
 
   // momentanen Zustand des Spiels laden
   if (spielmodus() === 'mehrspieler') {
@@ -189,7 +189,7 @@ function zug(zustand) {
 }
 
 async function zugBeenden(zustand) {
-  const heldIdentifizieren = sessionStorageInformationen();
+  const heldIdentifizieren = localStorageInformationen();
 
   // momentanen Spielstand auslesen
   const spielstand = standPruefen(

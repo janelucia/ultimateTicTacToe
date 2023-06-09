@@ -117,7 +117,7 @@ async function alleSpielerHolen() {
 }
 
 async function spielerHolen() {
-  const spielerInfosHolen = sessionStorageInformationen();
+  const spielerInfosHolen = localStorageInformationen();
   const spielerId = spielerInfosHolen.id;
   return fetch(`${SPIELER_ENDPOINT}/${spielerId}`, {
     method: 'GET',
@@ -125,7 +125,7 @@ async function spielerHolen() {
 }
 
 async function spielerAnlegen() {
-  const spielerInfosHolen = sessionStorageInformationen();
+  const spielerInfosHolen = localStorageInformationen();
   return fetch(`${SPIELER_ENDPOINT}`, {
     method: 'POST',
     headers: {
@@ -138,7 +138,7 @@ async function spielerAnlegen() {
 }
 
 async function spielerNamenAendern() {
-  const spielerInfosHolen = sessionStorageInformationen();
+  const spielerInfosHolen = localStorageInformationen();
   const spielerId = spielerInfosHolen.id;
   return fetch(`${SPIELER_ENDPOINT}/${spielerId}`, {
     method: 'PATCH',
@@ -152,7 +152,7 @@ async function spielerNamenAendern() {
 }
 
 async function spielerListeUpdaten(zustand) {
-  const spielerInfosHolen = sessionStorageInformationen();
+  const spielerInfosHolen = localStorageInformationen();
   return fetch(`${SPIELER_ENDPOINT}`, {
     method: 'PUT',
     headers: {

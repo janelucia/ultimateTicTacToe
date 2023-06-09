@@ -1,6 +1,6 @@
 const heldenErstellen = () => {
   let helden;
-  let spielerX = sessionStorageInformationen();
+  let spielerX = localStorageInformationen();
   if (spielmodus() === 'hotseat') {
     zufaelligeNamen = zufaelligeNamenWuerfelnArray();
     helden = {

@@ -25,7 +25,7 @@ const uebersichtAnzeigen = async (zustand) => {
 
   const momentanerSpielerAnzeigen = document.createElement('p');
 
-  const heldIdentifizieren = sessionStorageInformationen();
+  const heldIdentifizieren = localStorageInformationen();
 
   if (spielmodus() === 'mehrspieler') {
     if (
@@ -86,7 +86,7 @@ const spielfeldAnzeigen = (zustand) => {
             feldDiv.innerText = feld;
           }
           feldDiv.addEventListener('click', () => {
-            const heldIdentifizieren = sessionStorageInformationen();
+            const heldIdentifizieren = localStorageInformationen();
             if (!kleinesSpielfeldDiv.classList.contains('naechstes-feld')) {
               return;
             } else if (spielmodus() === 'mehrspieler') {

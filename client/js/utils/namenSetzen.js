@@ -1,12 +1,12 @@
 async function inputFeldHeldenNamen() {
   const namenInput = document.getElementById('spielername').value;
   if (namenInput === '') {
-    sessionStorage.removeItem('name');
+    localStorage.removeItem('name');
     heldenNamenInputRendern();
     return;
   }
   console.debug(namenInput);
-  sessionStorageNameSetzen(namenInput);
+  localStorageNameSetzen(namenInput);
 
   heldenNamenInputRendern();
 }
@@ -18,14 +18,14 @@ async function zufaelligeNamenWuerfelnAusfuehren() {
   let input = document.getElementById('spielername');
   input.value = namenInput;
 
-  sessionStorageNameSetzen(namenInput);
+  localStorageNameSetzen(namenInput);
   await spielerNamenAendern();
 
   heldenNamenInputRendern();
 }
 
-function sessionStorageNameSetzen(namen) {
-  sessionStorage.setItem('name', namen);
+function localStorageNameSetzen(namen) {
+  localStorage.setItem('name', namen);
 }
 
 function zufaelligeNamenWuerfelnArray() {
@@ -35,12 +35,12 @@ function zufaelligeNamenWuerfelnArray() {
 function heldenNamenInputRendern() {
   const ueberschrift = document.querySelector('.rechte-seite h2');
 
-  const sessionStorageName = sessionStorage.getItem('name');
+  const localStorageName = localStorage.getItem('name');
 
   ueberschrift.innerText = `Herzlich Willkommen, ${
-    !sessionStorageName ? 'Spieler!' : sessionStorageName
+    !localStorageName ? 'Spieler!' : localStorageName
   }`;
 
   let input = document.getElementById('spielername');
-  input.value = sessionStorageName;
+  input.value = localStorageName;
 }

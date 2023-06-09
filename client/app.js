@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else if (currentPath.endsWith('/gegnersuche.html')) {
     await spielerAnlegen();
     await leerenNamenVerhindern();
-    await neuesMehrspielerSpiel(sessionStorageInformationen());
+    await neuesMehrspielerSpiel(localStorageInformationen());
   } else if (currentPath.endsWith('/spiel.html')) {
     await spielerAnlegen();
     if (spielmodus() !== 'hotseat') {
@@ -27,16 +27,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function browserIdSetzen() {
-  if (sessionStorage.getItem('id')) {
+  if (localStorage.getItem('id')) {
     return;
   }
   const id = Math.round(Math.random() * 1e6);
-  sessionStorage.setItem('id', JSON.stringify(id));
+  localStorage.setItem('id', JSON.stringify(id));
   console.log(id);
 }
 
 async function leerenNamenVerhindern() {
-  const namenHolen = sessionStorageInformationen();
+  const namenHolen = localStorageInformationen();
   let namen = namenHolen.name;
   if (namen) {
     return;
@@ -44,15 +44,15 @@ async function leerenNamenVerhindern() {
   let zufaelligeNamen = zufaelligeNamenWuerfelnArray();
   namen = zufaelligeNamen[0];
 
-  sessionStorageNameSetzen(namen);
+  localStorageNameSetzen(namen);
   await spielerNamenAendern();
 
   return namenHolen === namen;
 }
 
-function sessionStorageInformationen() {
-  const id = sessionStorage.getItem('id');
-  const name = sessionStorage.getItem('name');
+function localStorageInformationen() {
+  const id = localStorage.getItem('id');
+  const name = localStorage.getItem('name');
   return { id, name };
 }
 
