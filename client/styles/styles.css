@@ -1,0 +1,661 @@
+:root {
+  --spieler-farbe: #00ffca;
+  --gegner-farbe: #088395;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #252525;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+header {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+header img {
+  width: 32px;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+  margin: 0;
+}
+
+h2 {
+  color: white;
+  text-align: center;
+  font-weight: normal;
+}
+
+h3 {
+  color: white;
+}
+
+h4 {
+  color: white;
+}
+
+footer {
+  color: white;
+  align-self: center;
+  position: absolute;
+  bottom: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  padding: 0 16px 16px 16px;
+  gap: 16px;
+}
+
+main p {
+  color: white;
+  text-align: center;
+}
+
+main a {
+  color: black;
+  border-radius: 8px;
+  background-color: #00ffca;
+  border: 1px solid black;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  width: fit-content;
+  align-self: center;
+  font-size: medium;
+}
+
+ul {
+  color: white;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+.menu {
+  background-color: #252525;
+  position: fixed;
+  padding-top: 35px;
+  z-index: 3;
+  width: 300px;
+  height: 90vh;
+  transform: translateX(1000%);
+  box-shadow: 1px 1px 6px #222;
+  transition: all 250ms ease-in-out;
+  right: 0;
+  border: 3px solid #088395;
+}
+
+.menuItem {
+  color: white;
+  margin: 16px;
+  font-size: 25px;
+  border-bottom: 2px solid #088395;
+}
+
+.menuItem a {
+  text-decoration: none;
+  color: white;
+}
+
+.menuOpen {
+  transform: translateX(0%) !important;
+}
+
+.menuItem:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.hamburger {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  background-color: #00ffca;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 5px 0px 0px 5px;
+  z-index: 4;
+  right: 0;
+  cursor: pointer;
+}
+
+.slice {
+  width: 22px;
+  height: 3px;
+  margin: 2.5px 0;
+  background-color: black;
+  border-radius: 5px;
+  transform-origin: left;
+  transition: all 250ms ease-in-out;
+}
+
+.cross .slice:nth-of-type(1) {
+  transform: rotate(45deg);
+}
+
+.cross .slice:nth-of-type(2) {
+  opacity: 0;
+}
+
+.cross .slice:nth-of-type(3) {
+  transform: rotate(-45deg);
+}
+
+.spielanzeige {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero {
+  display: flex;
+  width: 90vw;
+  justify-content: space-between;
+}
+
+.hero p {
+  color: #00ffca;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Lobby */
+.oberflaeche {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.linke-seite {
+  display: flex;
+  justify-content: center;
+  max-height: fit-content;
+  width: 100%;
+}
+
+.linke-seite img {
+  width: 70%;
+  height: 70%;
+}
+
+.rechte-seite {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-spielername {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.input-spielername button {
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.input-feld {
+  display: block;
+  border-radius: 8px;
+  border: 2px solid black;
+  padding: 5px;
+}
+
+.einzel-mehrspieler {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Gegnersuche */
+
+.mehrspieler-link-div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.mehrspieler-link-div button {
+  background-color: #00ffca;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.mehrspieler-link-div button:hover {
+  background-color: #00e6b7;
+}
+
+.mehrspieler-link-div button:focus {
+  outline: none;
+}
+
+.spielfeld {
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+
+.reihe-großes-spielfeld {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  width: 100%;
+  border: 2px solid transparent;
+}
+
+.reihe-großes-spielfeld:not(:last-child) {
+  border-bottom-color: #00ffccb9;
+}
+
+.kleines-spielfeld {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  padding: 4px;
+}
+
+.kleines-spielfeld {
+  border: 2px solid transparent;
+  border-right-color: #00ffccb9;
+}
+
+.kleines-spielfeld:last-child {
+  border-right-color: transparent;
+}
+
+.kleines-spielfeld-reihe {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 33.33%;
+  border: 2px solid transparent;
+}
+
+.kleines-spielfeld-reihe:not(:last-child) {
+  border-bottom-color: #088395;
+}
+
+.feld {
+  border: 2px solid transparent;
+  border-right-color: #05bfdb;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  color: white;
+
+  width: 10px;
+  height: 25px;
+  position: relative;
+}
+
+.feld:last-child {
+  border-right-color: transparent;
+}
+
+.feld::before,
+.feld::after {
+  content: '';
+  box-sizing: border-box;
+}
+
+.feld.spieler-x::before,
+.spielanzeige.spieler-x ~ .spielfeld .feld:not([disabled]):hover::before {
+  border: 1rem solid var(--spieler-farbe);
+  border-radius: 50%;
+  width: 80%;
+  height: 80%;
+}
+
+.feld.spieler-o::before,
+.feld.spieler-o::after {
+  background-color: var(--gegner-farbe);
+  width: 1rem;
+  height: 80%;
+}
+
+.feld.spieler-o::before {
+  transform: translateX(50%) rotate(45deg);
+}
+
+.feld.spieler-o::after {
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+.naechstes-feld {
+  outline: thin solid coral;
+  cursor: pointer;
+}
+
+.spieler-x .kleines-spielfeld-reihe {
+  color: lightgray;
+}
+
+.spieler-o .kleines-spielfeld-reihe {
+  color: lightgray;
+}
+
+.unentschieden .kleines-spielfeld-reihe {
+  color: lightgray;
+}
+
+.x-gewinnt {
+  color: rgba(0, 255, 202, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.o-gewinnt {
+  color: rgba(8, 131, 149, 0.8);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.unentschieden-gespielt {
+  color: rgba(128, 128, 128, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.x-symbol {
+  color: #00ffca;
+}
+
+.o-gewonnen .x-symbol,
+.o-gewonnen .o-symbol {
+  color: gray;
+}
+
+.x-symbol.zoom-out {
+  animation-name: x-zoomOutAnimation;
+  animation-duration: 1s;
+}
+
+@keyframes x-zoomOutAnimation {
+  from {
+    transform: scale(2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.o-symbol {
+  color: #09deff;
+}
+
+.x-gewonnen .x-symbol,
+.x-gewonnen .o-symbol {
+  color: gray;
+}
+
+.o-symbol.zoom-out {
+  animation-name: o-zoomOutAnimation;
+  animation-duration: 1s;
+}
+
+@keyframes o-zoomOutAnimation {
+  from {
+    transform: scale(2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.unentschieden .x-symbol,
+.unentschieden .o-symbol {
+  color: gray;
+}
+
+.overlay {
+  background-color: #252525;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.overlay-text {
+  font-size: clamp(2rem, 10vh, 4rem);
+  font-size: 900;
+  text-align: center;
+}
+
+.overlay-button {
+  font-size: 2rem;
+  font-weight: 500;
+  background-color: #00ffca;
+  border: 2px solid black;
+  border-radius: 8px;
+  color: black;
+  cursor: pointer;
+  padding: 4px 8px;
+  width: fit-content;
+  align-self: center;
+}
+
+.overlay-button .btn-weiterspielen {
+  font-weight: 700;
+}
+
+.overlay-button:hover {
+  background-color: #00ffccdc;
+}
+
+.overlay.sichtbar {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 1.5s;
+}
+
+/* Heldentafel */
+
+table {
+  border-collapse: collapse;
+  color: white;
+  width: 100%;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  text-align: right;
+}
+
+tr:first-child {
+  border-bottom: 2px solid #088395;
+}
+
+td:first-child {
+  border-right: 2px solid #088395;
+  width: 1/3;
+}
+
+td:last-child {
+  width: 1/3;
+}
+
+.highlight-spieler {
+  color: #00ffca;
+  font-weight: bolder;
+}
+
+/* Profilseite */
+
+.profil-spielername {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.profil-spielername p {
+  font-weight: 500;
+  font-size: xx-large;
+  color: #00ffccdc;
+}
+
+.uebersicht-spiele {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  min-width: fit-content;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.gespielte-spiele,
+.gewonnene-spiele,
+.gewonnen-einzelspieler,
+.gewonnen-hotseat,
+.gewonnen-mehrspieler {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.gespielte-spiele p,
+.gewonnen-einzelspieler p,
+.gewonnen-hotseat p,
+.gewonnen-mehrspieler p {
+  font-size: large;
+}
+
+.gewonnene-spiele p {
+  font-size: xx-large;
+  position: relative;
+}
+
+.gewonnene-spiele p::after {
+  content: '\1F389';
+  font-size: 24px;
+  margin-left: 5px;
+}
+
+@media (max-width: 768px) {
+  .naechstes-feld.zoomed {
+    outline: thin solid coral;
+    transition: transform 0.6s ease;
+    transform: scale(3);
+    z-index: 2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    background-color: #252525;
+  }
+}
+
+@media (min-width: 768px) {
+  table {
+    width: 50%;
+  }
+
+  .spielfeld {
+    width: 50vw;
+    height: 50vh;
+  }
+
+  .hero {
+    width: 25vw;
+  }
+
+  .gespielte-spiele,
+  .gewonnene-spiele,
+  .gewonnen-einzelspieler,
+  .gewonnen-hotseat,
+  .gewonnen-mehrspieler {
+    gap: 16px;
+  }
+
+  .uebersicht-spiele {
+    width: 25%;
+  }
+}
+
+@media (min-width: 992px) {
+  .oberflaeche {
+    display: flex;
+    flex-direction: row;
+    min-width: 80%;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .linke-seite {
+    width: 60%;
+  }
+}
