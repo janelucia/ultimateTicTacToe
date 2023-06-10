@@ -143,10 +143,7 @@ async function spielStarten() {
   uebersichtAnzeigen(await zustand);
   spielfeldAnzeigen(await zustand);
 
-  if (
-    spielmodus() === 'einzelspieler' &&
-    zustand.momentanerSpieler.name === 'Robo'
-  ) {
+  if (spielmodus() === 'einzelspieler' && !zustand.momentanerSpieler.id) {
     zugBeginnen(zustand);
   } else if (
     spielmodus() === 'mehrspieler' &&
@@ -159,14 +156,14 @@ async function spielStarten() {
 }
 
 function zugBeginnen(zustand) {
-  if (
-    spielmodus() === 'einzelspieler' &&
-    zustand.momentanerSpieler.name === 'Robo'
-  ) {
+  if (spielmodus() === 'einzelspieler' && !zustand.momentanerSpieler.id) {
     let roboMachtZug;
+    let robosZug;
     while (!roboMachtZug) {
-      roboMachtZug = zug(macheZufaelligenZug(zustand));
+      robosZug = macheZufaelligenZug(zustand);
+      roboMachtZug = zug(zustand, robosZug);
     }
+    zustand.momentanerZug = robosZug;
     zugBeenden(zustand);
   } else {
     if (zug(zustand)) {
@@ -175,10 +172,13 @@ function zugBeginnen(zustand) {
   }
 }
 
-function zug(zustand) {
+function zug(zustand, koordinaten) {
   // Prüfen, ob das Feld schon besetzt ist
-  let { l1, l2, l3, l4 } = zustand.momentanerZug;
-  if (zustand.spielfeld[l1][l2][l3][l4] != '') {
+  let { l1, l2, l3, l4 } = !koordinaten ? zustand.momentanerZug : koordinaten;
+  if (
+    zustand.spielfeld[l1][l2][l3][l4] != '' ||
+    booleanFeldGewonnen(standFeld(zustand, l1, l2)) === true
+  ) {
     return false;
   }
 
@@ -192,22 +192,16 @@ async function zugBeenden(zustand) {
   const heldIdentifizieren = localStorageInformationen();
 
   // momentanen Spielstand auslesen
-  const spielstand = standPruefen(
-    selektor(
-      zustand.spielfeld,
-      zustand.momentanerZug.l1,
-      zustand.momentanerZug.l2
-    ),
-    zustand.helden
+  const spielstand = standFeld(
+    zustand,
+    zustand.momentanerZug.l1,
+    zustand.momentanerZug.l2
   );
 
-  const spielstandNaechstesFeld = standPruefen(
-    selektor(
-      zustand.spielfeld,
-      zustand.momentanerZug.l3,
-      zustand.momentanerZug.l4
-    ),
-    zustand.helden
+  const spielstandNaechstesFeld = standFeld(
+    zustand,
+    zustand.momentanerZug.l3,
+    zustand.momentanerZug.l4
   );
 
   // testen ob das kleine Spielfeld beendet wurde
@@ -235,10 +229,7 @@ async function zugBeenden(zustand) {
     return;
   }
 
-  if (
-    spielmodus() === 'einzelspieler' &&
-    neuerZustand.momentanerSpieler.name === 'Robo'
-  ) {
+  if (spielmodus() === 'einzelspieler' && !neuerZustand.momentanerSpieler.id) {
     zugBeginnen(neuerZustand);
   } else if (spielmodus() === 'mehrspieler') {
     neuerZustand = await aufSpielstandWarten(heldIdentifizieren.id);
@@ -246,6 +237,10 @@ async function zugBeenden(zustand) {
     uebersichtAnzeigen(neuerZustand);
     spielfeldAnzeigen(neuerZustand);
   }
+}
+
+function standFeld(zustand, x, y) {
+  return standPruefen(selektor(zustand.spielfeld, x, y), zustand.helden);
 }
 
 async function spielBeenden(zustand) {

@@ -210,7 +210,9 @@ app.patch('/spieler/:id', (req, res) => {
 app.put('/spieler', (req, res) => {
   const held = spieler.find((d) => d.heldId === req.body.spieler.id);
 
-  if (!held) {
+  if (!req.body.spieler.id) {
+    return res.send(); // Wenn ein Spieler keine Id hat, dann spielt er im Hotseat oder singleplayer Modus, wo dann O keine Id hat, damit kein Fehler geworfen wird, da das Verhalten gewollt ist, wird hier einfach nur zurückgegeben
+  } else if (!held) {
     return res.status(404).send();
   }
 

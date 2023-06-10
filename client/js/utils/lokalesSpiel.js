@@ -67,15 +67,11 @@ function macheZufaelligenZug(zustand) {
   const koordinaten = { l1: '', l2: '', l3: '', l4: '' };
 
   // Wenn noch keine freie Feldwahl besteht, dann soll l1 von Koordinaten auf l3 des momentanen Zuges gesetzt werden
-  if (zustand.momentanerZug.l3 !== '') {
+  if (zustand.momentanerZug.l3 !== '' && zustand.momentanerZug.l4 !== '') {
     koordinaten.l1 = zustand.momentanerZug.l3;
-  } else {
-    koordinaten.l1 = Math.floor(Math.random() * zustand.spielfeld.length);
-  }
-
-  if (zustand.momentanerZug.l4 != '') {
     koordinaten.l2 = zustand.momentanerZug.l4;
   } else {
+    koordinaten.l1 = Math.floor(Math.random() * zustand.spielfeld.length);
     koordinaten.l2 = Math.floor(
       Math.random() * zustand.spielfeld[koordinaten.l1].length
     );
@@ -91,11 +87,8 @@ function macheZufaelligenZug(zustand) {
 
   console.log('Robos Zug: ', koordinaten);
 
-  zustand.momentanerZug = koordinaten;
-  console.log('Robos Zug: ', zustand);
-
-  // Rückgabe der aktualisierten Spielfeld-Array
-  return zustand;
+  // Rückgabe der Koordinaten
+  return koordinaten;
 }
 
 /*Fragen:
