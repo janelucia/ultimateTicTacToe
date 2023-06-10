@@ -295,6 +295,8 @@ async function zugBeenden(zustand) {
     return;
   }
 
+  // TODO: Ab hier darf nichts mehr ausgeführt werden, wenn spielBeenden true ist
+
   if (spielmodus() === 'einzelspieler' && !neuerZustand.momentanerSpieler.id) {
     setTimeout(() => {
       zugBeginnen(neuerZustand);
@@ -330,12 +332,15 @@ async function spielBeenden(zustand, naechstesFeld) {
       // overlay - wer hat gewonnen
       overlayText.innerText = 'Unentschieden!';
       overlay.classList.add(SICHTBAR_KLASSE);
-      overlayButton.addEventListener('click', async () => {
+      overlayButtonWeiterspielen.addEventListener('click', async () => {
         if (spielmodus() === 'mehrspieler') {
           zustand = spielstandZuruecksetzen(zustand);
           await weiteresMehrspielerSpielErstellen(zustand);
         }
         spielStarten();
+      });
+      overlayButtonZurueck.addEventListener('click', () => {
+        window.location = '/client/lobby.html';
       });
       return true;
     }
@@ -346,13 +351,16 @@ async function spielBeenden(zustand, naechstesFeld) {
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);
     overlay.classList.add(SICHTBAR_KLASSE);
-    overlayButton.addEventListener('click', async () => {
+    overlayButtonWeiterspielen.addEventListener('click', async () => {
       if (spielmodus() === 'mehrspieler') {
         zustand = spielstandZuruecksetzen(zustand);
         await weiteresMehrspielerSpielErstellen(zustand);
       }
 
       spielStarten();
+    });
+    overlayButtonZurueck.addEventListener('click', () => {
+      window.location = '/client/lobby.html';
     });
     return true;
   }

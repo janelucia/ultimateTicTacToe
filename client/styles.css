@@ -3,13 +3,20 @@
   --gegner-farbe: #088395;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: #252525;
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin: 16px;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 header {
@@ -18,6 +25,7 @@ header {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding: 16px;
 }
 
 header img {
@@ -27,13 +35,17 @@ header img {
 h1 {
   color: white;
   text-align: center;
-  margin: 16px;
+  margin: 0;
 }
 
 h2 {
   color: white;
   text-align: center;
   font-weight: normal;
+}
+
+h3 {
+  color: white;
 }
 
 h4 {
@@ -44,7 +56,6 @@ footer {
   color: white;
   align-self: center;
   position: absolute;
-  margin: 16px 0;
   bottom: 0;
 }
 
@@ -53,14 +64,8 @@ main {
   flex-direction: column;
   align-items: center;
   flex: 1;
-  width: 100vw;
-}
-
-main img {
-  display: block;
-  margin: 0 auto;
-  width: 50%;
-  height: 50%;
+  padding: 0 16px 16px 16px;
+  gap: 16px;
 }
 
 main p {
@@ -79,10 +84,9 @@ main a {
   width: fit-content;
   align-self: center;
   font-size: medium;
-  margin: 8px;
 }
 
-h3 {
+ul {
   color: white;
 }
 
@@ -102,10 +106,6 @@ h3 {
   transition: all 250ms ease-in-out;
   right: 0;
   border: 3px solid #088395;
-}
-
-ul {
-  color: white;
 }
 
 .menuItem {
@@ -147,7 +147,7 @@ ul {
 .slice {
   width: 22px;
   height: 3px;
-  margin: 2.5px 0px;
+  margin: 2.5px 0;
   background-color: black;
   border-radius: 5px;
   transform-origin: left;
@@ -167,10 +167,10 @@ ul {
 }
 
 .spielanzeige {
-  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
 }
 
 .hero {
@@ -191,11 +191,25 @@ ul {
 .oberflaeche {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+}
+
+.linke-seite {
+  display: flex;
+  justify-content: center;
+  max-height: fit-content;
+  width: 100%;
+}
+
+.linke-seite img {
+  width: 70%;
+  height: 70%;
 }
 
 .rechte-seite {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 .input-spielername {
@@ -219,9 +233,35 @@ ul {
 
 .einzel-mehrspieler {
   display: flex;
-  margin: 32px;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.mehrspieler-link-div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.mehrspieler-link-div button {
+  background-color: #00ffca;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.mehrspieler-link-div button:hover {
+  background-color: #00e6b7;
+}
+
+.mehrspieler-link-div button:focus {
+  outline: none;
 }
 
 .spielfeld {
@@ -433,7 +473,7 @@ ul {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: clamp(1rem, 2vh, 4rem);
+  gap: 16px;
   opacity: 0;
   z-index: 5;
   pointer-events: none;
@@ -447,7 +487,7 @@ ul {
 
 .overlay-button {
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 500;
   background-color: #00ffca;
   border: 2px solid black;
   border-radius: 8px;
@@ -456,7 +496,10 @@ ul {
   padding: 4px 8px;
   width: fit-content;
   align-self: center;
-  margin: 8px;
+}
+
+.overlay-button .btn-weiterspielen {
+  font-weight: 700;
 }
 
 .overlay-button:hover {
@@ -481,6 +524,7 @@ th,
 td {
   padding: 8px;
   text-align: left;
+  word-wrap: break-word;
 }
 
 th:nth-child(2),
@@ -508,12 +552,6 @@ td:last-child {
 
 /* Profilseite */
 
-/* .profilbild {
-  width: 200px;
-  height: auto;
-  margin: 16px;
-} */
-
 .profil-spielername {
   display: flex;
   align-items: center;
@@ -526,32 +564,13 @@ td:last-child {
   color: #00ffccdc;
 }
 
-/* .profil-spielername label {
-  color: white;
-  margin-right: 10px;
-}
-
-.profil-spielername input {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: medium;
-  width: 150px;
-}
-
-.profil-spielername input:hover {
-  background-color: #088395;
-  border-radius: 8px;
-  padding: 4px;
-} */
-
 .uebersicht-spiele {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 60%;
   min-width: fit-content;
-  margin: 0 auto;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .gespielte-spiele,
@@ -598,10 +617,10 @@ td:last-child {
 }
 
 @media (min-width: 768px) {
-  main img {
-    width: 80%;
-    height: 80%;
+  table {
+    width: 50%;
   }
+
   .spielfeld {
     width: 50vw;
     height: 50vh;
@@ -609,10 +628,6 @@ td:last-child {
 
   .hero {
     width: 25vw;
-  }
-
-  table {
-    width: 50%;
   }
 
   .gespielte-spiele,
@@ -632,19 +647,12 @@ td:last-child {
   .oberflaeche {
     display: flex;
     flex-direction: row;
-    width: 900px;
+    min-width: 80%;
+    align-items: center;
     justify-content: space-around;
   }
 
   .linke-seite {
-    display: flex;
-    justify-content: center;
-    text-align: center;
     width: 60%;
-  }
-
-  main img {
-    width: 90%;
-    height: 90%;
   }
 }

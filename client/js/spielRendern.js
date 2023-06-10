@@ -156,18 +156,20 @@ function setzeIcon(zustand, l1, l2, l3, l4, icon) {
  * @param {String} gewinner
  */
 function renderGewinnerKleinesFeld(element, gewinner) {
-  if (gewinner === 'U') {
+  console.log('Gewinner', gewinner);
+  if (gewinner === 'u') {
     element.classList.add('unentschieden');
   } else {
     element.classList.add(`spieler-${gewinner}`);
   }
 
   const kleinesSpielfeldSpan = document.createElement('span');
-  if (gewinner === 'U') {
+  if (gewinner === 'u') {
     kleinesSpielfeldSpan.classList.add('unentschieden-gespielt');
   } else {
     kleinesSpielfeldSpan.classList.add(`${gewinner}-gewinnt`);
   }
+
   kleinesSpielfeldSpan.innerText = gewinner.toLocaleUpperCase();
   element.appendChild(kleinesSpielfeldSpan);
 }

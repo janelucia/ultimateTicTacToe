@@ -11,7 +11,8 @@ const spielfeld = document.querySelector('.spielfeld');
 const spielanzeige = document.querySelector('.spielanzeige');
 const overlay = document.querySelector('.overlay');
 const overlayText = document.querySelector('.overlay-text');
-const overlayButton = document.querySelector('.overlay-button');
+const overlayButtonWeiterspielen = document.querySelector('.btn-weiterspielen');
+const overlayButtonZurueck = document.querySelector('.btn-zurueck');
 
 let zufaelligeNamen;
 

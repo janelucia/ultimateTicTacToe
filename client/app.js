@@ -78,3 +78,19 @@ function clickHamburger() {
   const menu = document.querySelector('.menu');
   menu.classList.toggle('menuOpen');
 }
+
+// den Link für den Mehrspielermodus kopieren
+
+function textKopieren() {
+  const linkElement = document.getElementById('mehrspieler-link');
+  const linkText = linkElement.textContent;
+
+  navigator.clipboard
+    .writeText(linkText)
+    .then(() => {
+      alert('Link copied to clipboard!');
+    })
+    .catch((error) => {
+      console.error('Failed to copy link:', error);
+    });
+}
