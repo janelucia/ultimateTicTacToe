@@ -160,7 +160,7 @@ function zugBeginnen(zustand) {
     let roboMachtZug;
     let robosZug;
     while (!roboMachtZug) {
-      robosZug = macheZufaelligenZug(zustand);
+      robosZug = generiereZufaelligenZug(zustand);
       roboMachtZug = zug(zustand, robosZug);
     }
     zustand.momentanerZug = robosZug;

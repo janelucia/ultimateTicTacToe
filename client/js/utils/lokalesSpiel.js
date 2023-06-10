@@ -60,7 +60,7 @@ async function lokalesSpiel(zustand) {
 
 // Einzelspieler
 
-function macheZufaelligenZug(zustand) {
+function generiereZufaelligenZug(zustand) {
   // Zufällige Indizes für jede Dimension generieren
 
   console.log('mein Zug: ', zustand.momentanerZug);

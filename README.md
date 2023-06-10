@@ -10,7 +10,7 @@ Der ultimative Spielspaß mit dem Klassiker.
 - 3 Punkte Desktop und Mobile - was bedeutet Desktop UND Mobile?
 - 1 Punkt Tastatur, Maus, Buttons
 - 1 Punkt rundenbasiert
-- 1 Punkt rasterbasiert - was bedeutet rasterbasiert?
+- 1 Punkt rasterbasiert
 - 2 Punkte übers Netzwerk
 
 ## Zusätzlich
