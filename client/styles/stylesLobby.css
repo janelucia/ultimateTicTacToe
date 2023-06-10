@@ -1,0 +1,64 @@
+.oberflaeche {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.linke-seite {
+  display: flex;
+  justify-content: center;
+  max-height: fit-content;
+  width: 100%;
+}
+
+.linke-seite img {
+  width: 70%;
+  height: 70%;
+}
+
+.rechte-seite {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-spielername {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.input-spielername button {
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.input-feld {
+  display: block;
+  border-radius: 8px;
+  border: 2px solid black;
+  padding: 5px;
+}
+
+.einzel-mehrspieler {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+@media (min-width: 992px) {
+  .oberflaeche {
+    display: flex;
+    flex-direction: row;
+    min-width: 80%;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .linke-seite {
+    width: 60%;
+  }
+}

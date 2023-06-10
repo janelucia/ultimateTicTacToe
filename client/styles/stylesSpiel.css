@@ -1,0 +1,260 @@
+@keyframes o-zoomOutAnimation {
+  from {
+    transform: scale(2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes x-zoomOutAnimation {
+  from {
+    transform: scale(2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.spielfeld {
+  display: flex;
+  flex-direction: column;
+  max-width: fit-content;
+  max-height: fit-content;
+}
+
+.reihe-großes-spielfeld {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  width: 100%;
+  border: 2px solid transparent;
+}
+
+.reihe-großes-spielfeld:not(:last-child) {
+  border-bottom-color: #00ffccb9;
+}
+
+.kleines-spielfeld {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  padding: 4px;
+}
+
+.kleines-spielfeld {
+  border: 2px solid transparent;
+  border-right-color: #00ffccb9;
+}
+
+.kleines-spielfeld:last-child {
+  border-right-color: transparent;
+}
+
+.kleines-spielfeld-reihe {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 33.33%;
+  border: 2px solid transparent;
+}
+
+.kleines-spielfeld-reihe:not(:last-child) {
+  border-bottom-color: #088395;
+}
+
+.feld {
+  border: 2px solid transparent;
+  border-right-color: #05bfdb;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  color: white;
+
+  width: 10px;
+  height: 25px;
+  position: relative;
+}
+
+.feld:last-child {
+  border-right-color: transparent;
+}
+
+.feld::before,
+.feld::after {
+  content: '';
+  box-sizing: border-box;
+}
+
+.feld.spieler-o::before {
+  transform: translateX(50%) rotate(45deg);
+}
+
+.feld.spieler-o::after {
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+.naechstes-feld {
+  outline: thin solid coral;
+  cursor: pointer;
+}
+
+.spieler-x .kleines-spielfeld-reihe {
+  color: lightgray;
+}
+
+.spieler-o .kleines-spielfeld-reihe {
+  color: lightgray;
+}
+
+.unentschieden .kleines-spielfeld-reihe {
+  color: lightgray;
+}
+
+.x-gewinnt {
+  color: rgba(0, 255, 202, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.o-gewinnt {
+  color: rgba(8, 131, 149, 0.8);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.unentschieden-gespielt {
+  color: rgba(128, 128, 128, 0.5);
+  position: absolute;
+  z-index: 1;
+  font-size: 8em;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.x-symbol {
+  color: #00ffca;
+}
+
+.o-gewonnen .x-symbol,
+.o-gewonnen .o-symbol {
+  color: gray;
+}
+
+.x-symbol.zoom-out {
+  animation-name: x-zoomOutAnimation;
+  animation-duration: 1s;
+}
+
+.o-symbol {
+  color: #09deff;
+}
+
+.x-gewonnen .x-symbol,
+.x-gewonnen .o-symbol {
+  color: gray;
+}
+
+.o-symbol.zoom-out {
+  animation-name: o-zoomOutAnimation;
+  animation-duration: 1s;
+}
+
+.unentschieden .x-symbol,
+.unentschieden .o-symbol {
+  color: gray;
+}
+
+.overlay {
+  background-color: #252525;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none;
+  padding: 16px;
+}
+
+.overlay-text {
+  font-size: clamp(2rem, 5vh, 4rem);
+  font-size: 900;
+  text-align: center;
+}
+
+.overlay-button {
+  font-size: 1.5rem;
+  font-weight: 500;
+  background-color: #00ffca;
+  border: 2px solid black;
+  border-radius: 8px;
+  color: black;
+  cursor: pointer;
+  padding: 4px 8px;
+  width: fit-content;
+  align-self: center;
+}
+
+.overlay-button .btn-weiterspielen {
+  font-weight: 700;
+}
+
+.overlay-button:hover {
+  background-color: #00ffccdc;
+}
+
+.overlay.sichtbar {
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 1.5s;
+}
+
+@media (max-width: 768px) {
+  .naechstes-feld.zoomed {
+    outline: thin solid coral;
+    transition: transform 0.6s ease;
+    transform: scale(3);
+    z-index: 2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    background-color: #252525;
+  }
+}
+
+@media (min-width: 768px) {
+  .spielfeld {
+    width: 50vw;
+    height: 50vh;
+  }
+  .overlay-text {
+    font-size: clamp(2rem, 10vh, 4rem);
+  }
+  .overlay-button {
+    font-size: 2rem;
+  }
+}

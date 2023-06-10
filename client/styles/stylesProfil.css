@@ -1,0 +1,63 @@
+.profil-spielername {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.profil-spielername p {
+  font-weight: 500;
+  font-size: xx-large;
+  color: #00ffccdc;
+}
+
+.uebersicht-spiele {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  min-width: fit-content;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.gespielte-spiele,
+.gewonnene-spiele,
+.gewonnen-einzelspieler,
+.gewonnen-hotseat,
+.gewonnen-mehrspieler {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.gespielte-spiele p,
+.gewonnen-einzelspieler p,
+.gewonnen-hotseat p,
+.gewonnen-mehrspieler p {
+  font-size: large;
+}
+
+.gewonnene-spiele p {
+  font-size: xx-large;
+  position: relative;
+}
+
+.gewonnene-spiele p::after {
+  content: '\1F389';
+  font-size: 24px;
+  margin-left: 5px;
+}
+
+@media (min-width: 768px) {
+  .gespielte-spiele,
+  .gewonnene-spiele,
+  .gewonnen-einzelspieler,
+  .gewonnen-hotseat,
+  .gewonnen-mehrspieler {
+    gap: 16px;
+  }
+
+  .uebersicht-spiele {
+    width: 25%;
+  }
+}
