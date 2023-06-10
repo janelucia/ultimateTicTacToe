@@ -7,11 +7,22 @@ Der ultimative Spielspaß mit dem Klassiker.
 
 ## Komplexität (min. 6)
 
-- 3 Punkte Desktop und Mobile - was bedeutet Desktop UND Mobile?
-- 1 Punkt Tastatur, Maus, Buttons
-- 1 Punkt rundenbasiert
-- 1 Punkt rasterbasiert
+- 3 Punkte Desktop und Mobile: 
+Unser Spiel wurde mit einem responsiven Design entwickelt, das es den Spielern ermöglicht, es sowohl auf Desktop- als auch auf Mobilgeräten zu spielen. Das bedeutet, dass die Benutzeroberfläche und das Spielfeld dynamisch an die Bildschirmgröße des Geräts angepasst werden. Die kleinste Größe die verwendet werden kann, ist das IPhone SE mit 375px in der Breite. (Katharina)
+
+- 1 Punkt Tastatur, Maus, Buttons: 
+Unser Spiel bietet eine intuitive Benutzeroberfläche, bei der Spieler ihre Spielzüge einfach durch Mausklicks auf das gewünschte Feld platzieren können. Die Tastatur kann genutzt werden, um den Spielernamen einzugeben. Darüber hinaus haben wir einen praktischen Neustart-Button implementiert, der es den Spielern ermöglicht, das Spiel nach einem Sieg oder einer Niederlage problemlos neu zu starten. (Jane/Katharina)
+
+- 1 Punkt rundenbasiert: 
+Unser Spiel verwendet eine rundenbasierte Spielweise, bei der das Spielfeld aus neun kleinen TicTacToe-Feldern besteht. Die Spieler tätigen nacheinander ihre Züge und müssen zu erst die kleinen TicTacToe-Felder gewinnen, bevor sie das große gewinnen können. (Jane/Katharina)
+
+- 1 Punkt rasterbasiert: 
+Ein TicTacToe-Spielfeld bietet sich natürlich als rasterbasiertes Spiel an, da aus einen Hauptgitter von 3x3 Feldern besteht. In jedem dieser Felder befindet sich ein weiteres kleineres Gitter mit einer Größe von 3x3. (Jane)
+
 - 2 Punkte übers Netzwerk
+  - wie wird es gestartet?
+  - es ist reload safe (die anderen Spielmodi sind nicht reload safe, da der Zustand nicht über Localhost weitergegeben wird)
+
 
 ## Zusätzlich
 

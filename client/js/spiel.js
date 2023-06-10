@@ -144,7 +144,9 @@ async function spielStarten() {
   spielfeldAnzeigen(await zustand);
 
   if (spielmodus() === 'einzelspieler' && !zustand.momentanerSpieler.id) {
-    zugBeginnen(zustand);
+    setTimeout(() => {
+      zugBeginnen(zustand);
+    }, 1000);
   } else if (
     spielmodus() === 'mehrspieler' &&
     parseInt(heldIdentifizieren.id) !== parseInt(zustand.momentanerSpieler.id)
@@ -189,6 +191,7 @@ function zug(zustand, koordinaten) {
 }
 
 async function zugBeenden(zustand) {
+  const naechstesFeld = document.getElementsByClassName('naechstes-feld');
   const heldIdentifizieren = localStorageInformationen();
 
   // momentanen Spielstand auslesen
@@ -225,17 +228,22 @@ async function zugBeenden(zustand) {
   spielfeldAnzeigen(neuerZustand);
 
   // Testen, ob jemand das Spiel gewonnen hat
-  if (spielBeenden(zustand) === true) {
+  if (spielBeenden(zustand, naechstesFeld) === true) {
     return;
   }
 
   if (spielmodus() === 'einzelspieler' && !neuerZustand.momentanerSpieler.id) {
-    zugBeginnen(neuerZustand);
+    setTimeout(() => {
+      zugBeginnen(neuerZustand);
+    }, 1000);
   } else if (spielmodus() === 'mehrspieler') {
     neuerZustand = await aufSpielstandWarten(heldIdentifizieren.id);
-    spielBeenden(neuerZustand);
+    spielBeenden(neuerZustand, naechstesFeld);
     uebersichtAnzeigen(neuerZustand);
     spielfeldAnzeigen(neuerZustand);
+    naechstesFeld[0].classList.add('zoomed');
+  } else {
+    naechstesFeld[0].classList.add('zoomed');
   }
 }
 
@@ -243,9 +251,8 @@ function standFeld(zustand, x, y) {
   return standPruefen(selektor(zustand.spielfeld, x, y), zustand.helden);
 }
 
-async function spielBeenden(zustand) {
+async function spielBeenden(zustand, naechstesFeld) {
   // großes Spielfeld mit dem Gewinner des jeweiligen Feldes
-  const naechstesFeld = document.getElementsByClassName('naechstes-feld');
   const grossesSpielfeld = großesFeldErstellen(zustand);
 
   console.log(grossesSpielfeld);

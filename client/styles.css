@@ -59,8 +59,8 @@ main {
 main img {
   display: block;
   margin: 0 auto;
-  width: 80%;
-  height: 80%;
+  width: 50%;
+  height: 50%;
 }
 
 main p {
@@ -240,7 +240,7 @@ ul {
 }
 
 .reihe-großes-spielfeld:not(:last-child) {
-  border-bottom-color: #00ffca;
+  border-bottom-color: #00ffccb9;
 }
 
 .kleines-spielfeld {
@@ -253,7 +253,7 @@ ul {
 
 .kleines-spielfeld {
   border: 2px solid transparent;
-  border-right-color: #00ffca;
+  border-right-color: #00ffccb9;
 }
 
 .kleines-spielfeld:last-child {
@@ -270,7 +270,7 @@ ul {
 }
 
 .kleines-spielfeld-reihe:not(:last-child) {
-  border-bottom-color: #05bfdb;
+  border-bottom-color: #088395;
 }
 
 .feld {
@@ -351,7 +351,7 @@ ul {
 }
 
 .o-gewinnt {
-  color: rgba(8, 131, 149, 0.5);
+  color: rgba(8, 131, 149, 0.8);
   position: absolute;
   z-index: 1;
   font-size: 8em;
@@ -362,7 +362,7 @@ ul {
   align-items: center;
 }
 
-.unentschieden {
+.unentschieden-gespielt {
   color: rgba(128, 128, 128, 0.5);
   position: absolute;
   z-index: 1;
@@ -372,6 +372,69 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.x-symbol {
+  color: #00ffca;
+}
+
+.o-gewonnen .x-symbol,
+.o-gewonnen .o-symbol {
+  color: gray;
+}
+
+.x-symbol.zoom-out {
+  animation-name: x-zoomOutAnimation;
+  animation-duration: 1s;
+}
+
+@keyframes x-zoomOutAnimation {
+  from {
+    transform: scale(2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.o-symbol {
+  color: #09deff;
+}
+
+.x-gewonnen .x-symbol,
+.x-gewonnen .o-symbol {
+  color: gray;
+}
+
+.o-symbol.zoom-out {
+  animation-name: o-zoomOutAnimation;
+  animation-duration: 1s;
+}
+
+@keyframes o-zoomOutAnimation {
+  from {
+    transform: scale(2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.unentschieden .x-symbol,
+.unentschieden .o-symbol {
+  color: gray;
+}
+
+.naechstes-feld.zoomed {
+  outline: thin solid coral;
+  transition: transform 0.6s ease;
+  transform: scale(3);
+  z-index: 2;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  background-color: #252525;
 }
 
 .overlay {
@@ -533,10 +596,15 @@ td:last-child {
 }
 
 @media (min-width: 768px) {
+  main img {
+    width: 80%;
+    height: 80%;
+  }
   .spielfeld {
     width: 50vw;
     height: 50vh;
   }
+
   .hero {
     width: 25vw;
   }

@@ -1,7 +1,7 @@
 const uebersichtAnzeigen = async (zustand) => {
   spielanzeige.innerHTML = '';
 
-  const erstelleSpielerDiv = (spielerName, spielerIcon) => {
+  const erstelleSpielerDiv = (spielerName, daten, istAmZug) => {
     const spielerDiv = document.createElement('div');
     spielerDiv.classList.add('hero');
 
@@ -9,7 +9,18 @@ const uebersichtAnzeigen = async (zustand) => {
     spieler.innerText = spielerName;
 
     const icon = document.createElement('p');
-    icon.innerText = spielerIcon;
+    icon.innerText = daten.icon;
+
+    if (istAmZug && daten.icon === 'X') {
+      spieler.style.color = '#00ffca';
+      icon.style.color = '#00ffca';
+    } else if (istAmZug && daten.icon === 'O') {
+      spieler.style.color = '#09deff';
+      icon.style.color = '#09deff';
+    } else {
+      spieler.style.color = 'gray';
+      icon.style.color = 'gray';
+    }
 
     spielerDiv.appendChild(spieler);
     spielerDiv.appendChild(icon);
@@ -18,7 +29,11 @@ const uebersichtAnzeigen = async (zustand) => {
   };
 
   const spielerDivs = Object.entries(zustand.helden).map(([spieler, daten]) =>
-    erstelleSpielerDiv(`Hero ${spieler}: ${daten.name}`, daten.icon)
+    erstelleSpielerDiv(
+      `Hero ${spieler}: ${daten.name}`,
+      daten,
+      daten.icon === zustand.momentanerSpieler.icon
+    )
   );
 
   spielerDivs.forEach((spielerDiv) => spielanzeige.appendChild(spielerDiv));
@@ -82,8 +97,12 @@ const spielfeldAnzeigen = (zustand) => {
         for (let [l4, feld] of reiheKleinesSpielfeld.entries()) {
           const feldDiv = document.createElement('div');
           feldDiv.classList.add('feld');
-          if (feld !== '') {
-            feldDiv.innerText = feld;
+          if (feld === 'X') {
+            const symbolX = setzeIcon(zustand, l1, l2, l3, l4, feld);
+            feldDiv.appendChild(symbolX);
+          } else if (feld === 'O') {
+            const symbolO = setzeIcon(zustand, l1, l2, l3, l4, feld);
+            feldDiv.appendChild(symbolO);
           }
           feldDiv.addEventListener('click', () => {
             const heldIdentifizieren = localStorageInformationen();
@@ -114,6 +133,23 @@ const spielfeldAnzeigen = (zustand) => {
   }
 };
 
+function setzeIcon(zustand, l1, l2, l3, l4, icon) {
+  const symbol = document.createElement('span');
+  symbol.classList.add(icon.toLocaleLowerCase() + '-symbol');
+  symbol.innerText = icon.toLocaleUpperCase();
+
+  if (
+    l1 === zustand.momentanerZug.l1 &&
+    l2 === zustand.momentanerZug.l2 &&
+    l3 === zustand.momentanerZug.l3 &&
+    l4 === zustand.momentanerZug.l4
+  ) {
+    symbol.classList.add('zoom-out');
+  }
+
+  return symbol;
+}
+
 /**
  *
  * @param {HTMLElement} element
@@ -128,7 +164,7 @@ function renderGewinnerKleinesFeld(element, gewinner) {
 
   const kleinesSpielfeldSpan = document.createElement('span');
   if (gewinner === 'U') {
-    kleinesSpielfeldSpan.classList.add('unentschieden');
+    kleinesSpielfeldSpan.classList.add('unentschieden-gespielt');
   } else {
     kleinesSpielfeldSpan.classList.add(`${gewinner}-gewinnt`);
   }
