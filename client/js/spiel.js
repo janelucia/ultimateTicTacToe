@@ -39,6 +39,11 @@ function standPruefen(spielfeld, helden) {
   }
 }
 
+// Prüft den Stand eines kleinen Feldes, dessen Koordinaten als zweites und drittes Argument übergeben wird.
+function standFeld(zustand, x, y) {
+  return standPruefen(selektor(zustand.spielfeld, x, y), zustand.helden);
+}
+
 // Spielfeld erstellen
 const initialesSpielfeld = () => {
   const spielfeldGenerieren = (level) =>
@@ -79,6 +84,64 @@ function großesFeldErstellen(zustand) {
           }
         }))
   );
+}
+
+async function updateSpielerListeGewinner(zustand, gewinner) {
+  const flachesSpielfeldArray = flachesArrayErstellen(zustand.spielfeld);
+  const zuegeGewinner = zuegeZaehlen(flachesSpielfeldArray, gewinner.icon);
+  console.log('occurence ', zuegeGewinner);
+
+  if (spielmodus() === 'mehrspieler') {
+    await spielerListeUpdaten({
+      spielId: zustand.momentanesSpiel,
+      gewinnerId: gewinner.id,
+      zuegeGewinner,
+      spielmodus: 'mehrspieler',
+    });
+  } else if (spielmodus() === 'einzelspieler') {
+    await spielerListeUpdaten({
+      spielId: zustand.momentanesSpiel,
+      gewinnerId: gewinner.id,
+      zuegeGewinner,
+      spielmodus: 'einzelspieler',
+    });
+  } else {
+    await spielerListeUpdaten({
+      spielId: zustand.momentanesSpiel,
+      gewinnerId: gewinner.id,
+      zuegeGewinner,
+      spielmodus: 'Hotseat',
+    });
+  }
+}
+
+function spielstandZuruecksetzen(zustand) {
+  zustand.spielfeld = initialesSpielfeld();
+  zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
+  return zustand;
+}
+
+function flachesArrayErstellen(array) {
+  const flachesArray = [];
+  for (let element of array) {
+    if (Array.isArray(element)) {
+      flachesArray.push(...flachesArrayErstellen(element));
+    } else {
+      flachesArray.push(element);
+    }
+  }
+
+  return flachesArray;
+}
+
+function zuegeZaehlen(flachesArray, icon) {
+  return flachesArray.reduce((acc, curr) => {
+    if (curr === icon) {
+      return acc + 1;
+    } else {
+      return acc;
+    }
+  }, 0);
 }
 
 // speichert den momentanen Zustand des Spiels
@@ -208,11 +271,11 @@ async function zugBeenden(zustand) {
   );
 
   // testen ob das kleine Spielfeld beendet wurde
-  if (booleanFeldGewonnen(spielstand)) {
-    // wenn das kleine Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
-    zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
-  } else if (booleanFeldGewonnen(spielstandNaechstesFeld)) {
-    // wenn das nächste kleine Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
+  if (
+    booleanFeldGewonnen(spielstand) ||
+    booleanFeldGewonnen(spielstandNaechstesFeld)
+  ) {
+    // wenn das kleine oder nächste Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
     zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   }
 
@@ -245,10 +308,6 @@ async function zugBeenden(zustand) {
   } else {
     naechstesFeld[0].classList.add('zoomed');
   }
-}
-
-function standFeld(zustand, x, y) {
-  return standPruefen(selektor(zustand.spielfeld, x, y), zustand.helden);
 }
 
 async function spielBeenden(zustand, naechstesFeld) {
@@ -299,62 +358,4 @@ async function spielBeenden(zustand, naechstesFeld) {
   }
 
   return false;
-}
-
-async function updateSpielerListeGewinner(zustand, gewinner) {
-  const flachesSpielfeldArray = flachesArrayErstellen(zustand.spielfeld);
-  const zuegeGewinner = zuegeZaehlen(flachesSpielfeldArray, gewinner.icon);
-  console.log('occurence ', zuegeGewinner);
-
-  if (spielmodus() === 'mehrspieler') {
-    await spielerListeUpdaten({
-      spielId: zustand.momentanesSpiel,
-      gewinnerId: gewinner.id,
-      zuegeGewinner,
-      spielmodus: 'mehrspieler',
-    });
-  } else if (spielmodus() === 'einzelspieler') {
-    await spielerListeUpdaten({
-      spielId: zustand.momentanesSpiel,
-      gewinnerId: gewinner.id,
-      zuegeGewinner,
-      spielmodus: 'einzelspieler',
-    });
-  } else {
-    await spielerListeUpdaten({
-      spielId: zustand.momentanesSpiel,
-      gewinnerId: gewinner.id,
-      zuegeGewinner,
-      spielmodus: 'Hotseat',
-    });
-  }
-}
-
-function spielstandZuruecksetzen(zustand) {
-  zustand.spielfeld = initialesSpielfeld();
-  zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
-  return zustand;
-}
-
-function flachesArrayErstellen(array) {
-  const flachesArray = [];
-  for (let element of array) {
-    if (Array.isArray(element)) {
-      flachesArray.push(...flachesArrayErstellen(element));
-    } else {
-      flachesArray.push(element);
-    }
-  }
-
-  return flachesArray;
-}
-
-function zuegeZaehlen(flachesArray, icon) {
-  return flachesArray.reduce((acc, curr) => {
-    if (curr === icon) {
-      return acc + 1;
-    } else {
-      return acc;
-    }
-  }, 0);
 }

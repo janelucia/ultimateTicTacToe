@@ -425,18 +425,6 @@ ul {
   color: gray;
 }
 
-.naechstes-feld.zoomed {
-  outline: thin solid coral;
-  transition: transform 0.6s ease;
-  transform: scale(3);
-  z-index: 2;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform-origin: center center;
-  background-color: #252525;
-}
-
 .overlay {
   background-color: #252525;
   position: fixed;
@@ -593,6 +581,20 @@ td:last-child {
   content: '\1F389';
   font-size: 24px;
   margin-left: 5px;
+}
+
+@media (max-width: 768px) {
+  .naechstes-feld.zoomed {
+    outline: thin solid coral;
+    transition: transform 0.6s ease;
+    transform: scale(3);
+    z-index: 2;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    background-color: #252525;
+  }
 }
 
 @media (min-width: 768px) {
