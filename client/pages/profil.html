@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="app.js" defer></script>
-    <script src="js/profil.js" defer></script>
-    <script src="js/utils/config.js" defer></script>
-    <script src="js/utils/namenSetzen.js" defer></script>
-    <script src="js/utils/spielerNamen.js" defer></script>
-    <script src="js/service.js"></script>
-    <link rel="stylesheet" href="styles.css" />
+    <script src="../app.js" defer></script>
+    <script src="../scripts/profil.js" defer></script>
+    <script src="../scripts/utils/config.js" defer></script>
+    <script src="../scripts/utils/namenSetzen.js" defer></script>
+    <script src="../scripts/utils/spielerNamen.js" defer></script>
+    <script src="../scripts/service.js"></script>
+    <link rel="stylesheet" href="../styles/styles.css" />
     <link rel="icon" type="image/svg" href="/client/assets/tic-tac-toe.svg" />
     <link
       rel="stylesheet"
@@ -21,7 +21,7 @@
   <body>
     <header>
       <div class="header-left">
-        <div><img src="assets/tic-tac-toe.svg" alt="Logo" /></div>
+        <div><img src="../assets/tic-tac-toe.svg" alt="Logo" /></div>
         <div class="hamburger" onclick="clickHamburger()">
           <div class="slice"></div>
           <div class="slice"></div>
@@ -29,13 +29,15 @@
         </div>
         <div class="menu">
           <div class="menuItem">
-            <a href="/client/lobby.html">Startseite</a>
+            <a href="/client/pages/lobby.html">Startseite</a>
           </div>
           <div class="menuItem">
-            <a href="/client/heldentafel.html">Heldentafel</a>
+            <a href="/client/pages/heldentafel.html">Heldentafel</a>
           </div>
           <div class="menuItem">
-            <a href="/client/profil.html" onclick="leerenNamenVerhindern()"
+            <a
+              href="/client/pages/profil.html"
+              onclick="leerenNamenVerhindern()"
               >Mein Profil</a
             >
           </div>

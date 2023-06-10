@@ -340,7 +340,7 @@ async function spielBeenden(zustand, naechstesFeld) {
         spielStarten();
       });
       overlayButtonZurueck.addEventListener('click', () => {
-        window.location = '/client/lobby.html';
+        window.location = '/client/pages/lobby.html';
       });
       return true;
     }
@@ -360,7 +360,7 @@ async function spielBeenden(zustand, naechstesFeld) {
       spielStarten();
     });
     overlayButtonZurueck.addEventListener('click', () => {
-      window.location = '/client/lobby.html';
+      window.location = '/client/pages/lobby.html';
     });
     return true;
   }
