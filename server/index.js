@@ -1,14 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs'); //write to filesystem,um lobbies und spieler nachhaltig zu speichern
-const lobbiesFile = 'lobbies.json'; //um den Zustand zu speichern
-const spielerFile = 'spieler.json';
 const app = express();
 const port = 3000;
 let lobbies = [];
 let spieler = [];
 
-app.use(cors()); // findet er nicht so schön - lieber beides unter einem Port laufen lassen
+app.use('/client', express.static('../client'));
+app.use(cors()); // für die dev env
 app.use(express.json());
 
 app.get('/lobby/:id', (req, res) => {

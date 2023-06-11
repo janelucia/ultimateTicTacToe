@@ -308,7 +308,6 @@ async function spielBeenden(zustand, naechstesFeld) {
     standGrossesFeld === 'Spiel läuft noch' ||
     standGrossesFeld === 'unentschieden'
   ) {
-    // TODO unentschieden richtig implementieren
     if (naechstesFeld.length === 0) {
       const gewinnerId = 'unentschieden';
       await updateSpielerListeGewinner(zustand, gewinnerId);
