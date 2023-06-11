@@ -2,8 +2,26 @@
 
 Der ultimative Spielspaß mit dem Klassiker.
 
-## To Do
-* wie wird zwischen Hotseat, Mehr- und Einzelspieler unterschieden? eigene js Seiten, die auf Funktionen in der game.js zu greifen, aber eigene Abläufe haben? Wie Klick verhindern, wenn der andere dran ist, bei Mehr- und Einzelspieler, aber bei Hotseat erlauben?
+## Spielkonzept
+Ultimate Tic Tac Toe, auch Meta Tic Tac Toe genannt, übernimmt die Prinzipien des normalen Tic Tac Toe Spiels mit der Erweiterung, dass in jedem Tic Tac Toe Feld wiederrum ein weiteres kleines Tic Tac Toe Spielfeld vorhanden ist. 
+
+Ziel der kleinen Spielfelder und des großen Spielfeldes: eine Reihe von drei X- oder O-Markierungen horizontal, vertikal oder diagonal erst in einem der kleinen und dann im großen Spielfeld erzielen.
+
+1. Sobald ein Spieler einen Zug gemacht hat, bestimmt das Feld, in dem er gesetzt hat, welches kleine Spielfeld der Gegner als nächstes spielen muss.
+2. Der Gegner muss sein nächstes Symbol in dem kleinen Spielfeld platzieren, das dem Feld des vorherigen Spielers entspricht. Das nächste Feld ist durch einen korallen farbenden Rahmen gekennzeichnet. 
+3. Es gibt zwei Möglichkeiten sich ein Feld frei auszuwählen:
+  * entweder man beginnt das Spiel
+  * oder der Gegner schickt einen in ein Spielfeld, welches schon gewonnen oder unentschieden wurde.
+4. Das Spiel endet, wenn entweder das große Spielfeld gewonnen oder unentschieden gespielt wurde.
+
+Viel Spaß beim Spielen von Ultimate Tic Tac Toe!
+
+## Bedienung
+- Der Server läuft über pm2 in einer Endlosschleife. Wenn der Code über das Terminal ausgeführt wird, dann muss: 
+    `npm install && npm run dev`
+  im Server Folder ausgeführt werden.
+- in development läuft die Seite über `localhost:3000`.
+- in production ist die Seite nur über HTTPS unter: https://tictacthetoe.de erreichbar.
 
 ## Komplexität (min. 6)
 
@@ -20,28 +38,11 @@ Unser Spiel verwendet eine rundenbasierte Spielweise, bei der das Spielfeld aus 
 Ein TicTacToe-Spielfeld bietet sich natürlich als rasterbasiertes Spiel an, da aus einen Hauptgitter von 3x3 Feldern besteht. In jedem dieser Felder befindet sich ein weiteres kleineres Gitter mit einer Größe von 3x3. (Jane)
 
 - 2 Punkte übers Netzwerk
-  - wie wird es gestartet?
-  - es ist reload safe (die anderen Spielmodi sind nicht reload safe, da der Zustand nicht über Localhost weitergegeben wird)
-  - der Mehrspielermodus kann nur von einem Browser aus gestartet werden, da die ID im localhost steht und diese für die Identifikation genutzt wird.
-  - nur https in production
+Alle Spiele werden pro Spieler über die ID gespeichert auf dem Server gespeichert und in der Profilliste ausgegeben. Mit Ausnahme des 'Robo's im Einzelspieler-Modus und dem Spieler O im Hotseat-Modus (lokales Mehrspielerspiel). Da die ID für den Spieler im localstorage gespeichert und pro Browser vergeben wird. Somit haben weder Robo, noch Spieler O im Hotseat-Modus eine ID. 
+Der Mehrspielermodus läuft über eine ID, die im path eines Links weitergegeben und dort gehalten wird. Der State wird über den Server weitergegeben und geholt. Deshalb ist der Mehrspielermodus reload safe. Einzelspieler und Hotseat sind nicht reload safe - der State geht mit dem reload verloren. (Jane)
 
+- Identifikation
+Die Identifikation wird über die zufällige Zuweisung einer ID, welche im localstorage gespeichert wird, geregelt. Somit kann man sich nicht browserübergreifend anmelden, sondern nur einen Spieler pro Browser erstellen. Jedoch kann man sich den Namen immer wieder neu aussuchen.
 
-## Zusätzlich
-
-- eine Einzelspieler Version zu erstellen
-- Historien und Bestenliste mittels eigenen User Agent
-- Anmeldung (keine externen Dienste) für Netzwerk
-
-## Allgemein
-
-- HTML, CSS, JS
-- Sämtliche Ressourcen, z.B. Bilder, Stylesheets, sind relativ zu addressieren
-- Nodejs (inkl. Express) kann verwendet werden
-- Nur Serverseitig dürfen Bibs verwendet werden
-- SVGs dürfen zum visualisieren verwendet werden
-- schnelles und intuitives Erfassen des Spiels, Anleitungen auf das Minimum reduzieren und angenehm auf dem gewählten Zielgerät spielbar sein
-- Quelltext mit Augenmaß auf Mitentwickler dokumentieren (kein JSDoc). Eine sprechende Benennung der Bezeichner ist wichtiger, als eine ausführliche Quelltextdokumentation
-- kurze Dokumentation für das Gitlab (README.md)
-  - Spielkonzept erläutern
-  - Bedienung erklären
-  - Arbeitsaufteilung auf die Teammitglieder erklären.
+- Heldentafel (Bestenliste)
+In der Heldentafel stehen die Spieler, die mindestens ein Spiel gewonnen haben. Der beste Spieler ist der, der ein Spiel mit den wenigsten Zügen gewonnen hat. Die Reihenfolge ist: 1. Platz ist in der ersten Reihe. Dazu wird der Spielmodus angezeigt, jedoch zählt nur ein Spiel pro Spieler mit den wenigsten Zügen. Die Heldentafel wird aus der Liste der Spiele der Spieler generiert, welche serverseitig gespeichert ist.

@@ -211,6 +211,7 @@
   font-size: clamp(2rem, 5vh, 4rem);
   font-size: 900;
   text-align: center;
+  word-wrap: anywhere;
 }
 
 .overlay-button {

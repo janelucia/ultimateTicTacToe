@@ -109,7 +109,7 @@ async function updateSpielerListeGewinner(zustand, gewinner) {
       spielId: zustand.momentanesSpiel,
       gewinnerId: gewinner.id,
       zuegeGewinner,
-      spielmodus: 'Hotseat',
+      spielmodus: 'hotseat',
     });
   }
 }

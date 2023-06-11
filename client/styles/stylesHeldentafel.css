@@ -8,7 +8,6 @@ th,
 td {
   padding: 8px;
   text-align: left;
-  word-wrap: break-word;
 }
 
 th:nth-child(2),
@@ -22,11 +21,12 @@ tr:first-child {
 
 td:first-child {
   border-right: 2px solid #088395;
-  width: 1/3;
+  word-wrap: anywhere;
+  width: calc(100% / 3);
 }
 
 td:last-child {
-  width: 1/3;
+  width: calc(100% / 3);
 }
 
 .highlight-spieler {
