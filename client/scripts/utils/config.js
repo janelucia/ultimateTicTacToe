@@ -1,5 +1,6 @@
 // Konstanten für den service
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL =
+  new URL(document.location).protocol + new URL(document.location).host;
 const LOBBY_ENDPOINT = `${SERVER_URL}/lobby`;
 const SPIELER_ENDPOINT = `${SERVER_URL}/spieler`;
 const PULL_TIMEOUT = 1000;
