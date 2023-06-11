@@ -164,32 +164,7 @@ ul {
   transform: rotate(-45deg);
 }
 
-.spielanzeige {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.hero {
-  display: flex;
-  width: 90vw;
-  justify-content: space-between;
-}
-
-.hero p {
-  color: #00ffca;
-}
-
 .header-left {
   display: flex;
   flex-direction: row;
-}
-
-/* Lobby */
-
-@media (min-width: 768px) {
-  .hero {
-    width: 25vw;
-  }
 }

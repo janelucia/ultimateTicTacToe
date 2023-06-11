@@ -298,9 +298,6 @@ async function zugBeenden(zustand) {
     spielBeenden(neuerZustand, naechstesFeld);
     uebersichtAnzeigen(neuerZustand);
     spielfeldAnzeigen(neuerZustand);
-    naechstesFeld[0].classList.add('zoomed');
-  } else {
-    naechstesFeld[0].classList.add('zoomed');
   }
 }
 

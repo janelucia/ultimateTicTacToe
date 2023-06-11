@@ -7,8 +7,8 @@ const PULL_TIMEOUT = 1000;
 // Konstanten für das Spiel
 const SICHTBAR_KLASSE = 'sichtbar';
 
-const spielfeld = document.querySelector('.spielfeld');
 const spielanzeige = document.querySelector('.spielanzeige');
+const spielfeld = document.querySelector('.spielfeld');
 const overlay = document.querySelector('.overlay');
 const overlayText = document.querySelector('.overlay-text');
 const overlayButtonWeiterspielen = document.querySelector('.btn-weiterspielen');
