@@ -1,4 +1,6 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const cors = require('cors');
 const app = express();
 const port = 3000;
@@ -246,6 +248,21 @@ app.put('/spieler', (req, res) => {
   return res.send();
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+if (process.env.NODE_ENV === 'production') {
+  https
+    .createServer(
+      {
+        key: fs.readFileSync('/etc/letsencrypt/live/tictacthetoe.de/key.pem'),
+        cert: fs.readFileSync('/etc/letsencrypt/live/tictacthetoe.de/cert.pem'),
+        ca: fs.readFileSync('/etc/letsencrypt/live/tictacthetoe.de/chain.pem'),
+      },
+      app
+    )
+    .listen(443, () => {
+      console.log('Listening...');
+    });
+} else {
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
+}
