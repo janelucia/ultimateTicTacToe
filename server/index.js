@@ -1,6 +1,5 @@
 const express = require('express');
 const https = require('https');
-const http = require('http');
 const fs = require('fs');
 const cors = require('cors');
 const app = express();
@@ -11,15 +10,6 @@ let spieler = [];
 app.use('/client', express.static('../client'));
 app.use(cors()); // für die dev env
 app.use(express.json());
-
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === 'production') {
-    if (req.protocol !== 'https')
-      // the statement for performing our redirection
-      return res.redirect('https://' + req.headers.host + req.url);
-    else return next();
-  } else return next();
-});
 
 app.get('/', (req, res) => {
   res.redirect('/client');
@@ -263,10 +253,6 @@ app.put('/spieler', (req, res) => {
 });
 
 if (process.env.NODE_ENV === 'production') {
-  http.createServer(app).listen(80, () => {
-    console.log('Listening...');
-  });
-
   https
     .createServer(
       {
