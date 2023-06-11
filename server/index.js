@@ -12,7 +12,7 @@ app.use(cors()); // für die dev env
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.redirect('/client');
+  return res.redirect('/client');
 });
 
 app.get('/lobby/:id', (req, res) => {
