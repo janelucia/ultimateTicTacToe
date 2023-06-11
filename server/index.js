@@ -18,9 +18,9 @@ app.get('/', (req, res) => {
 app.get('/lobby/:id', (req, res) => {
   const lobby = lobbies.find((l) => l.id === parseInt(req.params.id));
   if (!lobby) {
-    res.status(404).send();
+    return res.status(404).send();
   }
-  res.json(lobby);
+  return res.json(lobby);
 });
 
 app.post('/lobby', (req, res) => {
@@ -43,7 +43,7 @@ app.post('/lobby', (req, res) => {
   ];
 
   res.setHeader('Location', `${id}`);
-  res.status(201).json({ location: `${id}` });
+  return res.status(201).json({ location: `${id}` });
 });
 
 app.patch('/lobby/:id', (req, res) => {
@@ -181,7 +181,7 @@ app.post('/spieler', (req, res) => {
     },
   ];
 
-  res.status(201).send();
+  return res.status(201).send();
 });
 
 app.patch('/spieler/:id', (req, res) => {
@@ -206,7 +206,7 @@ app.patch('/spieler/:id', (req, res) => {
     return s;
   });
 
-  res.send();
+  return res.send();
 });
 
 app.put('/spieler', (req, res) => {
