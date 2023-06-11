@@ -5,7 +5,6 @@ async function inputFeldHeldenNamen() {
     heldenNamenInputRendern();
     return;
   }
-  console.debug(namenInput);
   localStorageNameSetzen(namenInput);
 
   heldenNamenInputRendern();

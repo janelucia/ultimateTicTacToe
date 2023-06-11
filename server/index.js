@@ -202,8 +202,6 @@ app.patch('/spieler/:id', (req, res) => {
     return s;
   });
 
-  console.log('Spieler: ', spieler);
-
   res.send();
 });
 
@@ -215,8 +213,6 @@ app.put('/spieler', (req, res) => {
   } else if (!held) {
     return res.status(404).send();
   }
-
-  console.log('Zustand', req.body.zustand);
 
   let updateSpieler;
 
@@ -241,8 +237,6 @@ app.put('/spieler', (req, res) => {
       { spielId, gewinner: istGewinner, zuegeGewinner, spielmodus },
     ],
   };
-
-  console.log('Update Spieler', updateSpieler);
 
   spieler = spieler.map((s) => {
     if (s.heldId === updateSpieler.heldId) {

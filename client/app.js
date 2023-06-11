@@ -32,7 +32,6 @@ function browserIdSetzen() {
   }
   const id = Math.round(Math.random() * 1e6);
   localStorage.setItem('id', JSON.stringify(id));
-  console.log(id);
 }
 
 async function leerenNamenVerhindern() {

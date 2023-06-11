@@ -156,7 +156,6 @@ function setzeIcon(zustand, l1, l2, l3, l4, icon) {
  * @param {String} gewinner
  */
 function renderGewinnerKleinesFeld(element, gewinner) {
-  console.log('Gewinner', gewinner);
   if (gewinner === 'u') {
     element.classList.add('unentschieden');
   } else {

@@ -98,7 +98,6 @@ async function spielstandUpdate(zustand) {
 
 async function weiteresMehrspielerSpielErstellen(zustand) {
   const id = lobbyIdHolen();
-  console.log('lobbyId', id);
   return fetch(`${LOBBY_ENDPOINT}/${id}`, {
     method: 'POST',
     headers: {

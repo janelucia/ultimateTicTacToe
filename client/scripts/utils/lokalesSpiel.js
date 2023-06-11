@@ -63,7 +63,6 @@ async function lokalesSpiel(zustand) {
 function generiereZufaelligenZug(zustand) {
   // Zufällige Indizes für jede Dimension generieren
 
-  console.log('mein Zug: ', zustand.momentanerZug);
   const koordinaten = { l1: '', l2: '', l3: '', l4: '' };
 
   // Wenn noch keine freie Feldwahl besteht, dann soll l1 von Koordinaten auf l3 des momentanen Zuges gesetzt werden
@@ -84,8 +83,6 @@ function generiereZufaelligenZug(zustand) {
     Math.random() *
       zustand.spielfeld[koordinaten.l1][koordinaten.l2][koordinaten.l3].length
   );
-
-  console.log('Robos Zug: ', koordinaten);
 
   // Rückgabe der Koordinaten
   return koordinaten;

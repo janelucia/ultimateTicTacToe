@@ -21,8 +21,6 @@ async function spielerInfos() {
     }
   }
 
-  console.log(zaehlenGespielt);
-
   return {
     held: data.name,
     zaehlenGespielt,

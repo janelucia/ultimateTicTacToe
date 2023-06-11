@@ -89,7 +89,6 @@ function großesFeldErstellen(zustand) {
 async function updateSpielerListeGewinner(zustand, gewinner) {
   const flachesSpielfeldArray = flachesArrayErstellen(zustand.spielfeld);
   const zuegeGewinner = zuegeZaehlen(flachesSpielfeldArray, gewinner.icon);
-  console.log('occurence ', zuegeGewinner);
 
   if (spielmodus() === 'mehrspieler') {
     await spielerListeUpdaten({
@@ -183,8 +182,6 @@ const spielzustand = async (spielzustand) => {
     momentanerSpieler,
     momentanerZug,
   };
-
-  console.log(data);
 
   return data;
 };
@@ -305,8 +302,6 @@ async function spielBeenden(zustand, naechstesFeld) {
   // großes Spielfeld mit dem Gewinner des jeweiligen Feldes
   const grossesSpielfeld = großesFeldErstellen(zustand);
 
-  console.log(grossesSpielfeld);
-
   const standGrossesFeld = standPruefen(grossesSpielfeld, zustand.helden);
 
   if (
@@ -335,7 +330,6 @@ async function spielBeenden(zustand, naechstesFeld) {
     }
   } else {
     const gewinner = zustand.helden[standGrossesFeld];
-    console.log('Gewinnerid', gewinner);
     updateSpielerListeGewinner(zustand, gewinner);
     overlayText.innerText = `${zustand.helden[standGrossesFeld].name} hat gewonnen!`;
     overlayText.classList.add('spieler' + standGrossesFeld);

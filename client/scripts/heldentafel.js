@@ -25,8 +25,6 @@ const spielerListeHolen = async () => {
     return zuegeA - zuegeB;
   });
 
-  console.log(sortieren);
-
   renderHeldentafel(sortieren);
 };
 
