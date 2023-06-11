@@ -25,8 +25,7 @@ async function mehrspielerModus(zustand) {
 
 const linkRendern = async (spielErstellen) => {
   const linkAnzeigen = document.getElementById('mehrspieler-link');
-  const hostname = new URL(document.location).host;
-  linkAnzeigen.innerHTML = `${hostname}/client/pages/lobby.html?spielBeitreten=${spielErstellen.location}`;
+  linkAnzeigen.innerHTML = `${SERVER_URL}/client/pages/lobby.html?spielBeitreten=${spielErstellen.location}`;
 };
 
 function gegnerIndexSeiteRendern() {

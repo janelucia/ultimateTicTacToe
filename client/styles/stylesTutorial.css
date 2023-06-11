@@ -15,12 +15,10 @@
 
 .stichpunkte {
   color: white;
-}
-
-.stichpunkte {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  list-style-position: inside;
 }
 
 @media (min-width: 768px) {

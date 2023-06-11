@@ -22,6 +22,7 @@ Ein TicTacToe-Spielfeld bietet sich natürlich als rasterbasiertes Spiel an, da 
 - 2 Punkte übers Netzwerk
   - wie wird es gestartet?
   - es ist reload safe (die anderen Spielmodi sind nicht reload safe, da der Zustand nicht über Localhost weitergegeben wird)
+  - der Mehrspielermodus kann nur von einem Browser aus gestartet werden, da die ID im localhost steht und diese für die Identifikation genutzt wird.
 
 
 ## Zusätzlich
