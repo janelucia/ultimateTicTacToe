@@ -252,7 +252,9 @@ if (process.env.NODE_ENV === 'production') {
   https
     .createServer(
       {
-        key: fs.readFileSync('/etc/letsencrypt/live/tictacthetoe.de/key.pem'),
+        key: fs.readFileSync(
+          '/etc/letsencrypt/live/tictacthetoe.de/privkey.pem'
+        ),
         cert: fs.readFileSync('/etc/letsencrypt/live/tictacthetoe.de/cert.pem'),
         ca: fs.readFileSync('/etc/letsencrypt/live/tictacthetoe.de/chain.pem'),
       },
