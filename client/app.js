@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     await neuesMehrspielerSpiel(localStorageInformationen());
   } else if (currentPath.endsWith('/spiel.html')) {
     await spielerAnlegen();
-    if (spielmodus() !== 'hotseat') {
-      await leerenNamenVerhindern();
-    }
+    await leerenNamenVerhindern();
     spielStarten();
   } else if (currentPath.endsWith('/profil.html')) {
+    await leerenNamenVerhindern();
     renderSpieleUebersicht();
   } else if (currentPath.endsWith('/heldentafel.html')) {
+    await leerenNamenVerhindern();
     spielerListeHolen();
   }
 });
