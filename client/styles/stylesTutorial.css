@@ -1,0 +1,30 @@
+.anleitung {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.anleitung h2 {
+  text-align: left;
+}
+
+.anleitung p {
+  text-align: left;
+  font-weight: 600;
+}
+
+.stichpunkte {
+  color: white;
+}
+
+.stichpunkte {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .anleitung {
+    width: 50%;
+  }
+}

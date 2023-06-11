@@ -31,16 +31,3 @@ function localStorageNameSetzen(namen) {
 function zufaelligeNamenWuerfelnArray() {
   return spielerNamen.spieler.sort(() => Math.random() - 0.5);
 }
-
-function heldenNamenInputRendern() {
-  const ueberschrift = document.querySelector('.rechte-seite h2');
-
-  const localStorageName = localStorage.getItem('name');
-
-  ueberschrift.innerText = `Herzlich Willkommen, ${
-    !localStorageName ? 'Spieler!' : localStorageName
-  }`;
-
-  let input = document.getElementById('spielername');
-  input.value = localStorageName;
-}

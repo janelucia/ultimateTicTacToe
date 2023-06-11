@@ -5,25 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="../app.js" defer></script>
-    <script src="../scripts/service.js" defer></script>
-    <script src="../scripts/spiel.js" defer></script>
-    <script src="../scripts/spielRendern.js" defer></script>
+    <script src="../scripts/service.js"></script>
+    <script src="../scripts/lobbyRendern.js"></script>
     <script src="../scripts/utils/netzwerkSpiel.js" defer></script>
     <script src="../scripts/utils/namenSetzen.js" defer></script>
     <script src="../scripts/utils/spielerNamen.js" defer></script>
     <script src="../scripts/utils/config.js" defer></script>
-    <script src="../scripts/utils/lokalesSpiel.js" defer></script>
     <link rel="stylesheet" href="../styles/styles.css" />
-    <link rel="stylesheet" href="../styles/stylesSpiel.css" />
-
-    <title>Ultimate Tic Tac Toe</title>
-
+    <link rel="stylesheet" href="../styles/stylesTutorial.css" />
     <link rel="icon" type="image/svg" href="/client/assets/tic-tac-toe.svg" />
-
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
+
+    <title>Ultimate Tic Tac Toe</title>
   </head>
   <body>
     <header>
@@ -55,16 +51,46 @@
       </div>
     </header>
     <main>
-      <div class="spielanzeige"></div>
-      <div class="spielfeld"></div>
-      <div class="overlay">
-        <p class="overlay-text">Platzhalter</p>
-        <button class="overlay-button btn-weiterspielen">
-          Nochmal spielen!
-        </button>
-        <button class="overlay-button btn-zurueck">
-          Zurück zur Startseite
-        </button>
+      <h1>Ultimate Tic Tac Toe</h1>
+      <div class="anleitung">
+        <h2>Spielanleitung:</h2>
+        <ol class="stichpunkte">
+          <li>
+            Spielfeld: ein großes Tic Tac Toe Feld mit 9 kleinen Tic Tac Toe
+            Feldern
+          </li>
+          <li>Symbole: entweder X oder O.</li>
+          <li>
+            Ziel kleine Spielfelder: eine Reihe von drei Symbolen in einer
+            horizontalen, vertikalen oder diagonalen Linie auf einem der
+            kleineren Spielfelder bilden.
+          </li>
+          <li>
+            Züge: Das Feld, in das der Gegner seinen Zug machen muss, wird durch
+            deinen Zug mitbestimmt und vice versa.
+          </li>
+          <li>
+            Ziel großes Spielfeld: eine Reihe von drei Symbolen in einem der
+            kleineren Spielfelder bildet oder wenn alle kleineren Spielfelder
+            unentschieden enden.
+          </li>
+        </ol>
+        <p>
+          Bitte beachte die folgenden Regeln für die Platzierung des Symbols:
+        </p>
+        <ul class="stichpunkte">
+          Der Spieler kann sich in drei Situationen das Spielfeld frei
+          auswählen:
+          <li>
+            Wenn einer der Spieler auf ein kleineres Spielfeld setzt, das
+            bereits gewonnen wurde oder unentschieden endet.
+          </li>
+          <li>
+            Wenn das nächste kleinere Spielfeld durch den vorherigen Zug des
+            Gegners bestimmt wird und dieses Spielfeld bereits gewonnen wurde
+            oder unentschieden endet.
+          </li>
+        </ul>
       </div>
     </main>
     <footer>Made with ❤ | by Katharina and Jane</footer>

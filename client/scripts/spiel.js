@@ -257,12 +257,7 @@ async function zugBeenden(zustand) {
   const naechstesFeld = document.getElementsByClassName('naechstes-feld');
   const heldIdentifizieren = localStorageInformationen();
 
-  // momentanen Spielstand auslesen
-  const spielstand = standFeld(
-    zustand,
-    zustand.momentanerZug.l1,
-    zustand.momentanerZug.l2
-  );
+  // den Spielstand vom nächsten Feld auslesen
 
   const spielstandNaechstesFeld = standFeld(
     zustand,
@@ -271,11 +266,8 @@ async function zugBeenden(zustand) {
   );
 
   // testen ob das kleine Spielfeld beendet wurde
-  if (
-    booleanFeldGewonnen(spielstand) ||
-    booleanFeldGewonnen(spielstandNaechstesFeld)
-  ) {
-    // wenn das kleine oder nächste Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
+  if (booleanFeldGewonnen(spielstandNaechstesFeld)) {
+    // wenn das nächste Spielfeld beendet wurde, dann kann man sich ein beliebiges neues Spielfeld aussuchen
     zustand.momentanerZug = { l1: '', l2: '', l3: '', l4: '' };
   }
 
